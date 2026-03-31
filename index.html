@@ -3,25 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="SwiftLink Logistics, LLC - Premium 3PL Solutions: Warehousing, Fulfillment, Transportation & Real-Time Tracking across the USA.">
-  <title>SwiftLink Logistics • 3PL Warehousing & Fulfillment</title>
+  <meta name="description" content="SwiftLink Logistics, LLC - Premium 3PL Transportation Solutions: FTL, LTL, Drayage & Port Services with Real-Time Tracking.">
+  <title>SwiftLink Logistics • Ship with Confidence</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
   <style>
-    .hero-bg { 
-      background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://picsum.photos/id/1015/2000/1200') center/cover; 
-    }
-    .tracking-bar { animation: pulse 2s infinite; }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.7; }
-    }
+    .hero-video-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: -1; }
+    .hero-video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1.5s ease-in-out; }
+    .hero-video.active { opacity: 1; }
+    .hero-overlay { background: linear-gradient(to bottom, rgba(0,0,0,0.45), rgba(0,0,0,0.85)); }
+    .fade-in { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+    .service-card { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+    .service-card:hover { transform: translateY(-12px) scale(1.03); box-shadow: 0 25px 50px -12px rgb(16 185 129 / 0.25); }
+    .stat-number { font-size: 3.5rem; line-height: 1; font-weight: 800; }
   </style>
 </head>
-<body class="bg-zinc-950 text-white font-sans">
+<body class="bg-zinc-950 text-white font-sans overflow-x-hidden">
 
   <!-- NAV -->
-  <nav class="bg-zinc-900 border-b border-zinc-800 sticky top-0 z-50">
+  <nav class="bg-zinc-900/95 backdrop-blur-md border-b border-zinc-800 sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-6 py-5 flex justify-between items-center">
       <div class="flex items-center gap-3">
         <i class="fa-solid fa-truck-fast text-3xl text-emerald-500"></i>
@@ -31,10 +32,10 @@
         </div>
       </div>
       <div class="hidden md:flex items-center gap-8 text-sm font-medium">
-        <a href="#services" class="hover:text-emerald-400 transition">Services</a>
+        <a href="#solutions" class="hover:text-emerald-400 transition">Solutions</a>
         <a href="#track" class="hover:text-emerald-400 transition">Track Shipment</a>
         <a href="#portal" class="hover:text-emerald-400 transition">Client Portal</a>
-        <a href="#about" class="hover:text-emerald-400 transition">About Us</a>
+        <a href="#why-us" class="hover:text-emerald-400 transition">Why Us</a>
         <a href="#pricing" class="hover:text-emerald-400 transition">Pricing</a>
       </div>
       <div class="flex items-center gap-4">
@@ -50,105 +51,97 @@
     </div>
   </nav>
 
-  <!-- HERO -->
-  <header class="hero-bg h-screen flex items-center">
-    <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
-      <div>
-        <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur px-4 py-1.5 rounded-full text-sm mb-6">
-          <span class="text-emerald-400">●</span> Nationwide 3PL Coverage
-        </div>
-        <h2 class="text-6xl md:text-7xl font-bold tracking-tighter leading-none mb-6">
-          Fast. Reliable.<br>SwiftLink Logistics.
+  <!-- HERO with CYCLING VIDEOS -->
+  <header class="relative h-screen flex items-center overflow-hidden">
+    <div class="hero-video-container" id="videoContainer"></div>
+    <div class="hero-overlay absolute inset-0"></div>
+    
+    <div class="relative max-w-7xl mx-auto px-6 z-10">
+      <div class="max-w-2xl">
+        <div id="videoLabel" class="inline-flex items-center gap-2 bg-white/10 backdrop-blur px-5 py-2 rounded-full text-sm mb-6"></div>
+        <h2 class="text-6xl md:text-7xl font-bold tracking-tighter leading-none mb-6 fade-in">
+          Ship with Confidence.<br><span class="text-emerald-400">SwiftLink Logistics.</span>
         </h2>
-        <p class="text-xl text-zinc-300 mb-10 max-w-lg">
-          Your trusted 3PL partner for warehousing, order fulfillment, transportation, and real-time visibility. 
-          Scale your business with confidence.
+        <p class="text-xl text-zinc-300 mb-10 fade-in">
+          Expert transportation management with Full Truckload, Less-Than-Truckload, 
+          Drayage and Port services. Nationwide coverage with real-time visibility.
         </p>
-        <div class="flex flex-wrap gap-4">
+        <div class="flex flex-wrap gap-4 fade-in">
           <button onclick="getQuote()" 
-                  class="bg-white text-black hover:bg-emerald-500 hover:text-white px-10 py-5 rounded-3xl text-lg font-semibold flex items-center gap-3">
-            <span>Get Free Quote</span>
-            <i class="fa-solid fa-arrow-right"></i>
+                  class="bg-white text-black hover:bg-emerald-500 hover:text-white px-10 py-5 rounded-3xl text-lg font-semibold flex items-center gap-3 transition">
+            Get Free Quote <i class="fa-solid fa-arrow-right"></i>
           </button>
           <button onclick="document.getElementById('track').scrollIntoView({behavior:'smooth'})" 
-                  class="border border-white/60 hover:border-white px-10 py-5 rounded-3xl text-lg font-semibold">
-            Track Your Shipment →
+                  class="border border-white/70 hover:border-white px-10 py-5 rounded-3xl text-lg font-semibold transition">
+            Track Shipment →
           </button>
-        </div>
-        <div class="mt-12 flex items-center gap-8 text-sm">
-          <div>⭐⭐⭐⭐⭐ <span class="text-zinc-400">Trusted by growing brands nationwide</span></div>
-        </div>
-      </div>
-      <div class="hidden md:block bg-white/10 backdrop-blur-xl border border-white/10 rounded-3xl p-8">
-        <div class="bg-zinc-900 rounded-2xl p-6">
-          <div class="text-emerald-400 text-sm font-medium mb-2 flex items-center gap-2">
-            <i class="fa-solid fa-circle-dot"></i> LIVE TRACKING EXAMPLE
-          </div>
-          <div class="flex justify-between text-sm mb-6">
-            <div>Shipment #SL-3921847</div>
-            <div class="text-emerald-400">In Transit • Michigan → Texas</div>
-          </div>
-          <div class="h-2 bg-zinc-700 rounded-full mb-8 relative overflow-hidden">
-            <div class="tracking-bar absolute left-[45%] top-0 h-2 w-1/3 bg-emerald-500 rounded-full"></div>
-          </div>
-          <div class="grid grid-cols-4 gap-2 text-center text-xs">
-            <div class="bg-zinc-800 p-3 rounded-2xl">Picked</div>
-            <div class="bg-zinc-800 p-3 rounded-2xl">Packed</div>
-            <div class="bg-emerald-900/50 p-3 rounded-2xl border border-emerald-500">In Transit</div>
-            <div class="bg-zinc-800 p-3 rounded-2xl">Delivered</div>
-          </div>
         </div>
       </div>
     </div>
+
+    <!-- Video progress dots -->
+    <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex gap-3 z-20" id="videoDots"></div>
   </header>
 
   <!-- TRUST BAR -->
   <div class="bg-zinc-900 py-6 border-b border-zinc-800">
-    <div class="max-w-7xl mx-auto px-6 flex flex-wrap justify-center gap-12 items-center text-sm opacity-75">
-      <div class="flex items-center gap-3"><i class="fa-solid fa-warehouse"></i> Multiple US Warehouses</div>
-      <div class="flex items-center gap-3"><i class="fa-solid fa-box"></i> Same-Day Fulfillment</div>
+    <div class="max-w-7xl mx-auto px-6 flex flex-wrap justify-center gap-x-12 gap-y-4 items-center text-sm opacity-75">
       <div class="flex items-center gap-3"><i class="fa-solid fa-truck"></i> Nationwide Coverage</div>
+      <div class="flex items-center gap-3"><i class="fa-solid fa-clock"></i> On-Time Delivery</div>
+      <div class="flex items-center gap-3"><i class="fa-solid fa-ship"></i> Port &amp; Drayage Experts</div>
       <div class="flex items-center gap-3"><i class="fa-solid fa-shield-halved"></i> Fully Insured</div>
     </div>
   </div>
 
-  <!-- SERVICES -->
-  <section id="services" class="py-24 bg-zinc-900">
+  <!-- OUR SCALE -->
+  <section class="py-20 bg-black">
+    <div class="max-w-7xl mx-auto px-6 text-center">
+      <h3 class="text-emerald-400 font-medium tracking-widest">OUR SCALE</h3>
+      <h2 class="text-5xl font-bold tracking-tighter mt-3 mb-12">Numbers That Matter</h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-10">
+        <div class="fade-in">
+          <div class="stat-number text-emerald-400">48</div>
+          <p class="text-zinc-400 mt-3 text-lg">States Served</p>
+        </div>
+        <div class="fade-in">
+          <div class="stat-number text-emerald-400">1,200+</div>
+          <p class="text-zinc-400 mt-3 text-lg">Active Clients</p>
+        </div>
+        <div class="fade-in">
+          <div class="stat-number text-emerald-400">99.8%</div>
+          <p class="text-zinc-400 mt-3 text-lg">On-Time Delivery</p>
+        </div>
+        <div class="fade-in">
+          <div class="stat-number text-emerald-400">250+</div>
+          <p class="text-zinc-400 mt-3 text-lg">Carrier Partners</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOLUTIONS -->
+  <section id="solutions" class="py-24 bg-zinc-900">
     <div class="max-w-7xl mx-auto px-6">
       <div class="text-center mb-16">
-        <h3 class="text-emerald-400 font-medium">WHAT WE OFFER</h3>
-        <h2 class="text-5xl font-bold tracking-tighter mt-3">End-to-End 3PL Solutions</h2>
+        <h3 class="text-emerald-400 font-medium tracking-widest">SOLUTIONS</h3>
+        <h2 class="text-5xl font-bold tracking-tighter mt-3">Transportation Services</h2>
+        <p class="text-zinc-400 mt-4 max-w-2xl mx-auto">Reliable freight solutions tailored to your shipping needs.</p>
       </div>
       <div class="grid md:grid-cols-3 gap-8">
-        <div class="bg-zinc-950 border border-zinc-800 rounded-3xl p-10 hover:border-emerald-500 transition group">
-          <i class="fa-solid fa-warehouse text-5xl text-emerald-500 mb-6"></i>
-          <h4 class="text-2xl font-semibold mb-4">Warehousing & Storage</h4>
-          <p class="text-zinc-400">Climate-controlled, secure facilities with real-time inventory visibility. Flexible space for any volume.</p>
-          <ul class="mt-8 space-y-3 text-sm">
-            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Pallet & bulk storage</li>
-            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Pick & pack services</li>
-            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Returns processing</li>
-          </ul>
+        <div class="service-card bg-zinc-950 border border-zinc-800 rounded-3xl p-8 fade-in">
+          <i class="fa-solid fa-truck text-5xl text-emerald-500 mb-6"></i>
+          <h4 class="text-2xl font-semibold mb-3">Full Truckload (FTL)</h4>
+          <p class="text-zinc-400">Dedicated trailers for your largest and most time-sensitive shipments. Direct and secure.</p>
         </div>
-        <div class="bg-zinc-950 border border-zinc-800 rounded-3xl p-10 hover:border-emerald-500 transition group">
+        <div class="service-card bg-zinc-950 border border-zinc-800 rounded-3xl p-8 fade-in">
           <i class="fa-solid fa-boxes-stacked text-5xl text-emerald-500 mb-6"></i>
-          <h4 class="text-2xl font-semibold mb-4">Order Fulfillment</h4>
-          <p class="text-zinc-400">Seamless integration with Shopify, Amazon, Walmart, and more. Accurate, fast fulfillment every time.</p>
-          <ul class="mt-8 space-y-3 text-sm">
-            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Same & next-day shipping</li>
-            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Kitting & bundling</li>
-            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Multi-channel sync</li>
-          </ul>
+          <h4 class="text-2xl font-semibold mb-3">Less-Than-Truckload (LTL)</h4>
+          <p class="text-zinc-400">Cost-effective shared freight shipping with reliable transit times.</p>
         </div>
-        <div class="bg-zinc-950 border border-zinc-800 rounded-3xl p-10 hover:border-emerald-500 transition group">
-          <i class="fa-solid fa-road text-5xl text-emerald-500 mb-6"></i>
-          <h4 class="text-2xl font-semibold mb-4">Transportation Management</h4>
-          <p class="text-zinc-400">LTL, FTL, parcel, and dedicated fleets. Optimized routing for cost and speed.</p>
-          <ul class="mt-8 space-y-3 text-sm">
-            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Carrier network access</li>
-            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Real-time GPS tracking</li>
-            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Freight auditing</li>
-          </ul>
+        <div class="service-card bg-zinc-950 border border-zinc-800 rounded-3xl p-8 fade-in">
+          <i class="fa-solid fa-ship text-5xl text-emerald-500 mb-6"></i>
+          <h4 class="text-2xl font-semibold mb-3">Drayage &amp; Port Services</h4>
+          <p class="text-zinc-400">Fast container pickup and delivery from all major U.S. ports to your warehouse or distribution center.</p>
         </div>
       </div>
     </div>
@@ -163,7 +156,7 @@
         <input id="trackInput" type="text" placeholder="Enter Tracking Number (e.g. SL-3921847)" 
                class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-6 py-5 text-lg focus:outline-none focus:border-emerald-500">
         <button onclick="fakeTrack()" 
-                class="mt-6 w-full bg-emerald-500 hover:bg-emerald-600 py-5 rounded-2xl font-semibold text-lg">
+                class="mt-6 w-full bg-emerald-500 hover:bg-emerald-600 py-5 rounded-2xl font-semibold text-lg transition">
           Track Now
         </button>
         <div id="trackResult" class="mt-8 hidden text-left"></div>
@@ -171,29 +164,56 @@
     </div>
   </section>
 
-  <!-- CLIENT PORTAL TEASER -->
+  <!-- CLIENT PORTAL -->
   <section id="portal" class="py-24 bg-zinc-900">
     <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
-      <div>
+      <div class="fade-in">
         <h2 class="text-5xl font-bold tracking-tighter">Client Portal Access</h2>
-        <p class="text-xl text-zinc-300 mt-6">Manage inventory, view orders, generate reports, and control your logistics 24/7 from one secure dashboard.</p>
-        <ul class="mt-10 space-y-6">
-          <li class="flex gap-5"><i class="fa-solid fa-check-circle text-emerald-500 mt-1"></i> <div>Real-time inventory levels and alerts</div></li>
-          <li class="flex gap-5"><i class="fa-solid fa-check-circle text-emerald-500 mt-1"></i> <div>Order history and analytics</div></li>
-          <li class="flex gap-5"><i class="fa-solid fa-check-circle text-emerald-500 mt-1"></i> <div>Automated reporting & billing</div></li>
+        <p class="text-xl text-zinc-300 mt-6">Manage shipments, view real-time tracking, access reports, and control your logistics 24/7.</p>
+        <ul class="mt-10 space-y-6 text-zinc-300">
+          <li class="flex gap-4"><i class="fa-solid fa-check-circle text-emerald-500 mt-1"></i>Real-time shipment tracking</li>
+          <li class="flex gap-4"><i class="fa-solid fa-check-circle text-emerald-500 mt-1"></i>Detailed shipment history &amp; analytics</li>
+          <li class="flex gap-4"><i class="fa-solid fa-check-circle text-emerald-500 mt-1"></i>Automated reporting &amp; documents</li>
         </ul>
-        <button onclick="showLogin()" class="mt-10 bg-white text-black px-10 py-4 rounded-2xl font-semibold hover:bg-emerald-400">Login to Portal →</button>
+        <button onclick="showLogin()" class="mt-10 bg-white text-black px-10 py-4 rounded-2xl font-semibold hover:bg-emerald-400 transition">Login to Portal →</button>
       </div>
-      <div class="bg-zinc-800 border border-zinc-700 rounded-3xl p-8 aspect-video flex items-center justify-center text-zinc-500">
+      <div class="bg-zinc-800 border border-zinc-700 rounded-3xl p-8 aspect-video flex items-center justify-center text-zinc-400 fade-in">
         <div class="text-center">
-          <i class="fa-solid fa-laptop text-6xl mb-4"></i>
-          <p class="text-lg">Secure Client Dashboard Preview</p>
+          <i class="fa-solid fa-laptop text-7xl mb-6"></i>
+          <p class="text-lg">Secure Dashboard Preview</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- FOOTER / CONTACT -->
+  <!-- WHY US -->
+  <section id="why-us" class="py-24 bg-black">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16">
+        <h3 class="text-emerald-400 font-medium">WHY CHOOSE SWIFTLink</h3>
+        <h2 class="text-5xl font-bold tracking-tighter mt-3">Built for Reliability</h2>
+      </div>
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="text-center fade-in">
+          <i class="fa-solid fa-clock text-5xl text-emerald-500 mb-6"></i>
+          <h4 class="text-2xl font-semibold mb-3">Speed &amp; Precision</h4>
+          <p class="text-zinc-400">Industry-leading on-time performance with proactive updates.</p>
+        </div>
+        <div class="text-center fade-in">
+          <i class="fa-solid fa-eye text-5xl text-emerald-500 mb-6"></i>
+          <h4 class="text-2xl font-semibold mb-3">Full Transparency</h4>
+          <p class="text-zinc-400">Real-time GPS tracking and detailed reporting at every step.</p>
+        </div>
+        <div class="text-center fade-in">
+          <i class="fa-solid fa-handshake text-5xl text-emerald-500 mb-6"></i>
+          <h4 class="text-2xl font-semibold mb-3">Dedicated Support</h4>
+          <p class="text-zinc-400">Personal account managers who know your shipping patterns.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
   <footer class="bg-black py-20 border-t border-zinc-800">
     <div class="max-w-7xl mx-auto px-6">
       <div class="flex flex-col md:flex-row justify-between gap-12">
@@ -202,11 +222,10 @@
             <i class="fa-solid fa-truck-fast text-3xl text-emerald-500"></i>
             <h1 class="text-3xl font-bold tracking-tighter">SwiftLink Logistics, LLC</h1>
           </div>
-          <p class="text-zinc-400 max-w-xs">Your reliable 3PL partner delivering speed, accuracy, and transparency.</p>
-          <p class="mt-8 text-sm text-zinc-500">© 2026 SwiftLink Logistics, LLC. All rights reserved.<br>
-          swiftlinkusa.com</p>
+          <p class="text-zinc-400 max-w-xs">Expert freight transportation and logistics solutions across the United States.</p>
+          <p class="mt-8 text-sm text-zinc-500">© 2026 SwiftLink Logistics, LLC • swiftlinkusa.com</p>
         </div>
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-12">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-12">
           <div>
             <h4 class="font-semibold mb-4">Company</h4>
             <ul class="space-y-3 text-sm text-zinc-400">
@@ -216,11 +235,11 @@
             </ul>
           </div>
           <div>
-            <h4 class="font-semibold mb-4">Services</h4>
+            <h4 class="font-semibold mb-4">Solutions</h4>
             <ul class="space-y-3 text-sm text-zinc-400">
-              <li><a href="#" class="hover:text-white">Warehousing</a></li>
-              <li><a href="#" class="hover:text-white">Fulfillment</a></li>
-              <li><a href="#" class="hover:text-white">Transportation</a></li>
+              <li><a href="#" class="hover:text-white">Full Truckload</a></li>
+              <li><a href="#" class="hover:text-white">LTL Shipping</a></li>
+              <li><a href="#" class="hover:text-white">Drayage Services</a></li>
             </ul>
           </div>
           <div>
@@ -231,27 +250,110 @@
               <li><a href="#" class="hover:text-white">Get Quote</a></li>
             </ul>
           </div>
+          <div>
+            <h4 class="font-semibold mb-4">Contact</h4>
+            <p class="text-sm text-zinc-400">info@swiftlinkusa.com</p>
+            <p class="text-sm text-zinc-400">(248) 555-0123</p>
+          </div>
         </div>
-      </div>
-      <div class="text-center text-xs text-zinc-600 mt-20">
-        This is a starter template. Replace placeholder images, add your real contact details, logo, and integrate with actual backend systems for login, tracking, and quoting.
       </div>
     </div>
   </footer>
 
   <!-- LOGIN MODAL -->
   <div id="loginModal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-[100]">
-    <div class="bg-zinc-900 rounded-3xl p-10 max-w-md w-full mx-4">
+    <div class="bg-zinc-900 rounded-3xl p-10 max-w-md w-full mx-4 relative">
       <h3 class="text-2xl font-bold mb-8">Client Portal Login</h3>
       <input type="email" placeholder="Email" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-6 py-5 mb-4">
       <input type="password" placeholder="Password" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-6 py-5 mb-8">
       <button onclick="fakeLogin()" class="w-full bg-emerald-500 py-5 rounded-2xl font-semibold">Sign In</button>
-      <p class="text-center text-sm text-zinc-500 mt-6">Demo only — connect to your real auth system later.</p>
-      <button onclick="hideLogin()" class="absolute top-6 right-6 text-zinc-400 hover:text-white">✕</button>
+      <button onclick="hideLogin()" class="absolute top-6 right-6 text-2xl text-zinc-400 hover:text-white">✕</button>
     </div>
   </div>
 
   <script>
+    // Cycling Videos
+    const videos = [
+      {
+        src: "https://videos.pexels.com/video-files/11578656/11578656-uhd_2560_1440_30fps.mp4",
+        label: "📍 Aerial Highway – Semi Trucks in Motion"
+      },
+      {
+        src: "https://videos.pexels.com/video-files/35908013/15231430_2560_1440_25fps.mp4",
+        label: "🚢 Port Operations – Container Loading"
+      },
+      {
+        src: "https://videos.pexels.com/video-files/855130/855130-hd_1920_1080_30fps.mp4",
+        label: "✈️ Freight Air Cargo – Plane in Flight"
+      },
+      {
+        src: "https://videos.pexels.com/video-files/20654636/20654636-uhd_2560_1440_30fps.mp4",
+        label: "📦 Loading Docks – Trucks at Warehouse"
+      }
+    ];
+
+    let currentIndex = 0;
+    let videoElements = [];
+
+    function createVideoElements() {
+      const container = document.getElementById('videoContainer');
+      videos.forEach((videoData, index) => {
+        const video = document.createElement('video');
+        video.src = videoData.src;
+        video.muted = true;
+        video.playsInline = true;
+        video.className = `hero-video ${index === 0 ? 'active' : ''}`;
+        container.appendChild(video);
+        videoElements.push(video);
+        video.addEventListener('ended', nextVideo);
+      });
+      videoElements[0].play();
+      updateLabelAndDots();
+    }
+
+    function nextVideo() {
+      videoElements[currentIndex].classList.remove('active');
+      videoElements[currentIndex].pause();
+      currentIndex = (currentIndex + 1) % videos.length;
+      videoElements[currentIndex].classList.add('active');
+      videoElements[currentIndex].currentTime = 0;
+      videoElements[currentIndex].play();
+      updateLabelAndDots();
+    }
+
+    function updateLabelAndDots() {
+      document.getElementById('videoLabel').innerHTML = `
+        <span class="text-emerald-400 animate-pulse">●</span> ${videos[currentIndex].label}
+      `;
+      const dotsContainer = document.getElementById('videoDots');
+      dotsContainer.innerHTML = videos.map((_, i) => `
+        <div onclick="jumpToVideo(${i})" 
+             class="w-3 h-3 rounded-full cursor-pointer transition-all ${i === currentIndex ? 'bg-emerald-400 scale-125' : 'bg-white/40'}"></div>
+      `).join('');
+    }
+
+    function jumpToVideo(index) {
+      videoElements[currentIndex].classList.remove('active');
+      videoElements[currentIndex].pause();
+      currentIndex = index;
+      videoElements[currentIndex].classList.add('active');
+      videoElements[currentIndex].currentTime = 0;
+      videoElements[currentIndex].play();
+      updateLabelAndDots();
+    }
+
+    // Scroll Animations
+    function handleScrollAnimations() {
+      const elements = document.querySelectorAll('.fade-in');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) entry.target.classList.add('visible');
+        });
+      }, { threshold: 0.1 });
+      elements.forEach(el => observer.observe(el));
+    }
+
+    // Demo Functions
     function getQuote() {
       alert("Quote request form would open here.\n\nIn a full build, this connects to your quoting engine or CRM.");
     }
@@ -265,28 +367,33 @@
     }
 
     function fakeLogin() {
-      alert("Logged in (demo). In production, this would authenticate users and redirect to the real client portal.");
+      alert("Demo login successful! (Connect to real authentication later)");
       hideLogin();
     }
 
     function fakeTrack() {
-      const input = document.getElementById('trackInput').value.trim();
+      const input = document.getElementById('trackInput').value.trim() || "SL-3921847";
       const result = document.getElementById('trackResult');
-      if (input) {
-        result.innerHTML = `
-          <div class="bg-emerald-900/30 border border-emerald-500 rounded-2xl p-6">
-            <p class="font-medium">Shipment Found: ${input || 'SL-3921847'}</p>
-            <p class="text-emerald-400 mt-2">Status: In Transit — Expected Delivery Tomorrow</p>
-            <p class="text-sm text-zinc-400 mt-4">Current Location: En route from Michigan warehouse</p>
+      result.innerHTML = `
+        <div class="bg-emerald-900/30 border border-emerald-500 rounded-2xl p-8">
+          <div class="flex justify-between mb-6">
+            <span class="font-medium">Shipment ${input}</span>
+            <span class="text-emerald-400">In Transit • Expected Tomorrow</span>
           </div>
-        `;
-        result.classList.remove('hidden');
-      } else {
-        alert("Please enter a tracking number.");
-      }
+          <div class="h-3 bg-zinc-700 rounded-full overflow-hidden mb-6">
+            <div class="h-3 bg-emerald-500 rounded-full w-3/5"></div>
+          </div>
+          <p class="text-sm text-zinc-400">Current location: En route from Michigan distribution center</p>
+        </div>
+      `;
+      result.classList.remove('hidden');
     }
 
-    // Tailwind script already loaded via CDN
+    // Initialize
+    window.onload = () => {
+      createVideoElements();
+      handleScrollAnimations();
+    };
   </script>
 </body>
 </html>
