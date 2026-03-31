@@ -1,352 +1,292 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>SwiftLink Logistics | Nationwide 3PL Brokerage</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-
-<style>
-
-body{
-font-family:'Inter',sans-serif;
-margin:0;
-color:#1a1a1a;
-background:#f6f8fb;
-}
-
-.container{
-max-width:1200px;
-margin:auto;
-padding:0 20px;
-}
-
-/* NAVBAR */
-
-header{
-background:white;
-border-bottom:1px solid #eee;
-}
-
-.navbar{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:20px 0;
-}
-
-.logo{
-font-size:22px;
-font-weight:700;
-color:#0b3d91;
-}
-
-.nav-links a{
-margin-left:25px;
-text-decoration:none;
-color:#333;
-font-weight:500;
-}
-
-/* HERO */
-
-.hero{
-background:linear-gradient(120deg,#0b3d91,#1c66e3);
-color:white;
-padding:120px 0;
-}
-
-.hero h1{
-font-size:46px;
-margin-bottom:15px;
-}
-
-.hero p{
-font-size:20px;
-max-width:600px;
-}
-
-.hero-buttons{
-margin-top:30px;
-}
-
-.hero-buttons button{
-padding:15px 30px;
-margin-right:15px;
-border:none;
-border-radius:5px;
-font-size:16px;
-cursor:pointer;
-}
-
-.primary{
-background:#ff9800;
-color:white;
-}
-
-.secondary{
-background:white;
-color:#0b3d91;
-}
-
-/* SERVICES */
-
-.services{
-padding:80px 0;
-}
-
-.section-title{
-font-size:32px;
-margin-bottom:40px;
-}
-
-.service-grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-gap:25px;
-}
-
-.service-card{
-background:white;
-padding:30px;
-border-radius:8px;
-box-shadow:0 5px 20px rgba(0,0,0,0.05);
-}
-
-/* STATS */
-
-.stats{
-background:#0b3d91;
-color:white;
-padding:70px 0;
-}
-
-.stats-grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-gap:30px;
-text-align:center;
-}
-
-.stat-number{
-font-size:40px;
-font-weight:700;
-}
-
-/* ABOUT */
-
-.about{
-padding:80px 0;
-}
-
-/* QUOTE FORM */
-
-.quote{
-background:#f1f4fa;
-padding:80px 0;
-}
-
-form input,
-form textarea{
-width:100%;
-padding:12px;
-margin-bottom:12px;
-border:1px solid #ccc;
-border-radius:4px;
-}
-
-form button{
-padding:14px;
-width:100%;
-background:#0b3d91;
-color:white;
-border:none;
-font-size:16px;
-}
-
-/* FOOTER */
-
-footer{
-background:#111;
-color:#aaa;
-padding:40px 0;
-text-align:center;
-}
-
-</style>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SwiftLink Logistics, LLC - Premium 3PL Solutions: Warehousing, Fulfillment, Transportation & Real-Time Tracking across the USA.">
+  <title>SwiftLink Logistics • 3PL Warehousing & Fulfillment</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <style>
+    .hero-bg { 
+      background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://picsum.photos/id/1015/2000/1200') center/cover; 
+    }
+    .tracking-bar { animation: pulse 2s infinite; }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+  </style>
 </head>
-
-<body>
-
-<header>
-
-<div class="container navbar">
-
-<div class="logo">SwiftLink Logistics</div>
-
-<div class="nav-links">
-<a href="#services">Services</a>
-<a href="#about">About</a>
-<a href="#quote">Quote</a>
-<a href="#contact">Contact</a>
-</div>
-
-</div>
-
-</header>
-
-<section class="hero">
-
-<div class="container">
-
-<h1>Nationwide 3PL Logistics Brokerage</h1>
-
-<p>
-SwiftLink Logistics connects shippers with trusted freight carriers
-across the United States, delivering reliable transportation solutions
-and competitive freight rates.
-</p>
-
-<div class="hero-buttons">
-
-<button class="primary" onclick="location.href='#quote'">Request Quote</button>
-
-<button class="secondary" onclick="location.href='#contact'">Contact Us</button>
-
-</div>
-
-</div>
-
-</section>
-
-<section class="services" id="services">
-
-<div class="container">
-
-<h2 class="section-title">Our Logistics Services</h2>
-
-<div class="service-grid">
-
-<div class="service-card">
-<h3>Freight Brokerage</h3>
-<p>Connecting shippers with a reliable network of carriers across North America.</p>
-</div>
-
-<div class="service-card">
-<h3>Transportation Management</h3>
-<p>Optimizing routes, carriers, and logistics costs for maximum efficiency.</p>
-</div>
-
-<div class="service-card">
-<h3>Nationwide Coverage</h3>
-<p>Freight solutions serving businesses across the entire United States.</p>
-</div>
-
-<div class="service-card">
-<h3>Dedicated Logistics Support</h3>
-<p>Our team works directly with customers to ensure smooth freight operations.</p>
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-<section class="stats">
-
-<div class="container stats-grid">
-
-<div>
-<div class="stat-number">48</div>
-<p>States Covered</p>
-</div>
-
-<div>
-<div class="stat-number">24/7</div>
-<p>Logistics Support</p>
-</div>
-
-<div>
-<div class="stat-number">1000+</div>
-<p>Carrier Network</p>
-</div>
-
-<div>
-<div class="stat-number">Fast</div>
-<p>Freight Quotes</p>
-</div>
-
-</div>
-
-</section>
-
-<section class="about" id="about">
-
-<div class="container">
-
-<h2 class="section-title">About SwiftLink Logistics</h2>
-
-<p>
-SwiftLink Logistics, LLC is a Michigan-based third-party logistics
-brokerage providing nationwide freight solutions. Our mission is to
-simplify shipping by connecting businesses with reliable carriers and
-efficient transportation services.
-</p>
-
-</div>
-
-</section>
-
-<section class="quote" id="quote">
-
-<div class="container">
-
-<h2 class="section-title">Request a Freight Quote</h2>
-
-<form>
-
-<input type="text" placeholder="Name">
-
-<input type="email" placeholder="Email">
-
-<input type="text" placeholder="Company">
-
-<input type="text" placeholder="Origin">
-
-<input type="text" placeholder="Destination">
-
-<textarea placeholder="Shipment Details"></textarea>
-
-<button type="submit">Submit Quote Request</button>
-
-</form>
-
-</div>
-
-</section>
-
-<footer id="contact">
-
-<div class="container">
-
-<p>SwiftLink Logistics, LLC</p>
-
-<p>Nationwide 3PL Freight Brokerage</p>
-
-<p>Email: info@SwiftLinkUSA.com</p>
-
-<p>Michigan, United States</p>
-
-<p>© 2026 SwiftLink Logistics</p>
-
-</div>
-
-</footer>
-
+<body class="bg-zinc-950 text-white font-sans">
+
+  <!-- NAV -->
+  <nav class="bg-zinc-900 border-b border-zinc-800 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-5 flex justify-between items-center">
+      <div class="flex items-center gap-3">
+        <i class="fa-solid fa-truck-fast text-3xl text-emerald-500"></i>
+        <div>
+          <h1 class="text-2xl font-bold tracking-tighter">SwiftLink</h1>
+          <p class="text-[10px] text-emerald-400 -mt-1">LOGISTICS, LLC</p>
+        </div>
+      </div>
+      <div class="hidden md:flex items-center gap-8 text-sm font-medium">
+        <a href="#services" class="hover:text-emerald-400 transition">Services</a>
+        <a href="#track" class="hover:text-emerald-400 transition">Track Shipment</a>
+        <a href="#portal" class="hover:text-emerald-400 transition">Client Portal</a>
+        <a href="#about" class="hover:text-emerald-400 transition">About Us</a>
+        <a href="#pricing" class="hover:text-emerald-400 transition">Pricing</a>
+      </div>
+      <div class="flex items-center gap-4">
+        <button onclick="showLogin()" 
+                class="px-6 py-2.5 text-sm font-semibold border border-white/30 hover:border-white rounded-2xl transition">
+          Client Login
+        </button>
+        <button onclick="getQuote()" 
+                class="bg-emerald-500 hover:bg-emerald-600 px-8 py-2.5 rounded-2xl font-semibold transition">
+          Get Instant Quote
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero-bg h-screen flex items-center">
+    <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+      <div>
+        <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur px-4 py-1.5 rounded-full text-sm mb-6">
+          <span class="text-emerald-400">●</span> Nationwide 3PL Coverage
+        </div>
+        <h2 class="text-6xl md:text-7xl font-bold tracking-tighter leading-none mb-6">
+          Fast. Reliable.<br>SwiftLink Logistics.
+        </h2>
+        <p class="text-xl text-zinc-300 mb-10 max-w-lg">
+          Your trusted 3PL partner for warehousing, order fulfillment, transportation, and real-time visibility. 
+          Scale your business with confidence.
+        </p>
+        <div class="flex flex-wrap gap-4">
+          <button onclick="getQuote()" 
+                  class="bg-white text-black hover:bg-emerald-500 hover:text-white px-10 py-5 rounded-3xl text-lg font-semibold flex items-center gap-3">
+            <span>Get Free Quote</span>
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+          <button onclick="document.getElementById('track').scrollIntoView({behavior:'smooth'})" 
+                  class="border border-white/60 hover:border-white px-10 py-5 rounded-3xl text-lg font-semibold">
+            Track Your Shipment →
+          </button>
+        </div>
+        <div class="mt-12 flex items-center gap-8 text-sm">
+          <div>⭐⭐⭐⭐⭐ <span class="text-zinc-400">Trusted by growing brands nationwide</span></div>
+        </div>
+      </div>
+      <div class="hidden md:block bg-white/10 backdrop-blur-xl border border-white/10 rounded-3xl p-8">
+        <div class="bg-zinc-900 rounded-2xl p-6">
+          <div class="text-emerald-400 text-sm font-medium mb-2 flex items-center gap-2">
+            <i class="fa-solid fa-circle-dot"></i> LIVE TRACKING EXAMPLE
+          </div>
+          <div class="flex justify-between text-sm mb-6">
+            <div>Shipment #SL-3921847</div>
+            <div class="text-emerald-400">In Transit • Michigan → Texas</div>
+          </div>
+          <div class="h-2 bg-zinc-700 rounded-full mb-8 relative overflow-hidden">
+            <div class="tracking-bar absolute left-[45%] top-0 h-2 w-1/3 bg-emerald-500 rounded-full"></div>
+          </div>
+          <div class="grid grid-cols-4 gap-2 text-center text-xs">
+            <div class="bg-zinc-800 p-3 rounded-2xl">Picked</div>
+            <div class="bg-zinc-800 p-3 rounded-2xl">Packed</div>
+            <div class="bg-emerald-900/50 p-3 rounded-2xl border border-emerald-500">In Transit</div>
+            <div class="bg-zinc-800 p-3 rounded-2xl">Delivered</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- TRUST BAR -->
+  <div class="bg-zinc-900 py-6 border-b border-zinc-800">
+    <div class="max-w-7xl mx-auto px-6 flex flex-wrap justify-center gap-12 items-center text-sm opacity-75">
+      <div class="flex items-center gap-3"><i class="fa-solid fa-warehouse"></i> Multiple US Warehouses</div>
+      <div class="flex items-center gap-3"><i class="fa-solid fa-box"></i> Same-Day Fulfillment</div>
+      <div class="flex items-center gap-3"><i class="fa-solid fa-truck"></i> Nationwide Coverage</div>
+      <div class="flex items-center gap-3"><i class="fa-solid fa-shield-halved"></i> Fully Insured</div>
+    </div>
+  </div>
+
+  <!-- SERVICES -->
+  <section id="services" class="py-24 bg-zinc-900">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16">
+        <h3 class="text-emerald-400 font-medium">WHAT WE OFFER</h3>
+        <h2 class="text-5xl font-bold tracking-tighter mt-3">End-to-End 3PL Solutions</h2>
+      </div>
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="bg-zinc-950 border border-zinc-800 rounded-3xl p-10 hover:border-emerald-500 transition group">
+          <i class="fa-solid fa-warehouse text-5xl text-emerald-500 mb-6"></i>
+          <h4 class="text-2xl font-semibold mb-4">Warehousing & Storage</h4>
+          <p class="text-zinc-400">Climate-controlled, secure facilities with real-time inventory visibility. Flexible space for any volume.</p>
+          <ul class="mt-8 space-y-3 text-sm">
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Pallet & bulk storage</li>
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Pick & pack services</li>
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Returns processing</li>
+          </ul>
+        </div>
+        <div class="bg-zinc-950 border border-zinc-800 rounded-3xl p-10 hover:border-emerald-500 transition group">
+          <i class="fa-solid fa-boxes-stacked text-5xl text-emerald-500 mb-6"></i>
+          <h4 class="text-2xl font-semibold mb-4">Order Fulfillment</h4>
+          <p class="text-zinc-400">Seamless integration with Shopify, Amazon, Walmart, and more. Accurate, fast fulfillment every time.</p>
+          <ul class="mt-8 space-y-3 text-sm">
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Same & next-day shipping</li>
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Kitting & bundling</li>
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Multi-channel sync</li>
+          </ul>
+        </div>
+        <div class="bg-zinc-950 border border-zinc-800 rounded-3xl p-10 hover:border-emerald-500 transition group">
+          <i class="fa-solid fa-road text-5xl text-emerald-500 mb-6"></i>
+          <h4 class="text-2xl font-semibold mb-4">Transportation Management</h4>
+          <p class="text-zinc-400">LTL, FTL, parcel, and dedicated fleets. Optimized routing for cost and speed.</p>
+          <ul class="mt-8 space-y-3 text-sm">
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Carrier network access</li>
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Real-time GPS tracking</li>
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Freight auditing</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRACK SHIPMENT -->
+  <section id="track" class="py-24 bg-black">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+      <h3 class="text-emerald-400 font-medium">REAL-TIME VISIBILITY</h3>
+      <h2 class="text-5xl font-bold tracking-tighter mt-3 mb-8">Track Your Shipment Instantly</h2>
+      <div class="bg-zinc-900 rounded-3xl p-10 max-w-md mx-auto">
+        <input id="trackInput" type="text" placeholder="Enter Tracking Number (e.g. SL-3921847)" 
+               class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-6 py-5 text-lg focus:outline-none focus:border-emerald-500">
+        <button onclick="fakeTrack()" 
+                class="mt-6 w-full bg-emerald-500 hover:bg-emerald-600 py-5 rounded-2xl font-semibold text-lg">
+          Track Now
+        </button>
+        <div id="trackResult" class="mt-8 hidden text-left"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLIENT PORTAL TEASER -->
+  <section id="portal" class="py-24 bg-zinc-900">
+    <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
+      <div>
+        <h2 class="text-5xl font-bold tracking-tighter">Client Portal Access</h2>
+        <p class="text-xl text-zinc-300 mt-6">Manage inventory, view orders, generate reports, and control your logistics 24/7 from one secure dashboard.</p>
+        <ul class="mt-10 space-y-6">
+          <li class="flex gap-5"><i class="fa-solid fa-check-circle text-emerald-500 mt-1"></i> <div>Real-time inventory levels and alerts</div></li>
+          <li class="flex gap-5"><i class="fa-solid fa-check-circle text-emerald-500 mt-1"></i> <div>Order history and analytics</div></li>
+          <li class="flex gap-5"><i class="fa-solid fa-check-circle text-emerald-500 mt-1"></i> <div>Automated reporting & billing</div></li>
+        </ul>
+        <button onclick="showLogin()" class="mt-10 bg-white text-black px-10 py-4 rounded-2xl font-semibold hover:bg-emerald-400">Login to Portal →</button>
+      </div>
+      <div class="bg-zinc-800 border border-zinc-700 rounded-3xl p-8 aspect-video flex items-center justify-center text-zinc-500">
+        <div class="text-center">
+          <i class="fa-solid fa-laptop text-6xl mb-4"></i>
+          <p class="text-lg">Secure Client Dashboard Preview</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER / CONTACT -->
+  <footer class="bg-black py-20 border-t border-zinc-800">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="flex flex-col md:flex-row justify-between gap-12">
+        <div>
+          <div class="flex items-center gap-3 mb-6">
+            <i class="fa-solid fa-truck-fast text-3xl text-emerald-500"></i>
+            <h1 class="text-3xl font-bold tracking-tighter">SwiftLink Logistics, LLC</h1>
+          </div>
+          <p class="text-zinc-400 max-w-xs">Your reliable 3PL partner delivering speed, accuracy, and transparency.</p>
+          <p class="mt-8 text-sm text-zinc-500">© 2026 SwiftLink Logistics, LLC. All rights reserved.<br>
+          swiftlinkusa.com</p>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-12">
+          <div>
+            <h4 class="font-semibold mb-4">Company</h4>
+            <ul class="space-y-3 text-sm text-zinc-400">
+              <li><a href="#" class="hover:text-white">About Us</a></li>
+              <li><a href="#" class="hover:text-white">Careers</a></li>
+              <li><a href="#" class="hover:text-white">Contact</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-semibold mb-4">Services</h4>
+            <ul class="space-y-3 text-sm text-zinc-400">
+              <li><a href="#" class="hover:text-white">Warehousing</a></li>
+              <li><a href="#" class="hover:text-white">Fulfillment</a></li>
+              <li><a href="#" class="hover:text-white">Transportation</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-semibold mb-4">Support</h4>
+            <ul class="space-y-3 text-sm text-zinc-400">
+              <li><a href="#" class="hover:text-white">Track Shipment</a></li>
+              <li><a href="#" class="hover:text-white">Client Portal</a></li>
+              <li><a href="#" class="hover:text-white">Get Quote</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="text-center text-xs text-zinc-600 mt-20">
+        This is a starter template. Replace placeholder images, add your real contact details, logo, and integrate with actual backend systems for login, tracking, and quoting.
+      </div>
+    </div>
+  </footer>
+
+  <!-- LOGIN MODAL -->
+  <div id="loginModal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-[100]">
+    <div class="bg-zinc-900 rounded-3xl p-10 max-w-md w-full mx-4">
+      <h3 class="text-2xl font-bold mb-8">Client Portal Login</h3>
+      <input type="email" placeholder="Email" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-6 py-5 mb-4">
+      <input type="password" placeholder="Password" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-6 py-5 mb-8">
+      <button onclick="fakeLogin()" class="w-full bg-emerald-500 py-5 rounded-2xl font-semibold">Sign In</button>
+      <p class="text-center text-sm text-zinc-500 mt-6">Demo only — connect to your real auth system later.</p>
+      <button onclick="hideLogin()" class="absolute top-6 right-6 text-zinc-400 hover:text-white">✕</button>
+    </div>
+  </div>
+
+  <script>
+    function getQuote() {
+      alert("Quote request form would open here.\n\nIn a full build, this connects to your quoting engine or CRM.");
+    }
+
+    function showLogin() {
+      document.getElementById('loginModal').classList.remove('hidden');
+    }
+
+    function hideLogin() {
+      document.getElementById('loginModal').classList.add('hidden');
+    }
+
+    function fakeLogin() {
+      alert("Logged in (demo). In production, this would authenticate users and redirect to the real client portal.");
+      hideLogin();
+    }
+
+    function fakeTrack() {
+      const input = document.getElementById('trackInput').value.trim();
+      const result = document.getElementById('trackResult');
+      if (input) {
+        result.innerHTML = `
+          <div class="bg-emerald-900/30 border border-emerald-500 rounded-2xl p-6">
+            <p class="font-medium">Shipment Found: ${input || 'SL-3921847'}</p>
+            <p class="text-emerald-400 mt-2">Status: In Transit — Expected Delivery Tomorrow</p>
+            <p class="text-sm text-zinc-400 mt-4">Current Location: En route from Michigan warehouse</p>
+          </div>
+        `;
+        result.classList.remove('hidden');
+      } else {
+        alert("Please enter a tracking number.");
+      }
+    }
+
+    // Tailwind script already loaded via CDN
+  </script>
 </body>
-
 </html>
