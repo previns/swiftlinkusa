@@ -3,7 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="SwiftLink Logistics, LLC - Premium 3PL Transportation Solutions: FTL, LTL, Drayage & Port Services with Real-Time Tracking.">
+  <meta name="description" content="SwiftLink Logistics is a Michigan-based 3PL freight broker offering FTL, LTL, drayage, expedited, heavy haul, and hazmat shipping across 48 states.">
+  <meta name="keywords" content="3PL, freight broker, logistics company, FTL shipping, LTL shipping, drayage, expedited freight, heavy haul, hazmat transport, Michigan logistics, freight brokerage, supply chain, transportation management">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://swiftlinkusa.com/">
+  <meta property="og:title" content="SwiftLink Logistics - 3PL Freight Brokerage | Ship with Confidence">
+  <meta property="og:description" content="Michigan-based 3PL freight broker offering FTL, LTL, drayage, expedited, heavy haul, and hazmat shipping across all 48 contiguous states.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://swiftlinkusa.com/">
+  <meta property="og:site_name" content="SwiftLink Logistics">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="SwiftLink Logistics - 3PL Freight Brokerage | Ship with Confidence">
+  <meta name="twitter:description" content="Michigan-based 3PL freight broker offering FTL, LTL, drayage, expedited, heavy haul, and hazmat shipping across all 48 contiguous states.">
   <title>SwiftLink Logistics • Ship with Confidence v2</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
@@ -24,31 +35,79 @@
 
   <!-- NAV -->
   <nav class="bg-slate-900/95 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-6 py-5 flex justify-between items-center">
-      <div class="flex items-center gap-3">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <a href="index.html" class="flex items-center gap-3">
         <i class="fa-solid fa-truck-fast text-3xl text-orange-500"></i>
         <div>
           <h1 class="text-2xl font-bold tracking-tighter">SwiftLink</h1>
           <p class="text-[10px] text-orange-500 -mt-1">LOGISTICS, LLC</p>
         </div>
-      </div>
+      </a>
       <div class="hidden md:flex items-center gap-8 text-sm font-medium">
-        <a href="#solutions" class="hover:text-orange-500 transition">Solutions</a>
-        <a href="#track" class="hover:text-orange-500 transition">Track Shipment</a>
-        <a href="#portal" class="hover:text-orange-500 transition">Client Portal</a>
-        <a href="#why-us" class="hover:text-orange-500 transition">Why Us</a>
-        <a href="#pricing" class="hover:text-orange-500 transition">Pricing</a>
+        <!-- Solutions mega dropdown -->
+        <div class="relative" id="solDropdown">
+          <button onclick="toggleSolDropdown()" class="flex items-center gap-1.5 hover:text-orange-500 transition py-2">
+            Solutions <i class="fa-solid fa-chevron-down text-[10px] opacity-50"></i>
+          </button>
+          <div id="solMenu" class="hidden absolute top-full left-1/2 -translate-x-1/2 pt-3 z-50">
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 w-[540px] shadow-2xl grid grid-cols-2 gap-1" style="box-shadow: 0 25px 60px rgba(0,0,0,0.7);">
+              <a href="ftl.html" class="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-800 transition">
+                <i class="fa-solid fa-truck text-orange-500 mt-0.5 text-sm"></i>
+                <div>
+                  <p class="font-semibold text-sm">Full Truckload (FTL)</p>
+                  <p class="text-xs text-slate-500 mt-0.5">Dedicated trailers, direct delivery</p>
+                </div>
+              </a>
+              <a href="ltl.html" class="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-800 transition">
+                <i class="fa-solid fa-boxes-stacked text-orange-500 mt-0.5 text-sm"></i>
+                <div>
+                  <p class="font-semibold text-sm">Less-Than-Truckload (LTL)</p>
+                  <p class="text-xs text-slate-500 mt-0.5">Cost-effective shared freight</p>
+                </div>
+              </a>
+              <a href="drayage.html" class="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-800 transition">
+                <i class="fa-solid fa-ship text-orange-500 mt-0.5 text-sm"></i>
+                <div>
+                  <p class="font-semibold text-sm">Drayage &amp; Port Services</p>
+                  <p class="text-xs text-slate-500 mt-0.5">Container pickup &amp; port delivery</p>
+                </div>
+              </a>
+              <a href="expedited.html" class="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-800 transition">
+                <i class="fa-solid fa-bolt text-orange-500 mt-0.5 text-sm"></i>
+                <div>
+                  <p class="font-semibold text-sm">Expedited Freight</p>
+                  <p class="text-xs text-slate-500 mt-0.5">Time-critical, guaranteed windows</p>
+                </div>
+              </a>
+              <a href="heavy-haul.html" class="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-800 transition">
+                <i class="fa-solid fa-weight-hanging text-orange-500 mt-0.5 text-sm"></i>
+                <div>
+                  <p class="font-semibold text-sm">Heavy Haul</p>
+                  <p class="text-xs text-slate-500 mt-0.5">Oversize &amp; overweight loads</p>
+                </div>
+              </a>
+              <a href="hazmat.html" class="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-800 transition">
+                <i class="fa-solid fa-biohazard text-orange-500 mt-0.5 text-sm"></i>
+                <div>
+                  <p class="font-semibold text-sm">Hazmat Shipping</p>
+                  <p class="text-xs text-slate-500 mt-0.5">Certified hazardous materials</p>
+                </div>
+              </a>
+              <div class="col-span-2 mt-2 pt-3 border-t border-slate-800">
+                <a href="quote.html" class="flex items-center justify-center gap-2 text-sm text-orange-500 hover:text-orange-400 font-semibold transition">
+                  <i class="fa-solid fa-arrow-right"></i> Request a Quote for Any Service
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <a href="about.html" class="hover:text-orange-500 transition">About</a>
+        <a href="contact.html" class="hover:text-orange-500 transition">Contact</a>
+        <a href="careers.html" class="hover:text-orange-500 transition">Careers</a>
       </div>
-      <div class="flex items-center gap-4">
-        <button onclick="showLogin()" 
-                class="px-6 py-2.5 text-sm font-semibold border border-white/30 hover:border-white rounded-2xl transition">
-          Client Login
-        </button>
-        <a href="quote.html"
-                class="bg-orange-500 hover:bg-orange-600 px-8 py-2.5 rounded-2xl font-semibold transition">
-          Get Instant Quote
-        </a>
-      </div>
+      <a href="quote.html" class="bg-orange-500 hover:bg-orange-600 px-8 py-2.5 rounded-2xl font-semibold text-sm transition">
+        Get Instant Quote
+      </a>
     </div>
   </nav>
 
@@ -59,7 +118,6 @@
     
     <div class="relative max-w-7xl mx-auto px-6 z-10">
       <div class="max-w-2xl">
-        <div id="videoLabel" class="inline-flex items-center gap-2 bg-white/10 backdrop-blur px-5 py-2 rounded-full text-sm mb-6"></div>
         <h2 class="text-6xl md:text-7xl font-bold tracking-tighter leading-none mb-6 fade-in">
           Ship with Confidence.<br><span class="text-orange-500">SwiftLink Logistics.</span>
         </h2>
@@ -72,10 +130,6 @@
                   class="bg-white text-black hover:bg-orange-500 hover:text-white px-10 py-5 rounded-3xl text-lg font-semibold flex items-center gap-3 transition">
             Get Free Quote <i class="fa-solid fa-arrow-right"></i>
           </a>
-          <button onclick="document.getElementById('track').scrollIntoView({behavior:'smooth'})" 
-                  class="border border-white/70 hover:border-white px-10 py-5 rounded-3xl text-lg font-semibold transition">
-            Track Shipment →
-          </button>
         </div>
       </div>
     </div>
@@ -113,7 +167,7 @@
           <p class="text-slate-400 mt-3 text-lg">On-Time Delivery</p>
         </div>
         <div class="fade-in">
-          <div class="stat-number text-orange-500">250+</div>
+          <div class="stat-number text-orange-500">5000+</div>
           <p class="text-slate-400 mt-3 text-lg">Carrier Partners</p>
         </div>
       </div>
@@ -132,56 +186,32 @@
         <div class="service-card bg-slate-950 border border-slate-800 rounded-3xl p-8 fade-in">
           <i class="fa-solid fa-truck text-5xl text-orange-500 mb-6"></i>
           <h4 class="text-2xl font-semibold mb-3">Full Truckload (FTL)</h4>
-          <p class="text-slate-400">Dedicated trailers for your largest and most time-sensitive shipments. Direct and secure.</p>
+          <p class="text-slate-400">Dedicated 53' trailers exclusively for your freight. Ideal for high-volume shipments that fill an entire trailer — dry van, flatbed, or reefer. Direct point-to-point delivery with no stops, no handling, and the fastest transit times available.</p>
         </div>
         <div class="service-card bg-slate-950 border border-slate-800 rounded-3xl p-8 fade-in">
           <i class="fa-solid fa-boxes-stacked text-5xl text-orange-500 mb-6"></i>
           <h4 class="text-2xl font-semibold mb-3">Less-Than-Truckload (LTL)</h4>
-          <p class="text-slate-400">Cost-effective shared freight shipping with reliable transit times.</p>
+          <p class="text-slate-400">Share trailer space and only pay for what you ship. Perfect for palletized freight that doesn't require a full trailer — from 1 to 14 pallets. Consolidated with other shipments for maximum cost efficiency without sacrificing reliability.</p>
         </div>
         <div class="service-card bg-slate-950 border border-slate-800 rounded-3xl p-8 fade-in">
           <i class="fa-solid fa-ship text-5xl text-orange-500 mb-6"></i>
           <h4 class="text-2xl font-semibold mb-3">Drayage &amp; Port Services</h4>
-          <p class="text-slate-400">Fast container pickup and delivery from all major U.S. ports to your warehouse or distribution center.</p>
+          <p class="text-slate-400">Container pickup and delivery from all major U.S. ports to your warehouse or distribution center. We handle chassis management, port fees, and last-mile delivery so your imports move seamlessly from vessel to final destination.</p>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- TRACK SHIPMENT -->
-  <section id="track" class="py-24 bg-slate-950">
-    <div class="max-w-4xl mx-auto px-6 text-center">
-      <h3 class="text-orange-500 font-medium">REAL-TIME VISIBILITY</h3>
-      <h2 class="text-5xl font-bold tracking-tighter mt-3 mb-8">Track Your Shipment Instantly</h2>
-      <div class="bg-slate-900 rounded-3xl p-10 max-w-md mx-auto">
-        <input id="trackInput" type="text" placeholder="Enter Tracking Number (e.g. SL-3921847)" 
-               class="w-full bg-slate-800 border border-slate-700 rounded-2xl px-6 py-5 text-lg focus:outline-none focus:border-orange-500">
-        <button onclick="fakeTrack()" 
-                class="mt-6 w-full bg-orange-500 hover:bg-orange-500-dark py-5 rounded-2xl font-semibold text-lg transition">
-          Track Now
-        </button>
-        <div id="trackResult" class="mt-8 hidden text-left"></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CLIENT PORTAL -->
-  <section id="portal" class="py-24 bg-slate-900">
-    <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
-      <div class="fade-in">
-        <h2 class="text-5xl font-bold tracking-tighter">Client Portal Access</h2>
-        <p class="text-xl text-slate-300 mt-6">Manage shipments, view real-time tracking, access reports, and control your logistics 24/7.</p>
-        <ul class="mt-10 space-y-6 text-slate-300">
-          <li class="flex gap-4"><i class="fa-solid fa-check-circle text-orange-500 mt-1"></i>Real-time shipment tracking</li>
-          <li class="flex gap-4"><i class="fa-solid fa-check-circle text-orange-500 mt-1"></i>Detailed shipment history &amp; analytics</li>
-          <li class="flex gap-4"><i class="fa-solid fa-check-circle text-orange-500 mt-1"></i>Automated reporting &amp; documents</li>
-        </ul>
-        <button onclick="showLogin()" class="mt-10 bg-white text-black px-10 py-4 rounded-2xl font-semibold hover:bg-orange-600 transition">Login to Portal →</button>
-      </div>
-      <div class="bg-slate-800 border border-slate-700 rounded-3xl p-8 aspect-video flex items-center justify-center text-slate-400 fade-in">
-        <div class="text-center">
-          <i class="fa-solid fa-laptop text-7xl mb-6"></i>
-          <p class="text-lg">Secure Dashboard Preview</p>
+        <div class="service-card bg-slate-950 border border-slate-800 rounded-3xl p-8 fade-in">
+          <i class="fa-solid fa-bolt text-5xl text-orange-500 mb-6"></i>
+          <h4 class="text-2xl font-semibold mb-3">Expedited Freight</h4>
+          <p class="text-slate-400">Time-critical shipments that can't wait. Dedicated team drivers, straight trucks, or sprinter vans for guaranteed delivery windows. Hot shots, emergency restocks, and production-line-down situations handled around the clock.</p>
+        </div>
+        <div class="service-card bg-slate-950 border border-slate-800 rounded-3xl p-8 fade-in">
+          <i class="fa-solid fa-weight-hanging text-5xl text-orange-500 mb-6"></i>
+          <h4 class="text-2xl font-semibold mb-3">Heavy Haul</h4>
+          <p class="text-slate-400">Oversize and overweight loads that require specialized equipment. Flatbeds, step decks, lowboys, and RGN trailers for machinery, construction equipment, and industrial cargo. We manage permits, escorts, and route planning.</p>
+        </div>
+        <div class="service-card bg-slate-950 border border-slate-800 rounded-3xl p-8 fade-in">
+          <i class="fa-solid fa-biohazard text-5xl text-orange-500 mb-6"></i>
+          <h4 class="text-2xl font-semibold mb-3">Hazmat Shipping</h4>
+          <p class="text-slate-400">Certified hazardous materials transportation across all classes. Our hazmat-endorsed carriers are fully compliant with DOT and FMCSA regulations. Proper placarding, documentation, and safety protocols handled end to end.</p>
         </div>
       </div>
     </div>
@@ -230,66 +260,53 @@
           <div>
             <h4 class="font-semibold mb-4">Company</h4>
             <ul class="space-y-3 text-sm text-slate-400">
-              <li><a href="#" class="hover:text-white">About Us</a></li>
-              <li><a href="#" class="hover:text-white">Careers</a></li>
-              <li><a href="#" class="hover:text-white">Contact</a></li>
+              <li><a href="about.html" class="hover:text-white">About Us</a></li>
+              <li><a href="careers.html" class="hover:text-white">Careers</a></li>
+              <li><a href="contact.html" class="hover:text-white">Contact</a></li>
             </ul>
           </div>
           <div>
             <h4 class="font-semibold mb-4">Solutions</h4>
             <ul class="space-y-3 text-sm text-slate-400">
-              <li><a href="#" class="hover:text-white">Full Truckload</a></li>
-              <li><a href="#" class="hover:text-white">LTL Shipping</a></li>
-              <li><a href="#" class="hover:text-white">Drayage Services</a></li>
+              <li><a href="ftl.html" class="hover:text-white">Full Truckload</a></li>
+              <li><a href="ltl.html" class="hover:text-white">LTL Shipping</a></li>
+              <li><a href="drayage.html" class="hover:text-white">Drayage Services</a></li>
+              <li><a href="expedited.html" class="hover:text-white">Expedited</a></li>
+              <li><a href="heavy-haul.html" class="hover:text-white">Heavy Haul</a></li>
+              <li><a href="hazmat.html" class="hover:text-white">Hazmat</a></li>
             </ul>
           </div>
           <div>
             <h4 class="font-semibold mb-4">Support</h4>
             <ul class="space-y-3 text-sm text-slate-400">
-              <li><a href="#" class="hover:text-white">Track Shipment</a></li>
-              <li><a href="#" class="hover:text-white">Client Portal</a></li>
-              <li><a href="#" class="hover:text-white">Get Quote</a></li>
+              <li><a href="quote.html" class="hover:text-white">Get Quote</a></li>
+              <li><a href="faq.html" class="hover:text-white">FAQ</a></li>
             </ul>
           </div>
           <div>
             <h4 class="font-semibold mb-4">Contact</h4>
             <p class="text-sm text-slate-400">info@swiftlinkusa.com</p>
-            <p class="text-sm text-slate-400">(248) 555-0123</p>
+            <p class="text-sm text-slate-400">(248) 987-6776</p>
           </div>
         </div>
       </div>
     </div>
   </footer>
 
-  <!-- LOGIN MODAL -->
-  <div id="loginModal" class="hidden fixed inset-0 bg-slate-950/80 flex items-center justify-center z-[100]">
-    <div class="bg-slate-900 rounded-3xl p-10 max-w-md w-full mx-4 relative">
-      <h3 class="text-2xl font-bold mb-8">Client Portal Login</h3>
-      <input type="email" placeholder="Email" class="w-full bg-slate-800 border border-slate-700 rounded-2xl px-6 py-5 mb-4">
-      <input type="password" placeholder="Password" class="w-full bg-slate-800 border border-slate-700 rounded-2xl px-6 py-5 mb-8">
-      <button onclick="fakeLogin()" class="w-full bg-orange-500 py-5 rounded-2xl font-semibold">Sign In</button>
-      <button onclick="hideLogin()" class="absolute top-6 right-6 text-2xl text-slate-400 hover:text-white">✕</button>
-    </div>
-  </div>
-
   <script>
     // Cycling Videos
     const videos = [
       {
-        src: "https://videos.pexels.com/video-files/11578656/11578656-uhd_2560_1440_30fps.mp4",
-        label: "📍 Aerial Highway – Semi Trucks in Motion"
-      },
-      {
         src: "https://videos.pexels.com/video-files/35908013/15231430_2560_1440_25fps.mp4",
-        label: "🚢 Port Operations – Container Loading"
+        label: "🚢 Drayage"
       },
       {
-        src: "https://videos.pexels.com/video-files/855130/855130-hd_1920_1080_30fps.mp4",
-        label: "✈️ Freight Air Cargo – Plane in Flight"
+        src: "https://videos.pexels.com/video-files/11578656/11578656-uhd_2560_1440_30fps.mp4",
+        label: "📍 Full Truckload"
       },
       {
         src: "https://videos.pexels.com/video-files/20654636/20654636-uhd_2560_1440_30fps.mp4",
-        label: "📦 Loading Docks – Trucks at Warehouse"
+        label: "📦 Less-than Truckload"
       }
     ];
 
@@ -323,9 +340,6 @@
     }
 
     function updateLabelAndDots() {
-      document.getElementById('videoLabel').innerHTML = `
-        <span class="text-orange-500 animate-pulse">●</span> ${videos[currentIndex].label}
-      `;
       const dotsContainer = document.getElementById('videoDots');
       dotsContainer.innerHTML = videos.map((_, i) => `
         <div onclick="jumpToVideo(${i})" 
@@ -354,41 +368,19 @@
       elements.forEach(el => observer.observe(el));
     }
 
-    // Demo Functions
-    function getQuote() {
-      alert("Quote request form would open here.\n\nIn a full build, this connects to your quoting engine or CRM.");
+    // Solutions Dropdown
+    function toggleSolDropdown() {
+      document.getElementById('solMenu').classList.toggle('hidden');
     }
-
-    function showLogin() {
-      document.getElementById('loginModal').classList.remove('hidden');
-    }
-
-    function hideLogin() {
-      document.getElementById('loginModal').classList.add('hidden');
-    }
-
-    function fakeLogin() {
-      alert("Demo login successful! (Connect to real authentication later)");
-      hideLogin();
-    }
-
-    function fakeTrack() {
-      const input = document.getElementById('trackInput').value.trim() || "SL-3921847";
-      const result = document.getElementById('trackResult');
-      result.innerHTML = `
-        <div class="bg-orange-500/20 border border-orange-500 rounded-2xl p-8">
-          <div class="flex justify-between mb-6">
-            <span class="font-medium">Shipment ${input}</span>
-            <span class="text-orange-500">In Transit • Expected Tomorrow</span>
-          </div>
-          <div class="h-3 bg-slate-700 rounded-full overflow-hidden mb-6">
-            <div class="h-3 bg-orange-500 rounded-full w-3/5"></div>
-          </div>
-          <p class="text-sm text-slate-400">Current location: En route from Michigan distribution center</p>
-        </div>
-      `;
-      result.classList.remove('hidden');
-    }
+    (function() {
+      const dd = document.getElementById('solDropdown');
+      const menu = document.getElementById('solMenu');
+      dd.addEventListener('mouseenter', () => menu.classList.remove('hidden'));
+      dd.addEventListener('mouseleave', () => menu.classList.add('hidden'));
+      document.addEventListener('click', (e) => {
+        if (!dd.contains(e.target)) menu.classList.add('hidden');
+      });
+    })();
 
     // Initialize
     window.onload = () => {
@@ -396,5 +388,37 @@
       handleScrollAnimations();
     };
   </script>
+<!-- JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "@id": "https://swiftlinkusa.com/#organization",
+  "name": "SwiftLink Logistics, LLC",
+  "url": "https://swiftlinkusa.com",
+  "telephone": "+1-248-987-6776",
+  "email": "info@swiftlinkusa.com",
+  "address": {
+    "@type": "PostalAddress",
+    "addressRegion": "MI",
+    "addressCountry": "US"
+  },
+  "areaServed": {
+    "@type": "Country",
+    "name": "US",
+    "description": "48 contiguous states"
+  },
+  "description": "SwiftLink Logistics is a Michigan-based 3PL freight brokerage offering full truckload, less-than-truckload, drayage, expedited, heavy haul, and hazmat shipping services across 48 states.",
+  "serviceType": [
+    "Full Truckload (FTL) Shipping",
+    "Less-Than-Truckload (LTL) Shipping",
+    "Drayage & Port Services",
+    "Expedited Freight Shipping",
+    "Heavy Haul & Oversize Freight",
+    "Hazardous Materials (Hazmat) Shipping"
+  ],
+  "sameAs": []
+}
+</script>
 </body>
 </html>

@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Affordable LTL shipping with SwiftLink Logistics. Cost-effective shared freight for 1-14 pallets, 150-15,000 lbs with nationwide carrier coverage.">
+  <meta name="keywords" content="LTL shipping, less than truckload, partial load shipping, pallet shipping, shared freight, LTL carrier, LTL freight rates, small shipment logistics, cost-effective freight">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://swiftlinkusa.com/ltl.html">
+  <meta property="og:title" content="Less-Than-Truckload (LTL) Shipping | SwiftLink Logistics">
+  <meta property="og:description" content="Cost-effective LTL shipping for 1-14 pallets. Nationwide carrier network with competitive rates and reliable delivery.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://swiftlinkusa.com/ltl.html">
+  <meta property="og:site_name" content="SwiftLink Logistics">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Less-Than-Truckload (LTL) Shipping | SwiftLink Logistics">
+  <meta name="twitter:description" content="Cost-effective LTL shipping for 1-14 pallets. Nationwide carrier network with competitive rates and reliable delivery.">
+  <title>Less-Than-Truckload (LTL) Shipping • SwiftLink Logistics</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <style>
+    .fade-in { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+    .hero-video-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: 0; }
+    .hero-video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 1; }
+    .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0,0,0,0.45), rgba(0,0,0,0.85)); z-index: 1; }
+  </style>
+</head>
+<body class="bg-slate-950 text-white font-sans overflow-x-hidden">
+
+  <!-- NAV -->
+  <nav class="bg-slate-900/95 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <a href="index.html" class="flex items-center gap-3">
+        <i class="fa-solid fa-truck-fast text-3xl text-orange-500"></i>
+        <div>
+          <h1 class="text-2xl font-bold tracking-tighter">SwiftLink</h1>
+          <p class="text-[10px] text-orange-500 -mt-1">LOGISTICS, LLC</p>
+        </div>
+      </a>
+      <div class="hidden md:flex items-center gap-8 text-sm font-medium">
+        <div class="relative" id="solDropdown">
+          <button onclick="toggleSolDropdown()" class="flex items-center gap-1.5 hover:text-orange-500 transition py-2">
+            Solutions <i class="fa-solid fa-chevron-down text-[10px] opacity-50"></i>
+          </button>
+          <div id="solMenu" class="hidden absolute top-full left-1/2 -translate-x-1/2 pt-3 z-50">
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 w-[540px] shadow-2xl grid grid-cols-2 gap-1" style="box-shadow: 0 25px 60px rgba(0,0,0,0.7);">
+              <a href="ftl.html" class="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-800 transition">
+                <i class="fa-solid fa-truck text-orange-500 mt-0.5 text-sm"></i>
+                <div><p class="font-semibold text-sm">Full Truckload (FTL)</p><p class="text-xs text-slate-500 mt-0.5">Dedicated trailers, direct delivery</p></div>
+              </a>
+              <a href="ltl.html" class="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-800 transition">
+                <i class="fa-solid fa-boxes-stacked text-orange-500 mt-0.5 text-sm"></i>
+                <div><p class="font-semibold text-sm">Less-Than-Truckload (LTL)</p><p class="text-xs text-slate-500 mt-0.5">Cost-effective shared freight</p></div>
+              </a>
+              <a href="drayage.html" class="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-800 transition">
+                <i class="fa-solid fa-ship text-orange-500 mt-0.5 text-sm"></i>
+                <div><p class="font-semibold text-sm">Drayage &amp; Port Services</p><p class="text-xs text-slate-500 mt-0.5">Container pickup &amp; port delivery</p></div>
+              </a>
+              <a href="expedited.html" class="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-800 transition">
+                <i class="fa-solid fa-bolt text-orange-500 mt-0.5 text-sm"></i>
+                <div><p class="font-semibold text-sm">Expedited Freight</p><p class="text-xs text-slate-500 mt-0.5">Time-critical, guaranteed windows</p></div>
+              </a>
+              <a href="heavy-haul.html" class="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-800 transition">
+                <i class="fa-solid fa-weight-hanging text-orange-500 mt-0.5 text-sm"></i>
+                <div><p class="font-semibold text-sm">Heavy Haul</p><p class="text-xs text-slate-500 mt-0.5">Oversize &amp; overweight loads</p></div>
+              </a>
+              <a href="hazmat.html" class="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-800 transition">
+                <i class="fa-solid fa-biohazard text-orange-500 mt-0.5 text-sm"></i>
+                <div><p class="font-semibold text-sm">Hazmat Shipping</p><p class="text-xs text-slate-500 mt-0.5">Certified hazardous materials</p></div>
+              </a>
+              <div class="col-span-2 mt-2 pt-3 border-t border-slate-800">
+                <a href="quote.html" class="flex items-center justify-center gap-2 text-sm text-orange-500 hover:text-orange-400 font-semibold transition">
+                  <i class="fa-solid fa-arrow-right"></i> Request a Quote for Any Service
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <a href="about.html" class="hover:text-orange-500 transition">About</a>
+        <a href="contact.html" class="hover:text-orange-500 transition">Contact</a>
+        <a href="careers.html" class="hover:text-orange-500 transition">Careers</a>
+      </div>
+      <a href="quote.html" class="bg-orange-500 hover:bg-orange-600 px-8 py-2.5 rounded-2xl font-semibold text-sm transition">
+        Get Instant Quote
+      </a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="relative bg-slate-900 py-28 overflow-hidden">
+    <div class="hero-video-container">
+      <video class="hero-video" autoplay muted loop playsinline>
+        <source src="https://videos.pexels.com/video-files/6169318/6169318-uhd_2560_1440_25fps.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="hero-overlay"></div>
+    <div class="max-w-7xl mx-auto px-6 relative z-10 text-center">
+      <div class="inline-flex items-center gap-2 bg-orange-500/10 border border-orange-500/30 rounded-full px-5 py-2 mb-8">
+        <i class="fa-solid fa-boxes-stacked text-orange-500"></i>
+        <span class="text-sm text-orange-400 font-medium">Cost-Effective Shared Freight</span>
+      </div>
+      <h1 class="text-5xl md:text-6xl font-extrabold tracking-tight mb-6">Less-Than-Truckload <span class="text-orange-500">(LTL)</span> Shipping</h1>
+      <p class="text-xl text-slate-300 max-w-3xl mx-auto mb-10">Ship 1 to 14 pallets without paying for an entire trailer. Your freight shares space with other shipments so you only pay for the space you use.</p>
+      <div class="flex flex-wrap justify-center gap-4">
+        <a href="quote.html?service=LTL" class="bg-orange-500 hover:bg-orange-600 px-10 py-4 rounded-2xl font-semibold text-lg transition">Get an LTL Quote</a>
+        <a href="#what-is-ltl" class="border border-slate-600 hover:border-orange-500 px-10 py-4 rounded-2xl font-semibold text-lg transition">Learn More</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHAT IS LTL -->
+  <section id="what-is-ltl" class="py-24 bg-slate-950">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid md:grid-cols-2 gap-16 items-center">
+        <div class="fade-in">
+          <h2 class="text-4xl font-bold mb-6">What is LTL Shipping?</h2>
+          <p class="text-slate-300 text-lg leading-relaxed mb-6">Less-Than-Truckload (LTL) shipping is a freight transportation method where multiple shippers share space on the same trailer. Each shipper pays only for the portion of the trailer their freight occupies — whether that's one pallet or twelve.</p>
+          <p class="text-slate-300 text-lg leading-relaxed mb-6">LTL is the most cost-effective option for shipments between <strong class="text-white">150 lbs and 15,000 lbs</strong>, or roughly <strong class="text-white">1 to 14 pallets</strong>. Freight is picked up from your dock, consolidated at a local terminal with other shipments heading in the same direction, and delivered to the consignee — often within 1 to 5 business days depending on distance.</p>
+          <p class="text-slate-300 text-lg leading-relaxed">SwiftLink partners with a network of top-tier LTL carriers including national, regional, and specialty operators. We rate-shop every shipment across multiple carriers to find you the best combination of price, transit time, and service level.</p>
+        </div>
+        <div class="fade-in">
+          <div class="bg-slate-900 rounded-3xl p-8 border border-slate-800">
+            <h3 class="text-xl font-bold mb-6 text-orange-500">LTL at a Glance</h3>
+            <div class="space-y-5">
+              <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                <span class="text-slate-400">Weight Range</span>
+                <span class="font-semibold">150 – 15,000 lbs</span>
+              </div>
+              <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                <span class="text-slate-400">Pallet Count</span>
+                <span class="font-semibold">1 – 14 pallets</span>
+              </div>
+              <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                <span class="text-slate-400">Transit Time</span>
+                <span class="font-semibold">1 – 5 business days</span>
+              </div>
+              <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                <span class="text-slate-400">Pricing Model</span>
+                <span class="font-semibold">Per CWT / class-based</span>
+              </div>
+              <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                <span class="text-slate-400">Tracking</span>
+                <span class="font-semibold">PRO number tracking</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-slate-400">Carrier Network</span>
+                <span class="font-semibold">50+ LTL carriers</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW LTL PRICING WORKS -->
+  <section class="py-24 bg-slate-900">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16 fade-in">
+        <h2 class="text-4xl font-bold mb-4">How LTL Pricing Works</h2>
+        <p class="text-slate-400 text-lg max-w-2xl mx-auto">LTL rates are determined by a combination of factors. Understanding these variables helps you optimize costs and avoid unexpected charges.</p>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="fade-in bg-slate-950 rounded-2xl p-8 border border-slate-800">
+          <div class="w-14 h-14 bg-orange-500/10 rounded-xl flex items-center justify-center mb-6">
+            <i class="fa-solid fa-layer-group text-orange-500 text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Freight Class (NMFC)</h3>
+          <p class="text-slate-400 mb-4">Every commodity is assigned an NMFC (National Motor Freight Classification) code and a freight class between 50 and 500. Class is based on four factors:</p>
+          <ul class="space-y-2 text-sm text-slate-400">
+            <li class="flex items-center gap-2"><i class="fa-solid fa-circle text-orange-500 text-[6px]"></i> <strong class="text-white">Density</strong> — weight per cubic foot</li>
+            <li class="flex items-center gap-2"><i class="fa-solid fa-circle text-orange-500 text-[6px]"></i> <strong class="text-white">Stowability</strong> — ease of stacking</li>
+            <li class="flex items-center gap-2"><i class="fa-solid fa-circle text-orange-500 text-[6px]"></i> <strong class="text-white">Handling</strong> — difficulty to move</li>
+            <li class="flex items-center gap-2"><i class="fa-solid fa-circle text-orange-500 text-[6px]"></i> <strong class="text-white">Liability</strong> — value and fragility</li>
+          </ul>
+          <p class="text-xs text-slate-500 mt-4">Lower class = lower rate. Class 50 (densest) is cheapest; Class 500 (lightest) is most expensive.</p>
+        </div>
+        <div class="fade-in bg-slate-950 rounded-2xl p-8 border border-slate-800">
+          <div class="w-14 h-14 bg-orange-500/10 rounded-xl flex items-center justify-center mb-6">
+            <i class="fa-solid fa-weight-scale text-orange-500 text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Weight &amp; Dimensions</h3>
+          <p class="text-slate-400 mb-4">LTL rates are quoted per hundredweight (CWT). The actual or dimensional weight of your shipment — whichever is greater — determines the billable weight.</p>
+          <ul class="space-y-2 text-sm text-slate-400">
+            <li class="flex items-center gap-2"><i class="fa-solid fa-circle text-orange-500 text-[6px]"></i> Actual weight on a certified scale</li>
+            <li class="flex items-center gap-2"><i class="fa-solid fa-circle text-orange-500 text-[6px]"></i> Dimensional weight (L x W x H / factor)</li>
+            <li class="flex items-center gap-2"><i class="fa-solid fa-circle text-orange-500 text-[6px]"></i> Weight breaks at 500, 1000, 2000, 5000 lbs</li>
+            <li class="flex items-center gap-2"><i class="fa-solid fa-circle text-orange-500 text-[6px]"></i> Heavier shipments get lower per-CWT rates</li>
+          </ul>
+          <p class="text-xs text-slate-500 mt-4">Pro tip: Sometimes adding weight to reach the next break point actually lowers the total cost.</p>
+        </div>
+        <div class="fade-in bg-slate-950 rounded-2xl p-8 border border-slate-800">
+          <div class="w-14 h-14 bg-orange-500/10 rounded-xl flex items-center justify-center mb-6">
+            <i class="fa-solid fa-route text-orange-500 text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Distance &amp; Lane</h3>
+          <p class="text-slate-400 mb-4">Origin and destination ZIP codes determine the shipping lane. Rates vary based on mileage, carrier terminal density, and lane competitiveness.</p>
+          <ul class="space-y-2 text-sm text-slate-400">
+            <li class="flex items-center gap-2"><i class="fa-solid fa-circle text-orange-500 text-[6px]"></i> Short-haul: under 500 miles</li>
+            <li class="flex items-center gap-2"><i class="fa-solid fa-circle text-orange-500 text-[6px]"></i> Long-haul: 500 – 1,500+ miles</li>
+            <li class="flex items-center gap-2"><i class="fa-solid fa-circle text-orange-500 text-[6px]"></i> Dense metro lanes are most competitive</li>
+            <li class="flex items-center gap-2"><i class="fa-solid fa-circle text-orange-500 text-[6px]"></i> Rural deliveries incur surcharges</li>
+          </ul>
+          <p class="text-xs text-slate-500 mt-4">SwiftLink rate-shops across 50+ carriers to find the best rate for your specific lane.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LTL SERVICES -->
+  <section class="py-24 bg-slate-950">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16 fade-in">
+        <h2 class="text-4xl font-bold mb-4">LTL Service Levels</h2>
+        <p class="text-slate-400 text-lg max-w-2xl mx-auto">From standard economy to guaranteed delivery and volume LTL, we offer the right service level for every shipment priority and budget.</p>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="fade-in bg-slate-900 rounded-2xl p-8 border border-slate-800 hover:border-orange-500/50 transition-all duration-300">
+          <div class="w-14 h-14 bg-orange-500/10 rounded-xl flex items-center justify-center mb-6">
+            <i class="fa-solid fa-truck text-orange-500 text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Standard LTL</h3>
+          <p class="text-slate-400 mb-3">Our most popular option. Reliable transit at the lowest cost, using carrier-estimated delivery windows. Ideal for shipments that don't require a hard delivery date.</p>
+          <p class="text-sm text-orange-400 font-medium">Transit: 1–5 business days</p>
+        </div>
+        <div class="fade-in bg-slate-900 rounded-2xl p-8 border border-slate-800 hover:border-orange-500/50 transition-all duration-300">
+          <div class="w-14 h-14 bg-orange-500/10 rounded-xl flex items-center justify-center mb-6">
+            <i class="fa-solid fa-clock text-orange-500 text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Guaranteed Delivery</h3>
+          <p class="text-slate-400 mb-3">Carrier-guaranteed delivery by a specific date and time. If the carrier misses the window, freight charges are refunded. Essential for production-critical deliveries.</p>
+          <p class="text-sm text-orange-400 font-medium">Money-back guarantee on delivery date</p>
+        </div>
+        <div class="fade-in bg-slate-900 rounded-2xl p-8 border border-slate-800 hover:border-orange-500/50 transition-all duration-300">
+          <div class="w-14 h-14 bg-orange-500/10 rounded-xl flex items-center justify-center mb-6">
+            <i class="fa-solid fa-cubes text-orange-500 text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Volume LTL</h3>
+          <p class="text-slate-400 mb-3">For shipments between 5,000 and 30,000 lbs that are too large for standard LTL but don't need a full truck. Also known as partial truckload or spot quotes.</p>
+          <p class="text-sm text-orange-400 font-medium">Weight: 5,000 – 30,000 lbs</p>
+        </div>
+        <div class="fade-in bg-slate-900 rounded-2xl p-8 border border-slate-800 hover:border-orange-500/50 transition-all duration-300">
+          <div class="w-14 h-14 bg-orange-500/10 rounded-xl flex items-center justify-center mb-6">
+            <i class="fa-solid fa-truck-ramp-box text-orange-500 text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3">LTL with Liftgate</h3>
+          <p class="text-slate-400 mb-3">Hydraulic liftgate service for locations without a loading dock. The driver lowers freight to ground level for pickup or delivery at non-dock-height facilities.</p>
+          <p class="text-sm text-orange-400 font-medium">No loading dock required</p>
+        </div>
+        <div class="fade-in bg-slate-900 rounded-2xl p-8 border border-slate-800 hover:border-orange-500/50 transition-all duration-300">
+          <div class="w-14 h-14 bg-orange-500/10 rounded-xl flex items-center justify-center mb-6">
+            <i class="fa-solid fa-door-open text-orange-500 text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Inside Delivery</h3>
+          <p class="text-slate-400 mb-3">Driver brings freight inside the building beyond the first door or loading area. Required for deliveries to offices, retail stores, schools, hospitals, and interior rooms.</p>
+          <p class="text-sm text-orange-400 font-medium">Beyond the threshold delivery</p>
+        </div>
+        <div class="fade-in bg-slate-900 rounded-2xl p-8 border border-slate-800 hover:border-orange-500/50 transition-all duration-300">
+          <div class="w-14 h-14 bg-orange-500/10 rounded-xl flex items-center justify-center mb-6">
+            <i class="fa-solid fa-star text-orange-500 text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Trade Show / Convention</h3>
+          <p class="text-slate-400 mb-3">Specialized service for delivering to trade shows, expos, and convention centers. Includes advance warehouse staging, timed delivery, and post-show return shipping.</p>
+          <p class="text-sm text-orange-400 font-medium">Show-site logistics coordination</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LTL vs FTL -->
+  <section class="py-24 bg-slate-900">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16 fade-in">
+        <h2 class="text-4xl font-bold mb-4">When to Choose LTL vs. FTL</h2>
+        <p class="text-slate-400 text-lg max-w-2xl mx-auto">The right mode depends on your shipment size, urgency, and budget. Here's how they compare.</p>
+      </div>
+      <div class="fade-in bg-slate-950 rounded-3xl border border-slate-800 overflow-hidden">
+        <div class="grid grid-cols-3 bg-slate-800/50 text-sm font-semibold">
+          <div class="p-5">Factor</div>
+          <div class="p-5 text-center border-l border-slate-700">LTL</div>
+          <div class="p-5 text-center border-l border-slate-700">FTL</div>
+        </div>
+        <div class="grid grid-cols-3 border-t border-slate-800 text-sm">
+          <div class="p-5 text-slate-400">Shipment Size</div>
+          <div class="p-5 text-center border-l border-slate-800">150 – 15,000 lbs</div>
+          <div class="p-5 text-center border-l border-slate-800">10,000 – 45,000 lbs</div>
+        </div>
+        <div class="grid grid-cols-3 border-t border-slate-800 text-sm">
+          <div class="p-5 text-slate-400">Pallet Count</div>
+          <div class="p-5 text-center border-l border-slate-800">1 – 14 pallets</div>
+          <div class="p-5 text-center border-l border-slate-800">10 – 26 pallets</div>
+        </div>
+        <div class="grid grid-cols-3 border-t border-slate-800 text-sm">
+          <div class="p-5 text-slate-400">Transit Speed</div>
+          <div class="p-5 text-center border-l border-slate-800">1 – 5 days (terminal stops)</div>
+          <div class="p-5 text-center border-l border-slate-800">1 – 3 days (direct)</div>
+        </div>
+        <div class="grid grid-cols-3 border-t border-slate-800 text-sm">
+          <div class="p-5 text-slate-400">Handling</div>
+          <div class="p-5 text-center border-l border-slate-800">Multiple touches at terminals</div>
+          <div class="p-5 text-center border-l border-slate-800">Single load, single unload</div>
+        </div>
+        <div class="grid grid-cols-3 border-t border-slate-800 text-sm">
+          <div class="p-5 text-slate-400">Pricing</div>
+          <div class="p-5 text-center border-l border-slate-800">Per CWT + class + accessorials</div>
+          <div class="p-5 text-center border-l border-slate-800">Flat rate per mile</div>
+        </div>
+        <div class="grid grid-cols-3 border-t border-slate-800 text-sm">
+          <div class="p-5 text-slate-400">Best For</div>
+          <div class="p-5 text-center border-l border-slate-800 text-orange-400">Smaller, cost-sensitive loads</div>
+          <div class="p-5 text-center border-l border-slate-800 text-orange-400">Large, time-sensitive loads</div>
+        </div>
+      </div>
+      <p class="text-center text-slate-500 text-sm mt-6 fade-in">The crossover point is typically 8–12 pallets or 8,000–12,000 lbs. Not sure which is right? <a href="quote.html" class="text-orange-500 hover:text-orange-400 underline">Get quotes for both</a> — we'll recommend the best option.</p>
+    </div>
+  </section>
+
+  <!-- ACCESSORIALS -->
+  <section class="py-24 bg-slate-950">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16 fade-in">
+        <h2 class="text-4xl font-bold mb-4">LTL Accessorial Services</h2>
+        <p class="text-slate-400 text-lg max-w-2xl mx-auto">Accessorials are additional services beyond standard dock-to-dock delivery. Declaring them upfront prevents costly reclassification fees and delivery delays.</p>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="fade-in flex items-start gap-4 bg-slate-900 rounded-xl p-6 border border-slate-800">
+          <i class="fa-solid fa-elevator text-orange-500 text-lg mt-1 flex-shrink-0"></i>
+          <div>
+            <h3 class="font-bold mb-1">Liftgate Service</h3>
+            <p class="text-slate-400 text-sm">Hydraulic liftgate for locations without a dock. Available at pickup, delivery, or both. Essential for retail stores and residential addresses.</p>
+          </div>
+        </div>
+        <div class="fade-in flex items-start gap-4 bg-slate-900 rounded-xl p-6 border border-slate-800">
+          <i class="fa-solid fa-house text-orange-500 text-lg mt-1 flex-shrink-0"></i>
+          <div>
+            <h3 class="font-bold mb-1">Residential Delivery</h3>
+            <p class="text-slate-400 text-sm">Delivery to a home address or non-commercial location. Carriers apply surcharges due to narrow streets, limited access, and absence of dock facilities.</p>
+          </div>
+        </div>
+        <div class="fade-in flex items-start gap-4 bg-slate-900 rounded-xl p-6 border border-slate-800">
+          <i class="fa-solid fa-lock text-orange-500 text-lg mt-1 flex-shrink-0"></i>
+          <div>
+            <h3 class="font-bold mb-1">Limited Access</h3>
+            <p class="text-slate-400 text-sm">Delivery to locations with restricted access — construction sites, military bases, schools, churches, fairs, farms, prisons, mines, and similar facilities.</p>
+          </div>
+        </div>
+        <div class="fade-in flex items-start gap-4 bg-slate-900 rounded-xl p-6 border border-slate-800">
+          <i class="fa-solid fa-right-to-bracket text-orange-500 text-lg mt-1 flex-shrink-0"></i>
+          <div>
+            <h3 class="font-bold mb-1">Inside Pickup / Delivery</h3>
+            <p class="text-slate-400 text-sm">Driver moves freight beyond the first door or room of the building. Required when freight must be placed in a specific interior location.</p>
+          </div>
+        </div>
+        <div class="fade-in flex items-start gap-4 bg-slate-900 rounded-xl p-6 border border-slate-800">
+          <i class="fa-solid fa-calendar-day text-orange-500 text-lg mt-1 flex-shrink-0"></i>
+          <div>
+            <h3 class="font-bold mb-1">Appointment Scheduling</h3>
+            <p class="text-slate-400 text-sm">Delivery within a specific time window agreed upon in advance. Common for retailers, distribution centers, and facilities with receiving schedules.</p>
+          </div>
+        </div>
+        <div class="fade-in flex items-start gap-4 bg-slate-900 rounded-xl p-6 border border-slate-800">
+          <i class="fa-solid fa-arrows-split-up-and-left text-orange-500 text-lg mt-1 flex-shrink-0"></i>
+          <div>
+            <h3 class="font-bold mb-1">Sort &amp; Segregate</h3>
+            <p class="text-slate-400 text-sm">Carrier separates a multi-piece shipment for delivery to different locations or departments at the same address. Billed per additional stop or sort.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-24 bg-slate-900">
+    <div class="max-w-4xl mx-auto px-6 text-center fade-in">
+      <div class="bg-gradient-to-br from-slate-950 to-slate-950/50 rounded-3xl p-12 border border-slate-800">
+        <i class="fa-solid fa-boxes-stacked text-orange-500 text-5xl mb-6"></i>
+        <h2 class="text-4xl font-bold mb-4">Get Your LTL Quote in Seconds</h2>
+        <p class="text-slate-300 text-lg mb-8 max-w-xl mx-auto">Enter your shipment details and we'll compare rates across 50+ LTL carriers to find the best price, transit time, and service level for your freight.</p>
+        <div class="flex flex-wrap justify-center gap-4">
+          <a href="quote.html?service=LTL" class="bg-orange-500 hover:bg-orange-600 px-10 py-4 rounded-2xl font-semibold text-lg transition">Get Your LTL Quote</a>
+          <a href="contact.html" class="border border-slate-600 hover:border-orange-500 px-10 py-4 rounded-2xl font-semibold text-lg transition">Talk to a Specialist</a>
+        </div>
+        <p class="text-sm text-slate-500 mt-6">Instant carrier rates &bull; No obligation &bull; Volume discounts available</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="bg-slate-950 py-20 border-t border-slate-800">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="flex flex-col md:flex-row justify-between gap-12">
+        <div>
+          <div class="flex items-center gap-3 mb-6">
+            <i class="fa-solid fa-truck-fast text-3xl text-orange-500"></i>
+            <h1 class="text-3xl font-bold tracking-tighter">SwiftLink Logistics, LLC</h1>
+          </div>
+          <p class="text-slate-400 max-w-xs">Expert freight transportation and logistics solutions across the United States.</p>
+          <p class="mt-8 text-sm text-slate-500">&copy; 2026 SwiftLink Logistics, LLC &bull; swiftlinkusa.com</p>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-12">
+          <div>
+            <h4 class="font-semibold mb-4">Company</h4>
+            <ul class="space-y-3 text-sm text-slate-400">
+              <li><a href="about.html" class="hover:text-white">About Us</a></li>
+              <li><a href="careers.html" class="hover:text-white">Careers</a></li>
+              <li><a href="contact.html" class="hover:text-white">Contact</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-semibold mb-4">Solutions</h4>
+            <ul class="space-y-3 text-sm text-slate-400">
+              <li><a href="ftl.html" class="hover:text-white">Full Truckload</a></li>
+              <li><a href="ltl.html" class="hover:text-white">LTL Shipping</a></li>
+              <li><a href="drayage.html" class="hover:text-white">Drayage Services</a></li>
+              <li><a href="expedited.html" class="hover:text-white">Expedited</a></li>
+              <li><a href="heavy-haul.html" class="hover:text-white">Heavy Haul</a></li>
+              <li><a href="hazmat.html" class="hover:text-white">Hazmat</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-semibold mb-4">Support</h4>
+            <ul class="space-y-3 text-sm text-slate-400">
+              <li><a href="quote.html" class="hover:text-white">Get Quote</a></li><li><a href="faq.html" class="hover:text-white">FAQ</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-semibold mb-4">Contact</h4>
+            <p class="text-sm text-slate-400">info@swiftlinkusa.com</p>
+            <p class="text-sm text-slate-400">(248) 987-6776</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function toggleSolDropdown() {
+      document.getElementById('solMenu').classList.toggle('hidden');
+    }
+    (function() {
+      const dd = document.getElementById('solDropdown');
+      const menu = document.getElementById('solMenu');
+      dd.addEventListener('mouseenter', () => menu.classList.remove('hidden'));
+      dd.addEventListener('mouseleave', () => menu.classList.add('hidden'));
+      document.addEventListener('click', (e) => {
+        if (!dd.contains(e.target)) menu.classList.add('hidden');
+      });
+    })();
+    // Scroll animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "serviceType": "Less-Than-Truckload (LTL) Shipping",
+  "provider": {
+    "@type": "LocalBusiness",
+    "name": "SwiftLink Logistics, LLC",
+    "url": "https://swiftlinkusa.com",
+    "telephone": "+1-248-987-6776"
+  },
+  "areaServed": {"@type": "Country", "name": "United States"},
+  "description": "Cost-effective shared freight for 1-14 pallets, 150-15,000 lbs. Consolidated shipping with nationwide carrier network for maximum efficiency.",
+  "url": "https://swiftlinkusa.com/ltl.html"
+}
+</script>
+</body>
+</html>

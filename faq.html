@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Frequently asked questions about SwiftLink Logistics freight services, pricing, shipping, tracking, and more. Get answers to common 3PL logistics questions.">
+  <meta name="keywords" content="freight FAQ, logistics questions, 3PL FAQ, shipping questions, FTL LTL FAQ, freight broker FAQ, hazmat shipping FAQ, drayage questions, SwiftLink Logistics FAQ">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://swiftlinkusa.com/faq.html">
+  <meta property="og:title" content="FAQ | SwiftLink Logistics - Freight & Shipping Questions Answered">
+  <meta property="og:description" content="Get answers to common questions about freight shipping, pricing, tracking, and logistics services from SwiftLink Logistics.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://swiftlinkusa.com/faq.html">
+  <meta property="og:site_name" content="SwiftLink Logistics">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="FAQ | SwiftLink Logistics - Freight & Shipping Questions Answered">
+  <meta name="twitter:description" content="Get answers to common questions about freight shipping, pricing, tracking, and logistics services from SwiftLink Logistics.">
+  <title>FAQ &bull; SwiftLink Logistics</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <style>
+    .fade-in { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+    .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.3s ease; }
+    .faq-answer.open { max-height: 500px; }
+    .faq-chevron { transition: transform 0.3s ease; }
+    .faq-chevron.open { transform: rotate(180deg); }
+  </style>
+</head>
+<body class="bg-slate-950 text-white font-sans overflow-x-hidden">
+
+  <!-- NAV -->
+  <nav class="bg-slate-900/95 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <a href="index.html" class="flex items-center gap-3">
+        <i class="fa-solid fa-truck-fast text-3xl text-orange-500"></i>
+        <div>
+          <h1 class="text-2xl font-bold tracking-tighter">SwiftLink</h1>
+          <p class="text-[10px] text-orange-500 -mt-1">LOGISTICS, LLC</p>
+        </div>
+      </a>
+      <div class="hidden md:flex items-center gap-8 text-sm font-medium">
+        <div class="relative" id="solDropdown">
+          <button onclick="toggleSolDropdown()" class="flex items-center gap-1.5 hover:text-orange-500 transition py-2">
+            Solutions <i class="fa-solid fa-chevron-down text-[10px] opacity-50"></i>
+          </button>
+          <div id="solMenu" class="hidden absolute top-full left-1/2 -translate-x-1/2 pt-3 z-50">
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 w-[540px] shadow-2xl grid grid-cols-2 gap-1" style="box-shadow: 0 25px 60px rgba(0,0,0,0.7);">
+              <a href="ftl.html" class="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-800 transition"><i class="fa-solid fa-truck text-orange-500 mt-0.5 text-sm"></i><div><p class="font-semibold text-sm">Full Truckload (FTL)</p><p class="text-xs text-slate-500 mt-0.5">Dedicated trailers, direct delivery</p></div></a>
+              <a href="ltl.html" class="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-800 transition"><i class="fa-solid fa-boxes-stacked text-orange-500 mt-0.5 text-sm"></i><div><p class="font-semibold text-sm">Less-Than-Truckload (LTL)</p><p class="text-xs text-slate-500 mt-0.5">Cost-effective shared freight</p></div></a>
+              <a href="drayage.html" class="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-800 transition"><i class="fa-solid fa-ship text-orange-500 mt-0.5 text-sm"></i><div><p class="font-semibold text-sm">Drayage &amp; Port Services</p><p class="text-xs text-slate-500 mt-0.5">Container pickup &amp; port delivery</p></div></a>
+              <a href="expedited.html" class="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-800 transition"><i class="fa-solid fa-bolt text-orange-500 mt-0.5 text-sm"></i><div><p class="font-semibold text-sm">Expedited Freight</p><p class="text-xs text-slate-500 mt-0.5">Time-critical, guaranteed windows</p></div></a>
+              <a href="heavy-haul.html" class="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-800 transition"><i class="fa-solid fa-weight-hanging text-orange-500 mt-0.5 text-sm"></i><div><p class="font-semibold text-sm">Heavy Haul</p><p class="text-xs text-slate-500 mt-0.5">Oversize &amp; overweight loads</p></div></a>
+              <a href="hazmat.html" class="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-800 transition"><i class="fa-solid fa-biohazard text-orange-500 mt-0.5 text-sm"></i><div><p class="font-semibold text-sm">Hazmat Shipping</p><p class="text-xs text-slate-500 mt-0.5">Certified hazardous materials</p></div></a>
+              <div class="col-span-2 mt-2 pt-3 border-t border-slate-800"><a href="quote.html" class="flex items-center justify-center gap-2 text-sm text-orange-500 hover:text-orange-400 font-semibold transition"><i class="fa-solid fa-arrow-right"></i> Request a Quote for Any Service</a></div>
+            </div>
+          </div>
+        </div>
+        <a href="about.html" class="hover:text-orange-500 transition">About</a>
+        <a href="contact.html" class="hover:text-orange-500 transition">Contact</a>
+        <a href="careers.html" class="hover:text-orange-500 transition">Careers</a>
+      </div>
+      <a href="quote.html" class="bg-orange-500 hover:bg-orange-600 px-8 py-2.5 rounded-2xl font-semibold text-sm transition">Get Instant Quote</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="relative bg-slate-900 border-b border-slate-800 py-20 overflow-hidden">
+    <div class="absolute inset-0 opacity-5" style="background-image: radial-gradient(circle at 30% 50%, rgb(249 115 22) 0%, transparent 50%), radial-gradient(circle at 70% 50%, rgb(249 115 22) 0%, transparent 50%);"></div>
+    <div class="relative max-w-4xl mx-auto px-6 text-center">
+      <span class="inline-flex items-center gap-2 bg-orange-500/10 border border-orange-500/30 text-orange-400 text-sm font-medium px-4 py-1.5 rounded-full mb-6">
+        <i class="fa-solid fa-circle-question"></i> Support
+      </span>
+      <h1 class="text-5xl md:text-6xl font-bold tracking-tighter mb-4">Frequently Asked Questions</h1>
+      <p class="text-slate-400 text-xl max-w-2xl mx-auto">Everything you need to know about shipping with SwiftLink Logistics. Can't find your answer? Contact our team directly.</p>
+    </div>
+  </section>
+
+  <!-- FAQ CONTENT -->
+  <section class="py-24 bg-slate-950">
+    <div class="max-w-4xl mx-auto px-6">
+
+      <!-- General Questions -->
+      <div class="mb-16 fade-in">
+        <div class="flex items-center gap-3 mb-8">
+          <div class="w-10 h-10 bg-orange-500/10 rounded-xl flex items-center justify-center">
+            <i class="fa-solid fa-info-circle text-orange-500"></i>
+          </div>
+          <h2 class="text-2xl font-bold">General Questions</h2>
+        </div>
+        <div class="space-y-3">
+          <div class="faq-item bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+            <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-slate-800/50 transition">
+              <span class="font-semibold pr-4">What is SwiftLink Logistics?</span>
+              <i class="fa-solid fa-chevron-down text-orange-500 text-xs faq-chevron"></i>
+            </button>
+            <div class="faq-answer px-5 text-slate-400 text-sm leading-relaxed">
+              <div class="pb-5">SwiftLink Logistics, LLC is a Michigan-based third-party logistics (3PL) freight brokerage. We connect shippers with a network of over 5,000 vetted carriers to move freight across all 48 contiguous states. We handle everything from full truckloads and LTL shipments to specialized services like drayage, expedited freight, heavy haul, and hazmat transport.</div>
+            </div>
+          </div>
+          <div class="faq-item bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+            <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-slate-800/50 transition">
+              <span class="font-semibold pr-4">What areas do you serve?</span>
+              <i class="fa-solid fa-chevron-down text-orange-500 text-xs faq-chevron"></i>
+            </button>
+            <div class="faq-answer px-5 text-slate-400 text-sm leading-relaxed">
+              <div class="pb-5">We provide freight transportation services across all 48 contiguous United States. Our carrier network covers every major market, including service to and from all major ports for drayage shipments. Whether your freight is moving coast-to-coast or within a single region, we have the coverage to handle it.</div>
+            </div>
+          </div>
+          <div class="faq-item bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+            <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-slate-800/50 transition">
+              <span class="font-semibold pr-4">How do I get a freight quote?</span>
+              <i class="fa-solid fa-chevron-down text-orange-500 text-xs faq-chevron"></i>
+            </button>
+            <div class="faq-answer px-5 text-slate-400 text-sm leading-relaxed">
+              <div class="pb-5">You can request a free freight quote through our <a href="quote.html" class="text-orange-500 hover:underline">online quote form</a> — just enter your origin, destination, cargo details, and preferred service type. You can also call us directly at <span class="text-white font-medium">(248) 987-6776</span> or email <span class="text-white font-medium">info@swiftlinkusa.com</span>. Most quotes are returned within minutes during business hours.</div>
+            </div>
+          </div>
+          <div class="faq-item bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+            <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-slate-800/50 transition">
+              <span class="font-semibold pr-4">What are your business hours?</span>
+              <i class="fa-solid fa-chevron-down text-orange-500 text-xs faq-chevron"></i>
+            </button>
+            <div class="faq-answer px-5 text-slate-400 text-sm leading-relaxed">
+              <div class="pb-5">Our office is open Monday through Friday, 7:00 AM to 7:00 PM Eastern Time. However, our dispatch team operates 24/7 to monitor active shipments, handle emergencies, and ensure your freight keeps moving around the clock. For urgent after-hours needs, call <span class="text-white font-medium">(248) 987-6776</span>.</div>
+            </div>
+          </div>
+          <div class="faq-item bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+            <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-slate-800/50 transition">
+              <span class="font-semibold pr-4">How do I contact SwiftLink?</span>
+              <i class="fa-solid fa-chevron-down text-orange-500 text-xs faq-chevron"></i>
+            </button>
+            <div class="faq-answer px-5 text-slate-400 text-sm leading-relaxed">
+              <div class="pb-5">You can reach us by phone at <span class="text-white font-medium">(248) 987-6776</span>, by fax at <span class="text-white font-medium">(248) 987-6672</span>, or by email at <span class="text-white font-medium">info@swiftlinkusa.com</span>. You can also use our <a href="contact.html" class="text-orange-500 hover:underline">online contact form</a> and we'll respond within one business day.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Shipping & Services -->
+      <div class="mb-16 fade-in">
+        <div class="flex items-center gap-3 mb-8">
+          <div class="w-10 h-10 bg-orange-500/10 rounded-xl flex items-center justify-center">
+            <i class="fa-solid fa-truck text-orange-500"></i>
+          </div>
+          <h2 class="text-2xl font-bold">Shipping &amp; Services</h2>
+        </div>
+        <div class="space-y-3">
+          <div class="faq-item bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+            <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-slate-800/50 transition">
+              <span class="font-semibold pr-4">What types of freight do you handle?</span>
+              <i class="fa-solid fa-chevron-down text-orange-500 text-xs faq-chevron"></i>
+            </button>
+            <div class="faq-answer px-5 text-slate-400 text-sm leading-relaxed">
+              <div class="pb-5">We handle virtually all types of freight: palletized goods, machinery, construction materials, consumer products, temperature-sensitive cargo, hazardous materials, oversized loads, and ocean containers. Our six core services are Full Truckload (FTL), Less-Than-Truckload (LTL), Drayage &amp; Port Services, Expedited Freight, Heavy Haul, and Hazmat Shipping.</div>
+            </div>
+          </div>
+          <div class="faq-item bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+            <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-slate-800/50 transition">
+              <span class="font-semibold pr-4">What is the difference between FTL and LTL?</span>
+              <i class="fa-solid fa-chevron-down text-orange-500 text-xs faq-chevron"></i>
+            </button>
+            <div class="faq-answer px-5 text-slate-400 text-sm leading-relaxed">
+              <div class="pb-5"><strong class="text-white">Full Truckload (FTL)</strong> means your freight gets a dedicated trailer — no sharing space with other shipments. It's ideal for large volumes (typically 10,000+ lbs or 10+ pallets) and offers the fastest transit times with no intermediate stops. <strong class="text-white">Less-Than-Truckload (LTL)</strong> combines your freight with other shipments on the same trailer, so you only pay for the space you use. It's the most cost-effective option for smaller shipments (1-14 pallets, 150-15,000 lbs).</div>
+            </div>
+          </div>
+          <div class="faq-item bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+            <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-slate-800/50 transition">
+              <span class="font-semibold pr-4">Do you handle hazmat shipments?</span>
+              <i class="fa-solid fa-chevron-down text-orange-500 text-xs faq-chevron"></i>
+            </button>
+            <div class="faq-answer px-5 text-slate-400 text-sm leading-relaxed">
+              <div class="pb-5">Yes. We transport hazardous materials across all 9 DOT hazmat classes, including flammable liquids, corrosives, gases, explosives, and radioactive materials. All of our hazmat carriers are fully certified with proper endorsements, and we handle all documentation including shipping papers, placarding, and emergency response information. <a href="hazmat.html" class="text-orange-500 hover:underline">Learn more about our hazmat services</a>.</div>
+            </div>
+          </div>
+          <div class="faq-item bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+            <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-slate-800/50 transition">
+              <span class="font-semibold pr-4">What is drayage?</span>
+              <i class="fa-solid fa-chevron-down text-orange-500 text-xs faq-chevron"></i>
+            </button>
+            <div class="faq-answer px-5 text-slate-400 text-sm leading-relaxed">
+              <div class="pb-5">Drayage is the short-distance transport of shipping containers between ports, rail yards, and warehouses. It's the critical first and last mile of your ocean freight supply chain. SwiftLink handles container pickup from all major U.S. ports, chassis management, port fees, and last-mile delivery to your warehouse or distribution center. <a href="drayage.html" class="text-orange-500 hover:underline">Learn more about our drayage services</a>.</div>
+            </div>
+          </div>
+          <div class="faq-item bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+            <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-slate-800/50 transition">
+              <span class="font-semibold pr-4">Do you offer expedited shipping?</span>
+              <i class="fa-solid fa-chevron-down text-orange-500 text-xs faq-chevron"></i>
+            </button>
+            <div class="faq-answer px-5 text-slate-400 text-sm leading-relaxed">
+              <div class="pb-5">Yes. Our expedited freight service includes dedicated team drivers, straight trucks, and sprinter vans for guaranteed delivery windows. We handle hot shots, emergency restocks, and production-line-down situations around the clock. <a href="expedited.html" class="text-orange-500 hover:underline">Learn more about expedited freight</a>.</div>
+            </div>
+          </div>
+          <div class="faq-item bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+            <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-slate-800/50 transition">
+              <span class="font-semibold pr-4">Can you ship oversized or overweight loads?</span>
+              <i class="fa-solid fa-chevron-down text-orange-500 text-xs faq-chevron"></i>
+            </button>
+            <div class="faq-answer px-5 text-slate-400 text-sm leading-relaxed">
+              <div class="pb-5">Absolutely. Our heavy haul division specializes in oversize and overweight freight using flatbeds, step decks, lowboys, and RGN trailers. We handle all permits, route surveys, pilot car coordination, and escort vehicles required by each state. <a href="heavy-haul.html" class="text-orange-500 hover:underline">Learn more about heavy haul</a>.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pricing & Quotes -->
+      <div class="mb-16 fade-in">
+        <div class="flex items-center gap-3 mb-8">
+          <div class="w-10 h-10 bg-orange-500/10 rounded-xl flex items-center justify-center">
+            <i class="fa-solid fa-dollar-sign text-orange-500"></i>
+          </div>
+          <h2 class="text-2xl font-bold">Pricing &amp; Quotes</h2>
+        </div>
+        <div class="space-y-3">
+          <div class="faq-item bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+            <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-slate-800/50 transition">
+              <span class="font-semibold pr-4">How is freight pricing determined?</span>
+              <i class="fa-solid fa-chevron-down text-orange-500 text-xs faq-chevron"></i>
+            </button>
+            <div class="faq-answer px-5 text-slate-400 text-sm leading-relaxed">
+              <div class="pb-5">Freight pricing depends on several factors: distance (origin and destination), shipment weight and dimensions, freight class, service type (FTL, LTL, expedited, etc.), equipment requirements, and current market conditions. Specialized services like hazmat, heavy haul, and temperature-controlled shipping may carry additional charges for compliance, permits, or specialized equipment.</div>
+            </div>
+          </div>
+          <div class="faq-item bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+            <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-slate-800/50 transition">
+              <span class="font-semibold pr-4">Is there a minimum shipment size?</span>
+              <i class="fa-solid fa-chevron-down text-orange-500 text-xs faq-chevron"></i>
+            </button>
+            <div class="faq-answer px-5 text-slate-400 text-sm leading-relaxed">
+              <div class="pb-5">For LTL shipments, the minimum is typically one pallet (approximately 150 lbs). For FTL, there's no minimum weight — you're booking a full trailer regardless of how much you put on it. For expedited freight, we can accommodate everything from a single box in a sprinter van to a full dedicated truck.</div>
+            </div>
+          </div>
+          <div class="faq-item bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+            <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-slate-800/50 transition">
+              <span class="font-semibold pr-4">Do you offer volume discounts?</span>
+              <i class="fa-solid fa-chevron-down text-orange-500 text-xs faq-chevron"></i>
+            </button>
+            <div class="faq-answer px-5 text-slate-400 text-sm leading-relaxed">
+              <div class="pb-5">Yes. If you're shipping regularly or in high volumes, we offer contract pricing and volume-based discounts. Your dedicated account manager will work with you to develop pricing structures that align with your shipping patterns and budget. Contact us to discuss volume pricing for your business.</div>
+            </div>
+          </div>
+          <div class="faq-item bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+            <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-slate-800/50 transition">
+              <span class="font-semibold pr-4">How long is a quote valid?</span>
+              <i class="fa-solid fa-chevron-down text-orange-500 text-xs faq-chevron"></i>
+            </button>
+            <div class="faq-answer px-5 text-slate-400 text-sm leading-relaxed">
+              <div class="pb-5">Spot quotes are typically valid for 24-48 hours, as carrier pricing fluctuates based on market conditions and available capacity. Contract rates are locked in for the agreed-upon period (monthly, quarterly, or annually). We recommend booking as soon as possible after receiving your quote to lock in the rate.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tracking & Delivery -->
+      <div class="mb-8 fade-in">
+        <div class="flex items-center gap-3 mb-8">
+          <div class="w-10 h-10 bg-orange-500/10 rounded-xl flex items-center justify-center">
+            <i class="fa-solid fa-location-crosshairs text-orange-500"></i>
+          </div>
+          <h2 class="text-2xl font-bold">Tracking &amp; Delivery</h2>
+        </div>
+        <div class="space-y-3">
+          <div class="faq-item bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+            <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-slate-800/50 transition">
+              <span class="font-semibold pr-4">How do I track my shipment?</span>
+              <i class="fa-solid fa-chevron-down text-orange-500 text-xs faq-chevron"></i>
+            </button>
+            <div class="faq-answer px-5 text-slate-400 text-sm leading-relaxed">
+              <div class="pb-5">Once your shipment is booked, your dedicated logistics coordinator will provide real-time updates on your freight's location and estimated arrival time. You'll receive proactive notifications at key milestones — pickup confirmation, in-transit updates, and delivery confirmation. For immediate status, call us at <span class="text-white font-medium">(248) 987-6776</span> with your reference number.</div>
+            </div>
+          </div>
+          <div class="faq-item bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+            <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-slate-800/50 transition">
+              <span class="font-semibold pr-4">What is your on-time delivery rate?</span>
+              <i class="fa-solid fa-chevron-down text-orange-500 text-xs faq-chevron"></i>
+            </button>
+            <div class="faq-answer px-5 text-slate-400 text-sm leading-relaxed">
+              <div class="pb-5">SwiftLink maintains a 99.8% on-time delivery rate across all service types. We achieve this through proactive monitoring, a vetted carrier network, and a 24/7 dispatch team that identifies and resolves potential delays before they impact your supply chain.</div>
+            </div>
+          </div>
+          <div class="faq-item bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+            <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-slate-800/50 transition">
+              <span class="font-semibold pr-4">What happens if my shipment is damaged?</span>
+              <i class="fa-solid fa-chevron-down text-orange-500 text-xs faq-chevron"></i>
+            </button>
+            <div class="faq-answer px-5 text-slate-400 text-sm leading-relaxed">
+              <div class="pb-5">All shipments moved through SwiftLink are covered by carrier cargo insurance. In the event of damage, document the damage at delivery, note it on the Bill of Lading, and contact your SwiftLink representative immediately. We'll initiate the claims process with the carrier and work to resolve it as quickly as possible. We recommend taking photos of any damage for documentation.</div>
+            </div>
+          </div>
+          <div class="faq-item bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+            <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center p-5 text-left hover:bg-slate-800/50 transition">
+              <span class="font-semibold pr-4">Do you offer delivery notifications?</span>
+              <i class="fa-solid fa-chevron-down text-orange-500 text-xs faq-chevron"></i>
+            </button>
+            <div class="faq-answer px-5 text-slate-400 text-sm leading-relaxed">
+              <div class="pb-5">Yes. We provide proactive notifications via email or phone at each stage of your shipment: booking confirmation, pickup confirmation, in-transit checkpoints, and delivery confirmation with proof of delivery (POD). Your logistics coordinator will also reach out proactively if there are any schedule changes or potential delays.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-20 bg-slate-900 border-t border-slate-800">
+    <div class="max-w-4xl mx-auto px-6 text-center fade-in">
+      <h3 class="text-3xl font-bold mb-4">Still Have Questions?</h3>
+      <p class="text-slate-400 text-lg mb-8">Our team is ready to help. Reach out and we'll get you the answers you need.</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="contact.html" class="bg-orange-500 hover:bg-orange-600 px-10 py-4 rounded-2xl font-semibold text-lg transition inline-flex items-center gap-2"><i class="fa-solid fa-phone"></i> Contact Us</a>
+        <a href="quote.html" class="border border-slate-700 hover:border-orange-500 px-10 py-4 rounded-2xl font-semibold text-lg transition inline-flex items-center gap-2"><i class="fa-solid fa-paper-plane"></i> Get a Quote</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="bg-slate-950 py-20 border-t border-slate-800">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="flex flex-col md:flex-row justify-between gap-12">
+        <div>
+          <div class="flex items-center gap-3 mb-6"><i class="fa-solid fa-truck-fast text-3xl text-orange-500"></i><h1 class="text-3xl font-bold tracking-tighter">SwiftLink Logistics, LLC</h1></div>
+          <p class="text-slate-400 max-w-xs">Expert freight transportation and logistics solutions across the United States.</p>
+          <p class="mt-8 text-sm text-slate-500">&copy; 2026 SwiftLink Logistics, LLC &bull; swiftlinkusa.com</p>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-12">
+          <div><h4 class="font-semibold mb-4">Company</h4><ul class="space-y-3 text-sm text-slate-400"><li><a href="about.html" class="hover:text-white">About Us</a></li><li><a href="careers.html" class="hover:text-white">Careers</a></li><li><a href="contact.html" class="hover:text-white">Contact</a></li></ul></div>
+          <div><h4 class="font-semibold mb-4">Solutions</h4><ul class="space-y-3 text-sm text-slate-400"><li><a href="ftl.html" class="hover:text-white">Full Truckload</a></li><li><a href="ltl.html" class="hover:text-white">LTL Shipping</a></li><li><a href="drayage.html" class="hover:text-white">Drayage Services</a></li><li><a href="expedited.html" class="hover:text-white">Expedited</a></li><li><a href="heavy-haul.html" class="hover:text-white">Heavy Haul</a></li><li><a href="hazmat.html" class="hover:text-white">Hazmat</a></li></ul></div>
+          <div><h4 class="font-semibold mb-4">Support</h4><ul class="space-y-3 text-sm text-slate-400"><li><a href="quote.html" class="hover:text-white">Get Quote</a></li><li><a href="faq.html" class="hover:text-white">FAQ</a></li></ul></div>
+          <div><h4 class="font-semibold mb-4">Contact</h4><p class="text-sm text-slate-400">info@swiftlinkusa.com</p><p class="text-sm text-slate-400">(248) 987-6776</p></div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Nav dropdown
+    function toggleSolDropdown() { document.getElementById('solMenu').classList.toggle('hidden'); }
+    (function() {
+      const dd = document.getElementById('solDropdown');
+      const menu = document.getElementById('solMenu');
+      dd.addEventListener('mouseenter', () => menu.classList.remove('hidden'));
+      dd.addEventListener('mouseleave', () => menu.classList.add('hidden'));
+      document.addEventListener('click', (e) => { if (!dd.contains(e.target)) menu.classList.add('hidden'); });
+    })();
+
+    // Scroll animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // FAQ accordion
+    function toggleFaq(btn) {
+      const answer = btn.nextElementSibling;
+      const chevron = btn.querySelector('.faq-chevron');
+      const isOpen = answer.classList.contains('open');
+
+      // Close all in same section
+      const section = btn.closest('.space-y-3');
+      section.querySelectorAll('.faq-answer.open').forEach(a => {
+        a.classList.remove('open');
+        a.previousElementSibling.querySelector('.faq-chevron').classList.remove('open');
+      });
+
+      // Toggle current
+      if (!isOpen) {
+        answer.classList.add('open');
+        chevron.classList.add('open');
+      }
+    }
+  </script>
+
+<!-- JSON-LD FAQ Schema -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "What is SwiftLink Logistics?", "acceptedAnswer": {"@type": "Answer", "text": "SwiftLink Logistics, LLC is a Michigan-based third-party logistics (3PL) freight brokerage connecting shippers with over 5,000 vetted carriers across all 48 contiguous states."}},
+    {"@type": "Question", "name": "What types of freight do you handle?", "acceptedAnswer": {"@type": "Answer", "text": "We handle Full Truckload (FTL), Less-Than-Truckload (LTL), Drayage & Port Services, Expedited Freight, Heavy Haul, and Hazmat Shipping across all 48 contiguous states."}},
+    {"@type": "Question", "name": "What is the difference between FTL and LTL?", "acceptedAnswer": {"@type": "Answer", "text": "FTL gives your freight a dedicated trailer with no sharing, ideal for large volumes. LTL combines your freight with other shipments so you only pay for the space you use, ideal for 1-14 pallets."}},
+    {"@type": "Question", "name": "Do you handle hazmat shipments?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, we transport hazardous materials across all 9 DOT hazmat classes with fully certified carriers, proper documentation, placarding, and emergency response protocols."}},
+    {"@type": "Question", "name": "How do I get a freight quote?", "acceptedAnswer": {"@type": "Answer", "text": "Request a free quote through our online form, call (248) 987-6776, or email info@swiftlinkusa.com. Most quotes are returned within minutes during business hours."}},
+    {"@type": "Question", "name": "What is your on-time delivery rate?", "acceptedAnswer": {"@type": "Answer", "text": "SwiftLink maintains a 99.8% on-time delivery rate across all service types through proactive monitoring and a vetted carrier network."}}
+  ]
+}
+</script>
+</body>
+</html>

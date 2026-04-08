@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Expedited freight shipping by SwiftLink Logistics. Dedicated vehicles, team drivers, and time-critical delivery with 24/7 dispatch and real-time tracking.">
+  <meta name="keywords" content="expedited freight, time-critical shipping, hot shot delivery, dedicated vehicle, team drivers, urgent freight, same day shipping, next day delivery, express freight, rush shipping">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://swiftlinkusa.com/expedited.html">
+  <meta property="og:title" content="Expedited Freight Shipping | SwiftLink Logistics">
+  <meta property="og:description" content="Time-critical expedited freight with dedicated vehicles, team drivers, 24/7 dispatch, and real-time tracking across the US.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://swiftlinkusa.com/expedited.html">
+  <meta property="og:site_name" content="SwiftLink Logistics">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Expedited Freight Shipping | SwiftLink Logistics">
+  <meta name="twitter:description" content="Time-critical expedited freight with dedicated vehicles, team drivers, 24/7 dispatch, and real-time tracking across the US.">
+  <title>Expedited Freight Shipping • SwiftLink Logistics</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <style>
+    .fade-in { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+<body class="bg-slate-950 text-white font-sans overflow-x-hidden">
+
+  <!-- NAV -->
+  <nav class="bg-slate-900/95 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <a href="index.html" class="flex items-center gap-3">
+        <i class="fa-solid fa-truck-fast text-3xl text-orange-500"></i>
+        <div>
+          <h1 class="text-2xl font-bold tracking-tighter">SwiftLink</h1>
+          <p class="text-[10px] text-orange-500 -mt-1">LOGISTICS, LLC</p>
+        </div>
+      </a>
+      <div class="hidden md:flex items-center gap-8 text-sm font-medium">
+        <div class="relative" id="solDropdown">
+          <button onclick="toggleSolDropdown()" class="flex items-center gap-1.5 hover:text-orange-500 transition py-2">
+            Solutions <i class="fa-solid fa-chevron-down text-[10px] opacity-50"></i>
+          </button>
+          <div id="solMenu" class="hidden absolute top-full left-1/2 -translate-x-1/2 pt-3 z-50">
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 w-[540px] shadow-2xl grid grid-cols-2 gap-1" style="box-shadow: 0 25px 60px rgba(0,0,0,0.7);">
+              <a href="ftl.html" class="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-800 transition"><i class="fa-solid fa-truck text-orange-500 mt-0.5 text-sm"></i><div><p class="font-semibold text-sm">Full Truckload (FTL)</p><p class="text-xs text-slate-500 mt-0.5">Dedicated trailers, direct delivery</p></div></a>
+              <a href="ltl.html" class="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-800 transition"><i class="fa-solid fa-boxes-stacked text-orange-500 mt-0.5 text-sm"></i><div><p class="font-semibold text-sm">Less-Than-Truckload (LTL)</p><p class="text-xs text-slate-500 mt-0.5">Cost-effective shared freight</p></div></a>
+              <a href="drayage.html" class="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-800 transition"><i class="fa-solid fa-ship text-orange-500 mt-0.5 text-sm"></i><div><p class="font-semibold text-sm">Drayage &amp; Port Services</p><p class="text-xs text-slate-500 mt-0.5">Container pickup &amp; port delivery</p></div></a>
+              <a href="expedited.html" class="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-800 transition"><i class="fa-solid fa-bolt text-orange-500 mt-0.5 text-sm"></i><div><p class="font-semibold text-sm">Expedited Freight</p><p class="text-xs text-slate-500 mt-0.5">Time-critical, guaranteed windows</p></div></a>
+              <a href="heavy-haul.html" class="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-800 transition"><i class="fa-solid fa-weight-hanging text-orange-500 mt-0.5 text-sm"></i><div><p class="font-semibold text-sm">Heavy Haul</p><p class="text-xs text-slate-500 mt-0.5">Oversize &amp; overweight loads</p></div></a>
+              <a href="hazmat.html" class="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-800 transition"><i class="fa-solid fa-biohazard text-orange-500 mt-0.5 text-sm"></i><div><p class="font-semibold text-sm">Hazmat Shipping</p><p class="text-xs text-slate-500 mt-0.5">Certified hazardous materials</p></div></a>
+              <div class="col-span-2 mt-2 pt-3 border-t border-slate-800"><a href="quote.html" class="flex items-center justify-center gap-2 text-sm text-orange-500 hover:text-orange-400 font-semibold transition"><i class="fa-solid fa-arrow-right"></i> Request a Quote for Any Service</a></div>
+            </div>
+          </div>
+        </div>
+        <a href="about.html" class="hover:text-orange-500 transition">About</a>
+        <a href="contact.html" class="hover:text-orange-500 transition">Contact</a>
+        <a href="careers.html" class="hover:text-orange-500 transition">Careers</a>
+      </div>
+      <a href="quote.html" class="bg-orange-500 hover:bg-orange-600 px-8 py-2.5 rounded-2xl font-semibold text-sm transition">Get Instant Quote</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="relative py-32 bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 overflow-hidden">
+    <div class="absolute inset-0 opacity-10">
+      <div class="absolute top-20 left-10 w-72 h-72 bg-orange-500 rounded-full blur-[120px]"></div>
+      <div class="absolute bottom-10 right-20 w-96 h-96 bg-orange-600 rounded-full blur-[150px]"></div>
+    </div>
+    <div class="max-w-7xl mx-auto px-6 text-center relative z-10">
+      <div class="fade-in">
+        <div class="inline-flex items-center gap-2 bg-orange-500/10 border border-orange-500/20 rounded-full px-5 py-2 mb-8">
+          <i class="fa-solid fa-bolt text-orange-500"></i>
+          <span class="text-orange-500 text-sm font-semibold">Time-Critical Delivery</span>
+        </div>
+        <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight leading-tight mb-6">Expedited Freight<br><span class="text-orange-500">Shipping</span></h1>
+        <p class="text-xl text-slate-400 max-w-2xl mx-auto mb-10">When every hour counts, SwiftLink delivers. Dedicated vehicles, team drivers, and zero consolidation stops — your freight arrives on the fastest possible timeline.</p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="quote.html?service=Expedited" class="bg-orange-500 hover:bg-orange-600 px-10 py-4 rounded-2xl font-semibold text-lg transition inline-flex items-center gap-2"><i class="fa-solid fa-clock"></i> Get Expedited Quote</a>
+          <a href="#what-is-expedited" class="border border-slate-700 hover:border-orange-500 px-10 py-4 rounded-2xl font-semibold text-lg transition inline-flex items-center gap-2"><i class="fa-solid fa-arrow-down"></i> Learn More</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHAT IS EXPEDITED -->
+  <section id="what-is-expedited" class="py-24 bg-slate-900">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid md:grid-cols-2 gap-16 items-center">
+        <div class="fade-in">
+          <h2 class="text-4xl font-bold mb-6">What is <span class="text-orange-500">Expedited Freight?</span></h2>
+          <p class="text-slate-400 text-lg leading-relaxed mb-6">Expedited freight is a premium shipping service designed for time-sensitive cargo that cannot wait for standard FTL or LTL transit timelines. Unlike conventional freight, expedited shipments move on dedicated vehicles with no consolidation, no terminal transfers, and no delays.</p>
+          <p class="text-slate-400 text-lg leading-relaxed mb-6">Your shipment is the only shipment on the truck. Team drivers rotate behind the wheel around the clock, meaning your freight moves continuously from pickup to delivery without overnight stops or mandatory rest breaks slowing it down.</p>
+          <p class="text-slate-400 text-lg leading-relaxed">Whether it is a critical machine part needed to restart a production line or a pharmaceutical shipment with a narrow delivery window, expedited freight eliminates the variables that cause delays in standard shipping.</p>
+        </div>
+        <div class="fade-in">
+          <div class="bg-slate-800/50 border border-slate-700 rounded-3xl p-8 space-y-6">
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 bg-orange-500/10 rounded-xl flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-truck text-orange-500"></i></div>
+              <div><h4 class="font-semibold text-lg mb-1">Dedicated Vehicle</h4><p class="text-slate-400 text-sm">Your freight is the only cargo on the truck — no sharing, no detours.</p></div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 bg-orange-500/10 rounded-xl flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-users text-orange-500"></i></div>
+              <div><h4 class="font-semibold text-lg mb-1">Team Drivers</h4><p class="text-slate-400 text-sm">Two drivers alternate driving shifts so the truck never stops moving.</p></div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 bg-orange-500/10 rounded-xl flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-ban text-orange-500"></i></div>
+              <div><h4 class="font-semibold text-lg mb-1">Zero Consolidation</h4><p class="text-slate-400 text-sm">No terminal stops, no cross-docking, no waiting for other freight.</p></div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 bg-orange-500/10 rounded-xl flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-gauge-high text-orange-500"></i></div>
+              <div><h4 class="font-semibold text-lg mb-1">Fastest Transit</h4><p class="text-slate-400 text-sm">Coast-to-coast in as little as 45 hours — the fastest ground option available.</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICE OPTIONS -->
+  <section class="py-24 bg-slate-950">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16 fade-in">
+        <h2 class="text-4xl font-bold mb-4">Expedited <span class="text-orange-500">Service Options</span></h2>
+        <p class="text-slate-400 text-lg max-w-2xl mx-auto">We match the right equipment and driver configuration to your shipment's urgency, size, and sensitivity requirements.</p>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Team Drivers -->
+        <div class="fade-in bg-slate-900 border border-slate-800 rounded-2xl p-8 hover:border-orange-500/50 transition-all duration-300 hover:-translate-y-2">
+          <div class="w-14 h-14 bg-orange-500/10 rounded-2xl flex items-center justify-center mb-6"><i class="fa-solid fa-people-carry-box text-orange-500 text-2xl"></i></div>
+          <h3 class="text-xl font-bold mb-3">Team Drivers</h3>
+          <p class="text-slate-400 mb-4">Two professional drivers alternate behind the wheel, keeping your freight moving 24 hours a day with no mandatory rest stops. Ideal for full truckload shipments that need to cover maximum distance in minimum time.</p>
+          <ul class="space-y-2 text-sm text-slate-400">
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-orange-500 text-xs"></i> Coast-to-coast in ~45 hours</li>
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-orange-500 text-xs"></i> Up to 44,000 lbs capacity</li>
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-orange-500 text-xs"></i> Dry van or reefer available</li>
+          </ul>
+        </div>
+        <!-- Straight Truck -->
+        <div class="fade-in bg-slate-900 border border-slate-800 rounded-2xl p-8 hover:border-orange-500/50 transition-all duration-300 hover:-translate-y-2">
+          <div class="w-14 h-14 bg-orange-500/10 rounded-2xl flex items-center justify-center mb-6"><i class="fa-solid fa-truck-moving text-orange-500 text-2xl"></i></div>
+          <h3 class="text-xl font-bold mb-3">Straight Truck / Box Truck</h3>
+          <p class="text-slate-400 mb-4">A versatile option for mid-size expedited shipments. Straight trucks navigate urban areas and tight loading docks with ease, and in some jurisdictions face fewer CDL-related restrictions for faster driver availability.</p>
+          <ul class="space-y-2 text-sm text-slate-400">
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-orange-500 text-xs"></i> 5,000 - 15,000 lbs capacity</li>
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-orange-500 text-xs"></i> Direct dock-to-dock delivery</li>
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-orange-500 text-xs"></i> Liftgate available</li>
+          </ul>
+        </div>
+        <!-- Sprinter Van -->
+        <div class="fade-in bg-slate-900 border border-slate-800 rounded-2xl p-8 hover:border-orange-500/50 transition-all duration-300 hover:-translate-y-2">
+          <div class="w-14 h-14 bg-orange-500/10 rounded-2xl flex items-center justify-center mb-6"><i class="fa-solid fa-van-shuttle text-orange-500 text-2xl"></i></div>
+          <h3 class="text-xl font-bold mb-3">Sprinter Van</h3>
+          <p class="text-slate-400 mb-4">The fastest option for smaller shipments. Sprinter vans are dispatched immediately for same-day and next-day deliveries of 1 to 4 pallets. Perfect for urgent parts, documents, medical supplies, and prototype shipments.</p>
+          <ul class="space-y-2 text-sm text-slate-400">
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-orange-500 text-xs"></i> 1-4 pallets / up to 3,500 lbs</li>
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-orange-500 text-xs"></i> Same-day & next-day delivery</li>
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-orange-500 text-xs"></i> Fastest dispatch times</li>
+          </ul>
+        </div>
+        <!-- Hot Shot -->
+        <div class="fade-in bg-slate-900 border border-slate-800 rounded-2xl p-8 hover:border-orange-500/50 transition-all duration-300 hover:-translate-y-2">
+          <div class="w-14 h-14 bg-orange-500/10 rounded-2xl flex items-center justify-center mb-6"><i class="fa-solid fa-fire text-orange-500 text-2xl"></i></div>
+          <h3 class="text-xl font-bold mb-3">Hot Shot</h3>
+          <p class="text-slate-400 mb-4">Hot shot freight uses medium-duty trucks with flatbed or step deck trailers for urgent oversized or oddly shaped loads. When you need heavy or bulky equipment moved fast without waiting for a full tractor-trailer rig.</p>
+          <ul class="space-y-2 text-sm text-slate-400">
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-orange-500 text-xs"></i> Flatbed & step deck trailers</li>
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-orange-500 text-xs"></i> Up to 16,500 lbs capacity</li>
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-orange-500 text-xs"></i> Oversized urgent loads</li>
+          </ul>
+        </div>
+        <!-- Air Ride -->
+        <div class="fade-in bg-slate-900 border border-slate-800 rounded-2xl p-8 hover:border-orange-500/50 transition-all duration-300 hover:-translate-y-2">
+          <div class="w-14 h-14 bg-orange-500/10 rounded-2xl flex items-center justify-center mb-6"><i class="fa-solid fa-microchip text-orange-500 text-2xl"></i></div>
+          <h3 class="text-xl font-bold mb-3">Air Ride Equipped</h3>
+          <p class="text-slate-400 mb-4">For freight that demands gentle handling — electronics, medical devices, precision instruments, and fine goods. Air ride suspension systems absorb road shock and vibration, protecting sensitive cargo throughout transit.</p>
+          <ul class="space-y-2 text-sm text-slate-400">
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-orange-500 text-xs"></i> Vibration-dampening suspension</li>
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-orange-500 text-xs"></i> Electronics & medical freight</li>
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-orange-500 text-xs"></i> Climate-controlled options</li>
+          </ul>
+        </div>
+        <!-- Quote Card -->
+        <div class="fade-in bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl p-8 flex flex-col justify-center">
+          <h3 class="text-2xl font-bold mb-4">Not Sure Which Option Fits?</h3>
+          <p class="text-orange-100 mb-6">Our logistics coordinators will recommend the ideal equipment and driver configuration based on your cargo, timeline, and budget.</p>
+          <a href="quote.html?service=Expedited" class="bg-white text-orange-600 hover:bg-orange-50 px-8 py-3 rounded-xl font-semibold transition inline-flex items-center gap-2 w-fit"><i class="fa-solid fa-paper-plane"></i> Get a Custom Quote</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHEN YOU NEED EXPEDITED -->
+  <section class="py-24 bg-slate-900">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16 fade-in">
+        <h2 class="text-4xl font-bold mb-4">When You Need <span class="text-orange-500">Expedited Freight</span></h2>
+        <p class="text-slate-400 text-lg max-w-2xl mx-auto">Expedited shipping is the right call when downtime, missed deadlines, or supply chain disruptions cost more than premium freight rates.</p>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="fade-in flex items-start gap-4 bg-slate-800/50 border border-slate-700 rounded-2xl p-6">
+          <div class="w-12 h-12 bg-red-500/10 rounded-xl flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-industry text-red-400 text-lg"></i></div>
+          <div>
+            <h4 class="font-bold text-lg mb-2">Production Line Down</h4>
+            <p class="text-slate-400 text-sm">A missing component has halted your manufacturing line. Every hour of downtime costs thousands. Expedited freight gets the part on-site in hours, not days.</p>
+          </div>
+        </div>
+        <div class="fade-in flex items-start gap-4 bg-slate-800/50 border border-slate-700 rounded-2xl p-6">
+          <div class="w-12 h-12 bg-purple-500/10 rounded-xl flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-calendar-check text-purple-400 text-lg"></i></div>
+          <div>
+            <h4 class="font-bold text-lg mb-2">Trade Show Deadlines</h4>
+            <p class="text-slate-400 text-sm">Your booth materials, displays, and product samples must arrive before the show opens. There is no second chance — expedited ensures on-time delivery to convention centers nationwide.</p>
+          </div>
+        </div>
+        <div class="fade-in flex items-start gap-4 bg-slate-800/50 border border-slate-700 rounded-2xl p-6">
+          <div class="w-12 h-12 bg-green-500/10 rounded-xl flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-chart-line text-green-400 text-lg"></i></div>
+          <div>
+            <h4 class="font-bold text-lg mb-2">Seasonal Demand Spikes</h4>
+            <p class="text-slate-400 text-sm">Holiday rushes, back-to-school, or unexpected demand surges require rapid inventory replenishment. Keep shelves stocked and customers satisfied with expedited restocking.</p>
+          </div>
+        </div>
+        <div class="fade-in flex items-start gap-4 bg-slate-800/50 border border-slate-700 rounded-2xl p-6">
+          <div class="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-heart-pulse text-blue-400 text-lg"></i></div>
+          <div>
+            <h4 class="font-bold text-lg mb-2">Healthcare & Pharmaceutical</h4>
+            <p class="text-slate-400 text-sm">Medications, medical devices, and lab specimens often have strict time and temperature requirements. Expedited shipping with temperature-controlled equipment protects patient safety.</p>
+          </div>
+        </div>
+        <div class="fade-in flex items-start gap-4 bg-slate-800/50 border border-slate-700 rounded-2xl p-6">
+          <div class="w-12 h-12 bg-yellow-500/10 rounded-xl flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-store text-yellow-400 text-lg"></i></div>
+          <div>
+            <h4 class="font-bold text-lg mb-2">Retail Restocks</h4>
+            <p class="text-slate-400 text-sm">Empty shelves mean lost revenue. When a fast-selling product runs out, expedited freight from your distribution center to retail locations prevents missed sales opportunities.</p>
+          </div>
+        </div>
+        <div class="fade-in flex items-start gap-4 bg-slate-800/50 border border-slate-700 rounded-2xl p-6">
+          <div class="w-12 h-12 bg-orange-500/10 rounded-xl flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-car text-orange-400 text-lg"></i></div>
+          <div>
+            <h4 class="font-bold text-lg mb-2">Auto Plant JIT Delivery</h4>
+            <p class="text-slate-400 text-sm">Automotive manufacturers operate on just-in-time inventory systems with zero tolerance for late deliveries. A single missing part can shut down an entire assembly line costing millions per hour.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OUR EXPEDITED PROMISE -->
+  <section class="py-24 bg-slate-950">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16 fade-in">
+        <h2 class="text-4xl font-bold mb-4">Our Expedited <span class="text-orange-500">Promise</span></h2>
+        <p class="text-slate-400 text-lg max-w-2xl mx-auto">When you trust SwiftLink with your time-critical freight, you get more than fast trucks — you get a dedicated logistics partner committed to your success.</p>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="fade-in text-center bg-slate-900 border border-slate-800 rounded-2xl p-8">
+          <div class="w-16 h-16 bg-orange-500/10 rounded-full flex items-center justify-center mx-auto mb-6"><i class="fa-solid fa-headset text-orange-500 text-2xl"></i></div>
+          <h4 class="text-xl font-bold mb-3">24/7 Dispatch</h4>
+          <p class="text-slate-400 text-sm">Our dispatch team operates around the clock — nights, weekends, and holidays. When an emergency shipment arises at 2 AM, we answer the phone and have a truck rolling within hours.</p>
+        </div>
+        <div class="fade-in text-center bg-slate-900 border border-slate-800 rounded-2xl p-8">
+          <div class="w-16 h-16 bg-orange-500/10 rounded-full flex items-center justify-center mx-auto mb-6"><i class="fa-solid fa-satellite-dish text-orange-500 text-2xl"></i></div>
+          <h4 class="text-xl font-bold mb-3">Real-Time GPS</h4>
+          <p class="text-slate-400 text-sm">Track your shipment every mile of the way with live GPS updates. Know exactly where your freight is at all times and receive proactive ETA notifications so you can plan ahead.</p>
+        </div>
+        <div class="fade-in text-center bg-slate-900 border border-slate-800 rounded-2xl p-8">
+          <div class="w-16 h-16 bg-orange-500/10 rounded-full flex items-center justify-center mx-auto mb-6"><i class="fa-solid fa-user-shield text-orange-500 text-2xl"></i></div>
+          <h4 class="text-xl font-bold mb-3">Dedicated Driver</h4>
+          <p class="text-slate-400 text-sm">Your load gets a dedicated driver (or team) focused exclusively on your shipment. No sharing the trailer, no multi-stop routes — direct point-to-point service from pickup to delivery.</p>
+        </div>
+        <div class="fade-in text-center bg-slate-900 border border-slate-800 rounded-2xl p-8">
+          <div class="w-16 h-16 bg-orange-500/10 rounded-full flex items-center justify-center mx-auto mb-6"><i class="fa-solid fa-calendar-days text-orange-500 text-2xl"></i></div>
+          <h4 class="text-xl font-bold mb-3">Flexible Scheduling</h4>
+          <p class="text-slate-400 text-sm">Need pickup in two hours or a guaranteed delivery window? We accommodate tight schedules, after-hours pickups, weekend deliveries, and custom appointment times to meet your needs.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS BAR -->
+  <section class="py-16 bg-slate-900 border-y border-slate-800">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center fade-in">
+        <div>
+          <p class="text-4xl font-extrabold text-orange-500 mb-2">45 hrs</p>
+          <p class="text-slate-400 text-sm">Coast-to-Coast Transit</p>
+        </div>
+        <div>
+          <p class="text-4xl font-extrabold text-orange-500 mb-2">24/7</p>
+          <p class="text-slate-400 text-sm">Dispatch Availability</p>
+        </div>
+        <div>
+          <p class="text-4xl font-extrabold text-orange-500 mb-2">2 hrs</p>
+          <p class="text-slate-400 text-sm">Average Pickup Time</p>
+        </div>
+        <div>
+          <p class="text-4xl font-extrabold text-orange-500 mb-2">99.4%</p>
+          <p class="text-slate-400 text-sm">On-Time Delivery Rate</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-24 bg-slate-950">
+    <div class="max-w-4xl mx-auto px-6 text-center fade-in">
+      <h2 class="text-4xl md:text-5xl font-bold mb-6">Need It There <span class="text-orange-500">Yesterday?</span></h2>
+      <p class="text-xl text-slate-400 mb-10 max-w-2xl mx-auto">Tell us where it is, where it needs to go, and when it needs to arrive. We will make it happen — guaranteed.</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="quote.html?service=Expedited" class="bg-orange-500 hover:bg-orange-600 px-10 py-4 rounded-2xl font-semibold text-lg transition inline-flex items-center gap-2"><i class="fa-solid fa-bolt"></i> Get Expedited Quote</a>
+        <a href="contact.html" class="border border-slate-700 hover:border-orange-500 px-10 py-4 rounded-2xl font-semibold text-lg transition inline-flex items-center gap-2"><i class="fa-solid fa-phone"></i> Call (248) 987-6776</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="bg-slate-950 py-20 border-t border-slate-800">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="flex flex-col md:flex-row justify-between gap-12">
+        <div>
+          <div class="flex items-center gap-3 mb-6"><i class="fa-solid fa-truck-fast text-3xl text-orange-500"></i><h1 class="text-3xl font-bold tracking-tighter">SwiftLink Logistics, LLC</h1></div>
+          <p class="text-slate-400 max-w-xs">Expert freight transportation and logistics solutions across the United States.</p>
+          <p class="mt-8 text-sm text-slate-500">&copy; 2026 SwiftLink Logistics, LLC &bull; swiftlinkusa.com</p>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-12">
+          <div><h4 class="font-semibold mb-4">Company</h4><ul class="space-y-3 text-sm text-slate-400"><li><a href="about.html" class="hover:text-white">About Us</a></li><li><a href="careers.html" class="hover:text-white">Careers</a></li><li><a href="contact.html" class="hover:text-white">Contact</a></li></ul></div>
+          <div><h4 class="font-semibold mb-4">Solutions</h4><ul class="space-y-3 text-sm text-slate-400"><li><a href="ftl.html" class="hover:text-white">Full Truckload</a></li><li><a href="ltl.html" class="hover:text-white">LTL Shipping</a></li><li><a href="drayage.html" class="hover:text-white">Drayage Services</a></li><li><a href="expedited.html" class="hover:text-white">Expedited</a></li><li><a href="heavy-haul.html" class="hover:text-white">Heavy Haul</a></li><li><a href="hazmat.html" class="hover:text-white">Hazmat</a></li></ul></div>
+          <div><h4 class="font-semibold mb-4">Support</h4><ul class="space-y-3 text-sm text-slate-400"><li><a href="quote.html" class="hover:text-white">Get Quote</a></li><li><a href="faq.html" class="hover:text-white">FAQ</a></li></ul></div>
+          <div><h4 class="font-semibold mb-4">Contact</h4><p class="text-sm text-slate-400">info@swiftlinkusa.com</p><p class="text-sm text-slate-400">(248) 987-6776</p></div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function toggleSolDropdown() { document.getElementById('solMenu').classList.toggle('hidden'); }
+    (function() {
+      const dd = document.getElementById('solDropdown');
+      const menu = document.getElementById('solMenu');
+      dd.addEventListener('mouseenter', () => menu.classList.remove('hidden'));
+      dd.addEventListener('mouseleave', () => menu.classList.add('hidden'));
+      document.addEventListener('click', (e) => { if (!dd.contains(e.target)) menu.classList.add('hidden'); });
+    })();
+    const observer = new IntersectionObserver((entries) => { entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }); }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  </script>
+<!-- JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "serviceType": "Expedited Freight Shipping",
+  "name": "Expedited Freight Shipping",
+  "description": "Time-critical expedited freight shipping with dedicated vehicles, team drivers, 24/7 dispatch, and real-time tracking for urgent deliveries across the US.",
+  "provider": {
+    "@type": "LocalBusiness",
+    "name": "SwiftLink Logistics, LLC",
+    "url": "https://swiftlinkusa.com",
+    "telephone": "+1-248-987-6776"
+  },
+  "areaServed": {
+    "@type": "Country",
+    "name": "US"
+  },
+  "url": "https://swiftlinkusa.com/expedited.html"
+}
+</script>
+</body>
+</html>

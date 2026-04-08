@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Join SwiftLink Logistics and build your career in freight and logistics. Explore open positions at our growing Michigan-based 3PL brokerage.">
+  <meta name="keywords" content="logistics careers, freight broker jobs, 3PL jobs, transportation careers, logistics jobs Michigan, freight industry careers, supply chain jobs, SwiftLink careers">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://swiftlinkusa.com/careers.html">
+  <meta property="og:title" content="Careers at SwiftLink Logistics | Join Our Team">
+  <meta property="og:description" content="Build your career in freight and logistics. Explore open positions at SwiftLink Logistics, a growing Michigan-based 3PL brokerage.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://swiftlinkusa.com/careers.html">
+  <meta property="og:site_name" content="SwiftLink Logistics">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Careers at SwiftLink Logistics | Join Our Team">
+  <meta name="twitter:description" content="Build your career in freight and logistics. Explore open positions at SwiftLink Logistics, a growing Michigan-based 3PL brokerage.">
+  <title>Careers &bull; SwiftLink Logistics</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <style>
+    .fade-in { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+    .modal-overlay { background: rgba(0,0,0,0.7); backdrop-filter: blur(6px); }
+    .modal-card { animation: modalIn 0.3s ease-out; }
+    @keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+    .input-field { width: 100%; background-color: rgb(15 23 42); border: 1px solid rgb(51 65 85); border-radius: 0.75rem; padding: 0.75rem 1rem; font-size: 0.95rem; color: white; outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
+    .input-field::placeholder { color: rgb(100 116 139); }
+    .input-field:focus { border-color: rgb(249 115 22); box-shadow: 0 0 0 3px rgb(249 115 22 / 0.15); }
+    .file-drop { border: 2px dashed rgb(51 65 85); transition: border-color 0.2s, background 0.2s; }
+    .file-drop.dragover { border-color: rgb(249 115 22); background: rgb(249 115 22 / 0.05); }
+  </style>
+</head>
+<body class="bg-slate-950 text-white font-sans overflow-x-hidden">
+
+  <!-- NAV -->
+  <nav class="bg-slate-900/95 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <a href="index.html" class="flex items-center gap-3">
+        <i class="fa-solid fa-truck-fast text-3xl text-orange-500"></i>
+        <div>
+          <h1 class="text-2xl font-bold tracking-tighter">SwiftLink</h1>
+          <p class="text-[10px] text-orange-500 -mt-1">LOGISTICS, LLC</p>
+        </div>
+      </a>
+      <div class="hidden md:flex items-center gap-8 text-sm font-medium">
+        <div class="relative" id="solDropdown">
+          <button onclick="toggleSolDropdown()" class="flex items-center gap-1.5 hover:text-orange-500 transition py-2">
+            Solutions <i class="fa-solid fa-chevron-down text-[10px] opacity-50"></i>
+          </button>
+          <div id="solMenu" class="hidden absolute top-full left-1/2 -translate-x-1/2 pt-3 z-50">
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 w-[540px] shadow-2xl grid grid-cols-2 gap-1" style="box-shadow: 0 25px 60px rgba(0,0,0,0.7);">
+              <a href="ftl.html" class="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-800 transition"><i class="fa-solid fa-truck text-orange-500 mt-0.5 text-sm"></i><div><p class="font-semibold text-sm">Full Truckload (FTL)</p><p class="text-xs text-slate-500 mt-0.5">Dedicated trailers, direct delivery</p></div></a>
+              <a href="ltl.html" class="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-800 transition"><i class="fa-solid fa-boxes-stacked text-orange-500 mt-0.5 text-sm"></i><div><p class="font-semibold text-sm">Less-Than-Truckload (LTL)</p><p class="text-xs text-slate-500 mt-0.5">Cost-effective shared freight</p></div></a>
+              <a href="drayage.html" class="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-800 transition"><i class="fa-solid fa-ship text-orange-500 mt-0.5 text-sm"></i><div><p class="font-semibold text-sm">Drayage &amp; Port Services</p><p class="text-xs text-slate-500 mt-0.5">Container pickup &amp; port delivery</p></div></a>
+              <a href="expedited.html" class="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-800 transition"><i class="fa-solid fa-bolt text-orange-500 mt-0.5 text-sm"></i><div><p class="font-semibold text-sm">Expedited Freight</p><p class="text-xs text-slate-500 mt-0.5">Time-critical, guaranteed windows</p></div></a>
+              <a href="heavy-haul.html" class="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-800 transition"><i class="fa-solid fa-weight-hanging text-orange-500 mt-0.5 text-sm"></i><div><p class="font-semibold text-sm">Heavy Haul</p><p class="text-xs text-slate-500 mt-0.5">Oversize &amp; overweight loads</p></div></a>
+              <a href="hazmat.html" class="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-800 transition"><i class="fa-solid fa-biohazard text-orange-500 mt-0.5 text-sm"></i><div><p class="font-semibold text-sm">Hazmat Shipping</p><p class="text-xs text-slate-500 mt-0.5">Certified hazardous materials</p></div></a>
+              <div class="col-span-2 mt-2 pt-3 border-t border-slate-800"><a href="quote.html" class="flex items-center justify-center gap-2 text-sm text-orange-500 hover:text-orange-400 font-semibold transition"><i class="fa-solid fa-arrow-right"></i> Request a Quote for Any Service</a></div>
+            </div>
+          </div>
+        </div>
+        <a href="about.html" class="hover:text-orange-500 transition">About</a>
+        <a href="contact.html" class="hover:text-orange-500 transition">Contact</a>
+        <a href="careers.html" class="hover:text-orange-500 transition text-orange-500">Careers</a>
+      </div>
+      <a href="quote.html" class="bg-orange-500 hover:bg-orange-600 px-8 py-2.5 rounded-2xl font-semibold text-sm transition">Get Instant Quote</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="relative bg-slate-900 border-b border-slate-800 py-20 overflow-hidden">
+    <div class="absolute inset-0 opacity-5" style="background-image: radial-gradient(circle at 30% 50%, rgb(249 115 22) 0%, transparent 50%), radial-gradient(circle at 70% 50%, rgb(249 115 22) 0%, transparent 50%);"></div>
+    <div class="relative max-w-4xl mx-auto px-6 text-center">
+      <span class="inline-flex items-center gap-2 bg-orange-500/10 border border-orange-500/30 text-orange-400 text-sm font-medium px-4 py-1.5 rounded-full mb-6">
+        <i class="fa-solid fa-briefcase"></i> We're Hiring
+      </span>
+      <h1 class="text-5xl md:text-6xl font-bold tracking-tighter mb-4">Join the SwiftLink Team</h1>
+      <p class="text-slate-400 text-xl max-w-2xl mx-auto">Build your career in one of the fastest-growing industries in America. We're looking for driven people who want to make an impact in freight and logistics.</p>
+    </div>
+  </section>
+
+  <!-- WHY WORK HERE -->
+  <section class="py-24 bg-slate-950">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16">
+        <h3 class="text-orange-500 font-medium tracking-widest">BENEFITS</h3>
+        <h2 class="text-4xl font-bold tracking-tighter mt-3">Why Work at SwiftLink?</h2>
+        <p class="text-slate-400 mt-4 max-w-2xl mx-auto">We invest in our people because they're the engine behind everything we do.</p>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="fade-in bg-slate-900 border border-slate-800 rounded-2xl p-8 text-center">
+          <div class="w-14 h-14 bg-orange-500/10 rounded-full flex items-center justify-center mx-auto mb-5">
+            <i class="fa-solid fa-dollar-sign text-orange-500 text-xl"></i>
+          </div>
+          <h4 class="text-lg font-bold mb-2">Competitive Pay</h4>
+          <p class="text-slate-400 text-sm">Base salary plus uncapped commission structures for revenue-generating roles. We reward performance.</p>
+        </div>
+        <div class="fade-in bg-slate-900 border border-slate-800 rounded-2xl p-8 text-center">
+          <div class="w-14 h-14 bg-orange-500/10 rounded-full flex items-center justify-center mx-auto mb-5">
+            <i class="fa-solid fa-chart-line text-orange-500 text-xl"></i>
+          </div>
+          <h4 class="text-lg font-bold mb-2">Growth Opportunities</h4>
+          <p class="text-slate-400 text-sm">Clear advancement paths from coordinator to management. Many of our leaders started in entry-level roles.</p>
+        </div>
+        <div class="fade-in bg-slate-900 border border-slate-800 rounded-2xl p-8 text-center">
+          <div class="w-14 h-14 bg-orange-500/10 rounded-full flex items-center justify-center mx-auto mb-5">
+            <i class="fa-solid fa-users text-orange-500 text-xl"></i>
+          </div>
+          <h4 class="text-lg font-bold mb-2">Team Culture</h4>
+          <p class="text-slate-400 text-sm">Collaborative, fast-paced, and entrepreneurial. We celebrate wins together and support each other through challenges.</p>
+        </div>
+        <div class="fade-in bg-slate-900 border border-slate-800 rounded-2xl p-8 text-center">
+          <div class="w-14 h-14 bg-orange-500/10 rounded-full flex items-center justify-center mx-auto mb-5">
+            <i class="fa-solid fa-graduation-cap text-orange-500 text-xl"></i>
+          </div>
+          <h4 class="text-lg font-bold mb-2">Industry Training</h4>
+          <p class="text-slate-400 text-sm">Hands-on training in freight brokerage, TMS systems, carrier negotiations, and supply chain management.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OPEN POSITIONS -->
+  <section class="py-24 bg-slate-900">
+    <div class="max-w-5xl mx-auto px-6">
+      <div class="text-center mb-16">
+        <h3 class="text-orange-500 font-medium tracking-widest">OPEN ROLES</h3>
+        <h2 class="text-4xl font-bold tracking-tighter mt-3">Current Openings</h2>
+        <p class="text-slate-400 mt-4">We're growing fast and looking for talented people to join our team.</p>
+      </div>
+
+      <div class="space-y-6">
+
+        <!-- Position 1 -->
+        <div class="fade-in bg-slate-950 border border-slate-800 rounded-2xl p-8 hover:border-orange-500/40 transition">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <h4 class="text-xl font-bold">Freight Broker / Carrier Sales Representative</h4>
+              <div class="flex flex-wrap gap-3 mt-2">
+                <span class="text-xs bg-slate-800 text-slate-300 px-3 py-1 rounded-full"><i class="fa-solid fa-location-dot mr-1 text-orange-500"></i> Michigan</span>
+                <span class="text-xs bg-slate-800 text-slate-300 px-3 py-1 rounded-full"><i class="fa-solid fa-briefcase mr-1 text-orange-500"></i> Full-Time</span>
+                <span class="text-xs bg-slate-800 text-slate-300 px-3 py-1 rounded-full"><i class="fa-solid fa-building mr-1 text-orange-500"></i> On-Site</span>
+              </div>
+              <p class="text-slate-400 text-sm mt-3">Build and manage carrier relationships across our nationwide network. Negotiate competitive rates, book loads, and ensure capacity for our clients. Ideal for self-starters with strong communication skills and a drive to build a book of business.</p>
+            </div>
+            <button onclick="openApplication('Freight Broker / Carrier Sales Representative')" class="flex-shrink-0 bg-orange-500 hover:bg-orange-600 px-6 py-3 rounded-xl font-semibold text-sm transition whitespace-nowrap cursor-pointer">Apply Now</button>
+          </div>
+        </div>
+
+        <!-- Position 2 -->
+        <div class="fade-in bg-slate-950 border border-slate-800 rounded-2xl p-8 hover:border-orange-500/40 transition">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <h4 class="text-xl font-bold">Logistics Coordinator</h4>
+              <div class="flex flex-wrap gap-3 mt-2">
+                <span class="text-xs bg-slate-800 text-slate-300 px-3 py-1 rounded-full"><i class="fa-solid fa-location-dot mr-1 text-orange-500"></i> Michigan</span>
+                <span class="text-xs bg-slate-800 text-slate-300 px-3 py-1 rounded-full"><i class="fa-solid fa-briefcase mr-1 text-orange-500"></i> Full-Time</span>
+                <span class="text-xs bg-slate-800 text-slate-300 px-3 py-1 rounded-full"><i class="fa-solid fa-building mr-1 text-orange-500"></i> On-Site</span>
+              </div>
+              <p class="text-slate-400 text-sm mt-3">Coordinate day-to-day shipments from pickup to delivery. Track loads in real time, communicate with drivers and shippers, resolve issues proactively, and ensure every load delivers on time. Great entry point into the logistics industry.</p>
+            </div>
+            <button onclick="openApplication('Logistics Coordinator')" class="flex-shrink-0 bg-orange-500 hover:bg-orange-600 px-6 py-3 rounded-xl font-semibold text-sm transition whitespace-nowrap cursor-pointer">Apply Now</button>
+          </div>
+        </div>
+
+        <!-- Position 3 -->
+        <div class="fade-in bg-slate-950 border border-slate-800 rounded-2xl p-8 hover:border-orange-500/40 transition">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <h4 class="text-xl font-bold">Operations Manager</h4>
+              <div class="flex flex-wrap gap-3 mt-2">
+                <span class="text-xs bg-slate-800 text-slate-300 px-3 py-1 rounded-full"><i class="fa-solid fa-location-dot mr-1 text-orange-500"></i> Michigan</span>
+                <span class="text-xs bg-slate-800 text-slate-300 px-3 py-1 rounded-full"><i class="fa-solid fa-briefcase mr-1 text-orange-500"></i> Full-Time</span>
+                <span class="text-xs bg-slate-800 text-slate-300 px-3 py-1 rounded-full"><i class="fa-solid fa-user-tie mr-1 text-orange-500"></i> Management</span>
+              </div>
+              <p class="text-slate-400 text-sm mt-3">Oversee daily logistics operations, lead a team of coordinators and dispatchers, optimize processes, and drive operational KPIs. 3+ years of logistics management experience required. This role reports directly to senior leadership.</p>
+            </div>
+            <button onclick="openApplication('Operations Manager')" class="flex-shrink-0 bg-orange-500 hover:bg-orange-600 px-6 py-3 rounded-xl font-semibold text-sm transition whitespace-nowrap cursor-pointer">Apply Now</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CULTURE -->
+  <section class="py-24 bg-slate-950">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid md:grid-cols-2 gap-16 items-center">
+        <div class="fade-in">
+          <h3 class="text-orange-500 font-medium tracking-widest">OUR CULTURE</h3>
+          <h2 class="text-4xl font-bold tracking-tighter mt-3 mb-6">Fast-Paced. Collaborative. Rewarding.</h2>
+          <p class="text-slate-300 text-lg mb-6">Logistics moves fast, and so do we. At SwiftLink, you'll work alongside people who are passionate about solving problems, building relationships, and moving freight efficiently across the country.</p>
+          <p class="text-slate-400 mb-6">We believe in giving people ownership over their work, investing in their growth, and celebrating results. Whether you're negotiating your first carrier rate or managing a team of ten, you'll have the support and tools you need to succeed.</p>
+          <ul class="space-y-4 text-slate-300">
+            <li class="flex items-start gap-3"><i class="fa-solid fa-check-circle text-orange-500 mt-1"></i> Entrepreneurial environment &mdash; your ideas matter</li>
+            <li class="flex items-start gap-3"><i class="fa-solid fa-check-circle text-orange-500 mt-1"></i> Direct mentorship from experienced logistics professionals</li>
+            <li class="flex items-start gap-3"><i class="fa-solid fa-check-circle text-orange-500 mt-1"></i> Real responsibility from day one</li>
+            <li class="flex items-start gap-3"><i class="fa-solid fa-check-circle text-orange-500 mt-1"></i> Team events, lunch &amp; learns, and industry conferences</li>
+          </ul>
+        </div>
+        <div class="fade-in bg-slate-900 border border-slate-800 rounded-3xl p-10 text-center">
+          <i class="fa-solid fa-people-group text-7xl text-orange-500 mb-6"></i>
+          <p class="text-3xl font-bold mb-2">Growing Team</p>
+          <p class="text-slate-400">Join a company that's scaling &mdash; with room for you to scale with it.</p>
+          <div class="mt-8 grid grid-cols-2 gap-6">
+            <div><p class="text-3xl font-bold text-orange-500">48</p><p class="text-slate-400 text-sm">States We Operate In</p></div>
+            <div><p class="text-3xl font-bold text-orange-500">5,000+</p><p class="text-slate-400 text-sm">Carrier Partners</p></div>
+            <div><p class="text-3xl font-bold text-orange-500">1,200+</p><p class="text-slate-400 text-sm">Active Clients</p></div>
+            <div><p class="text-3xl font-bold text-orange-500">24/7</p><p class="text-slate-400 text-sm">Dispatch Coverage</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-20 bg-slate-900 border-t border-slate-800">
+    <div class="max-w-3xl mx-auto px-6 text-center fade-in">
+      <h3 class="text-3xl font-bold mb-4">Don't See Your Role?</h3>
+      <p class="text-slate-400 text-lg mb-8">We're always looking for talented people. Send your resume and tell us how you can contribute to the SwiftLink team.</p>
+      <button onclick="openApplication('General Application')" class="inline-flex items-center gap-3 bg-orange-500 hover:bg-orange-600 px-10 py-4 rounded-2xl font-semibold text-lg transition cursor-pointer">
+        <i class="fa-solid fa-paper-plane"></i> Submit Your Application
+      </button>
+    </div>
+  </section>
+
+  <!-- APPLICATION MODAL -->
+  <div id="appModal" class="fixed inset-0 z-[100] hidden">
+    <div class="modal-overlay absolute inset-0" onclick="closeApplication()"></div>
+    <div class="relative flex items-center justify-center min-h-screen p-4">
+      <div class="modal-card bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-xl max-h-[90vh] overflow-y-auto relative" style="box-shadow: 0 25px 60px rgba(0,0,0,0.8);">
+        <div class="sticky top-0 bg-slate-900 border-b border-slate-800 p-6 rounded-t-2xl z-10">
+          <div class="flex justify-between items-center">
+            <div>
+              <h3 class="text-xl font-bold">Apply to SwiftLink</h3>
+              <p id="appPosition" class="text-orange-500 text-sm mt-1"></p>
+            </div>
+            <button onclick="closeApplication()" class="text-slate-500 hover:text-white transition text-xl"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+        </div>
+
+        <!-- Form states -->
+        <div id="appFormWrap" class="p-6">
+          <form id="appForm" action="https://formspree.io/f/meepzjzk" method="POST">
+            <input type="hidden" name="_subject" id="appSubject" value="">
+            <input type="hidden" name="position" id="appPositionField" value="">
+            <input type="hidden" name="resumeFilename" id="resumeFilenameField" value="">
+
+            <!-- Resume Upload -->
+            <div class="mb-6">
+              <label class="block text-sm font-medium mb-2">Resume <span class="text-orange-500">*</span></label>
+              <div id="fileDrop" class="file-drop rounded-xl p-6 text-center cursor-pointer" onclick="document.getElementById('resumeInput').click()">
+                <input type="file" id="resumeInput" accept=".pdf,.doc,.docx" class="hidden">
+                <div id="fileDropContent">
+                  <i class="fa-solid fa-cloud-arrow-up text-3xl text-slate-500 mb-3"></i>
+                  <p class="text-sm text-slate-400">Drop your resume here or <span class="text-orange-500 font-semibold">click to browse</span></p>
+                  <p class="text-xs text-slate-600 mt-1">PDF or DOCX &bull; Max 5MB</p>
+                </div>
+                <div id="fileSelected" class="hidden">
+                  <i class="fa-solid fa-file-check text-3xl text-green-500 mb-3"></i>
+                  <p class="text-sm font-semibold text-green-400" id="fileName"></p>
+                  <p class="text-xs text-slate-500 mt-1" id="fileParsingStatus">Extracting info from resume...</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Auto-filled Fields -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+              <div>
+                <label class="block text-xs text-slate-500 mb-1.5">Full Name <span class="text-orange-500">*</span></label>
+                <input type="text" name="fullName" id="appName" placeholder="John Smith" class="input-field" required>
+              </div>
+              <div>
+                <label class="block text-xs text-slate-500 mb-1.5">Phone <span class="text-orange-500">*</span></label>
+                <input type="tel" name="phone" id="appPhone" placeholder="(248) 555-0100" class="input-field" required>
+              </div>
+            </div>
+            <div class="mb-4">
+              <label class="block text-xs text-slate-500 mb-1.5">Email <span class="text-orange-500">*</span></label>
+              <input type="email" name="email" id="appEmail" placeholder="john@example.com" class="input-field" required>
+            </div>
+            <div class="mb-6">
+              <label class="block text-xs text-slate-500 mb-1.5">Cover Letter / Message <span class="text-slate-600">(optional)</span></label>
+              <textarea name="message" rows="4" placeholder="Tell us why you'd be a great fit..." class="input-field resize-none"></textarea>
+            </div>
+
+            <button type="submit" id="appSubmitBtn" class="w-full bg-orange-500 hover:bg-orange-600 py-3.5 rounded-xl font-semibold transition flex items-center justify-center gap-2">
+              <i class="fa-solid fa-paper-plane" id="appSubmitIcon"></i>
+              <span id="appSubmitText">Submit Application</span>
+            </button>
+            <p class="text-xs text-slate-600 text-center mt-3">Your resume will be sent to <span class="text-slate-400">careers@swiftlinkusa.com</span> for review.</p>
+          </form>
+        </div>
+
+        <!-- Success state -->
+        <div id="appSuccess" class="p-6 text-center hidden">
+          <div class="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fa-solid fa-check text-green-500 text-2xl"></i>
+          </div>
+          <h4 class="text-xl font-bold mb-2">Application Submitted!</h4>
+          <p class="text-slate-400 text-sm mb-4">Thank you for your interest in joining SwiftLink Logistics. Our team will review your application and get back to you within 3-5 business days.</p>
+          <p class="text-sm text-orange-400 bg-orange-500/10 border border-orange-500/20 rounded-xl p-4 mb-6">
+            <i class="fa-solid fa-envelope mr-2"></i>
+            Please also email your resume directly to <a href="mailto:careers@swiftlinkusa.com" class="underline font-semibold">careers@swiftlinkusa.com</a> with your name and position in the subject line.
+          </p>
+          <button onclick="closeApplication()" class="bg-slate-800 hover:bg-slate-700 px-8 py-3 rounded-xl font-semibold transition">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="bg-slate-950 py-20 border-t border-slate-800">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="flex flex-col md:flex-row justify-between gap-12">
+        <div>
+          <div class="flex items-center gap-3 mb-6"><i class="fa-solid fa-truck-fast text-3xl text-orange-500"></i><h1 class="text-3xl font-bold tracking-tighter">SwiftLink Logistics, LLC</h1></div>
+          <p class="text-slate-400 max-w-xs">Expert freight transportation and logistics solutions across the United States.</p>
+          <p class="mt-8 text-sm text-slate-500">&copy; 2026 SwiftLink Logistics, LLC &bull; swiftlinkusa.com</p>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-12">
+          <div><h4 class="font-semibold mb-4">Company</h4><ul class="space-y-3 text-sm text-slate-400"><li><a href="about.html" class="hover:text-white">About Us</a></li><li><a href="careers.html" class="hover:text-white">Careers</a></li><li><a href="contact.html" class="hover:text-white">Contact</a></li></ul></div>
+          <div><h4 class="font-semibold mb-4">Solutions</h4><ul class="space-y-3 text-sm text-slate-400"><li><a href="ftl.html" class="hover:text-white">Full Truckload</a></li><li><a href="ltl.html" class="hover:text-white">LTL Shipping</a></li><li><a href="drayage.html" class="hover:text-white">Drayage Services</a></li><li><a href="expedited.html" class="hover:text-white">Expedited</a></li><li><a href="heavy-haul.html" class="hover:text-white">Heavy Haul</a></li><li><a href="hazmat.html" class="hover:text-white">Hazmat</a></li></ul></div>
+          <div><h4 class="font-semibold mb-4">Support</h4><ul class="space-y-3 text-sm text-slate-400"><li><a href="quote.html" class="hover:text-white">Get Quote</a></li><li><a href="faq.html" class="hover:text-white">FAQ</a></li></ul></div>
+          <div><h4 class="font-semibold mb-4">Contact</h4><p class="text-sm text-slate-400">info@swiftlinkusa.com</p><p class="text-sm text-slate-400">(248) 987-6776</p></div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ─── NAV DROPDOWN ──────────────────────────────────────────────────
+    function toggleSolDropdown() { document.getElementById('solMenu').classList.toggle('hidden'); }
+    (function() {
+      const dd = document.getElementById('solDropdown');
+      const menu = document.getElementById('solMenu');
+      dd.addEventListener('mouseenter', () => menu.classList.remove('hidden'));
+      dd.addEventListener('mouseleave', () => menu.classList.add('hidden'));
+      document.addEventListener('click', (e) => { if (!dd.contains(e.target)) menu.classList.add('hidden'); });
+    })();
+
+    // ─── SCROLL ANIMATIONS ─────────────────────────────────────────────
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // ─── APPLICATION MODAL ──────────────────────────────────────────────
+    function openApplication(position) {
+      document.getElementById('appPosition').textContent = position;
+      document.getElementById('appPositionField').value = position;
+      document.getElementById('appSubject').value = 'Job Application: ' + position;
+      document.getElementById('appModal').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+      // Reset form
+      document.getElementById('appForm').reset();
+      document.getElementById('appFormWrap').classList.remove('hidden');
+      document.getElementById('appSuccess').classList.add('hidden');
+      document.getElementById('fileDropContent').classList.remove('hidden');
+      document.getElementById('fileSelected').classList.add('hidden');
+      document.getElementById('resumeFilenameField').value = '';
+    }
+
+    function closeApplication() {
+      document.getElementById('appModal').classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+
+    // Close on Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeApplication();
+    });
+
+    // ─── RESUME UPLOAD & PARSING ────────────────────────────────────────
+    const fileDrop = document.getElementById('fileDrop');
+    const resumeInput = document.getElementById('resumeInput');
+
+    // Drag & drop
+    fileDrop.addEventListener('dragover', (e) => { e.preventDefault(); fileDrop.classList.add('dragover'); });
+    fileDrop.addEventListener('dragleave', () => fileDrop.classList.remove('dragover'));
+    fileDrop.addEventListener('drop', (e) => {
+      e.preventDefault();
+      fileDrop.classList.remove('dragover');
+      if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+    });
+
+    resumeInput.addEventListener('change', () => {
+      if (resumeInput.files.length) handleFile(resumeInput.files[0]);
+    });
+
+    function handleFile(file) {
+      const maxSize = 5 * 1024 * 1024;
+      if (file.size > maxSize) {
+        alert('File is too large. Please upload a file under 5MB.');
+        return;
+      }
+      const ext = file.name.split('.').pop().toLowerCase();
+      if (!['pdf', 'doc', 'docx'].includes(ext)) {
+        alert('Please upload a PDF or DOCX file.');
+        return;
+      }
+
+      // Show file selected state
+      document.getElementById('fileDropContent').classList.add('hidden');
+      document.getElementById('fileSelected').classList.remove('hidden');
+      document.getElementById('fileName').textContent = file.name;
+      document.getElementById('resumeFilenameField').value = file.name;
+
+      // Parse resume
+      if (ext === 'pdf') {
+        parsePDF(file);
+      } else if (ext === 'docx') {
+        parseDOCX(file);
+      } else {
+        document.getElementById('fileParsingStatus').textContent = 'File attached (auto-fill not available for .doc)';
+      }
+    }
+
+    function parsePDF(file) {
+      const statusEl = document.getElementById('fileParsingStatus');
+      statusEl.textContent = 'Extracting info from resume...';
+
+      const reader = new FileReader();
+      reader.onload = async function(e) {
+        try {
+          pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+          const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(e.target.result) }).promise;
+          let fullText = '';
+          for (let i = 1; i <= Math.min(pdf.numPages, 3); i++) {
+            const page = await pdf.getPage(i);
+            const content = await page.getTextContent();
+            fullText += content.items.map(item => item.str).join(' ') + '\n';
+          }
+          autoFillFromText(fullText);
+          statusEl.textContent = 'Info extracted from resume';
+        } catch (err) {
+          statusEl.textContent = 'File attached (could not auto-fill)';
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    }
+
+    function parseDOCX(file) {
+      const statusEl = document.getElementById('fileParsingStatus');
+      statusEl.textContent = 'Extracting info from resume...';
+
+      const reader = new FileReader();
+      reader.onload = async function(e) {
+        try {
+          // Use JSZip to read docx
+          const script = document.createElement('script');
+          script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
+          script.onload = async () => {
+            try {
+              const zip = await JSZip.loadAsync(e.target.result);
+              const docXml = await zip.file('word/document.xml').async('text');
+              // Strip XML tags to get plain text
+              const text = docXml.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
+              autoFillFromText(text);
+              statusEl.textContent = 'Info extracted from resume';
+            } catch (err) {
+              statusEl.textContent = 'File attached (could not auto-fill)';
+            }
+          };
+          document.head.appendChild(script);
+        } catch (err) {
+          statusEl.textContent = 'File attached (could not auto-fill)';
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    }
+
+    function autoFillFromText(text) {
+      // Extract email
+      const emailMatch = text.match(/[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/);
+      if (emailMatch && !document.getElementById('appEmail').value) {
+        document.getElementById('appEmail').value = emailMatch[0];
+      }
+
+      // Extract phone number
+      const phoneMatch = text.match(/(?:\+?1[\s.-]?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}/);
+      if (phoneMatch && !document.getElementById('appPhone').value) {
+        document.getElementById('appPhone').value = phoneMatch[0];
+      }
+
+      // Extract name (first line that looks like a name - capitalized words, 2-4 words, no special chars)
+      const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+      for (const line of lines) {
+        const cleaned = line.replace(/\s+/g, ' ').trim();
+        if (cleaned.length > 3 && cleaned.length < 50 &&
+            /^[A-Z][a-z]+(\s[A-Z][a-z]+){0,3}$/.test(cleaned) &&
+            !cleaned.includes('@') && !cleaned.includes('.com')) {
+          if (!document.getElementById('appName').value) {
+            document.getElementById('appName').value = cleaned;
+          }
+          break;
+        }
+      }
+    }
+
+    // ─── FORM SUBMISSION ────────────────────────────────────────────────
+    document.getElementById('appForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const btn = document.getElementById('appSubmitBtn');
+      const icon = document.getElementById('appSubmitIcon');
+      const text = document.getElementById('appSubmitText');
+
+      btn.classList.add('opacity-70', 'pointer-events-none');
+      icon.className = 'fa-solid fa-spinner fa-spin';
+      text.textContent = 'Submitting...';
+
+      try {
+        const formData = new FormData(this);
+        const resp = await fetch(this.action, {
+          method: 'POST',
+          body: formData,
+          headers: { 'Accept': 'application/json' }
+        });
+
+        if (resp.ok) {
+          document.getElementById('appFormWrap').classList.add('hidden');
+          document.getElementById('appSuccess').classList.remove('hidden');
+        } else {
+          throw new Error('Submit failed');
+        }
+      } catch (err) {
+        alert('Something went wrong. Please try again or email careers@swiftlinkusa.com directly.');
+        btn.classList.remove('opacity-70', 'pointer-events-none');
+        icon.className = 'fa-solid fa-paper-plane';
+        text.textContent = 'Submit Application';
+      }
+    });
+  </script>
+</body>
+</html>
