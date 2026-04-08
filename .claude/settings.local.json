@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find . -name \"index.html\" -not -path \"./index.html\" -exec grep -l 'href=\"[a-z]' {} \\\\;)",
+      "Bash(sed -i 's|href=\"ftl\"|href=\"/ftl\"|g' index.html)",
+      "Bash(sed -i 's|href=\"ltl\"|href=\"/ltl\"|g' index.html)",
+      "Bash(sed -i 's|href=\"drayage\"|href=\"/drayage\"|g' index.html)",
+      "Bash(sed -i 's|href=\"expedited\"|href=\"/expedited\"|g' index.html)",
+      "Bash(sed -i 's|href=\"heavy-haul\"|href=\"/heavy-haul\"|g' index.html)"
+    ]
+  }
+}
