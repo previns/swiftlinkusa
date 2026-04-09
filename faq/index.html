@@ -21,6 +21,9 @@
   <style>
     .fade-in { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
     .fade-in.visible { opacity: 1; transform: translateY(0); }
+    .hero-video-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: 0; }
+    .hero-video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 1; }
+    .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0,0,0,0.45), rgba(0,0,0,0.85)); z-index: 1; }
     .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.3s ease; }
     .faq-answer.open { max-height: 500px; }
     .faq-chevron { transition: transform 0.3s ease; }
@@ -67,8 +70,13 @@
 
   <!-- HERO -->
   <section class="relative bg-slate-900 border-b border-slate-800 py-20 overflow-hidden">
-    <div class="absolute inset-0 opacity-5" style="background-image: radial-gradient(circle at 30% 50%, rgb(249 115 22) 0%, transparent 50%), radial-gradient(circle at 70% 50%, rgb(249 115 22) 0%, transparent 50%);"></div>
-    <div class="relative max-w-4xl mx-auto px-6 text-center">
+    <div class="hero-video-container">
+      <video class="hero-video" autoplay muted loop playsinline>
+        <source src="https://videos.pexels.com/video-files/6169318/6169318-uhd_2560_1440_25fps.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="hero-overlay"></div>
+    <div class="relative z-10 max-w-4xl mx-auto px-6 text-center">
       <span class="inline-flex items-center gap-2 bg-orange-500/10 border border-orange-500/30 text-orange-400 text-sm font-medium px-4 py-1.5 rounded-full mb-6">
         <i class="fa-solid fa-circle-question"></i> Support
       </span>
@@ -300,6 +308,16 @@
         </div>
       </div>
 
+    </div>
+  </section>
+
+  <!-- IMAGE STRIP -->
+  <section class="py-16 bg-slate-900">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid md:grid-cols-2 gap-6 fade-in">
+        <img src="https://images.pexels.com/photos/1427541/pexels-photo-1427541.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Shipping containers at port terminal" class="rounded-2xl w-full h-60 object-cover border border-slate-800">
+        <img src="https://images.pexels.com/photos/2199293/pexels-photo-2199293.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Freight trucks ready for dispatch" class="rounded-2xl w-full h-60 object-cover border border-slate-800">
+      </div>
     </div>
   </section>
 

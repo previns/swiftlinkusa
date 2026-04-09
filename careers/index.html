@@ -22,6 +22,9 @@
   <style>
     .fade-in { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
     .fade-in.visible { opacity: 1; transform: translateY(0); }
+    .hero-video-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: 0; }
+    .hero-video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 1; }
+    .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0,0,0,0.45), rgba(0,0,0,0.85)); z-index: 1; }
     .modal-overlay { background: rgba(0,0,0,0.7); backdrop-filter: blur(6px); }
     .modal-card { animation: modalIn 0.3s ease-out; }
     @keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
@@ -72,8 +75,13 @@
 
   <!-- HERO -->
   <section class="relative bg-slate-900 border-b border-slate-800 py-20 overflow-hidden">
-    <div class="absolute inset-0 opacity-5" style="background-image: radial-gradient(circle at 30% 50%, rgb(249 115 22) 0%, transparent 50%), radial-gradient(circle at 70% 50%, rgb(249 115 22) 0%, transparent 50%);"></div>
-    <div class="relative max-w-4xl mx-auto px-6 text-center">
+    <div class="hero-video-container">
+      <video class="hero-video" autoplay muted loop playsinline>
+        <source src="https://videos.pexels.com/video-files/3252118/3252118-uhd_2560_1440_25fps.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="hero-overlay"></div>
+    <div class="relative z-10 max-w-4xl mx-auto px-6 text-center">
       <span class="inline-flex items-center gap-2 bg-orange-500/10 border border-orange-500/30 text-orange-400 text-sm font-medium px-4 py-1.5 rounded-full mb-6">
         <i class="fa-solid fa-briefcase"></i> We're Hiring
       </span>
@@ -119,6 +127,17 @@
           <h4 class="text-lg font-bold mb-2">Industry Training</h4>
           <p class="text-slate-400 text-sm">Hands-on training in freight brokerage, TMS systems, carrier negotiations, and supply chain management.</p>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEAM IMAGES -->
+  <section class="py-16 bg-slate-950">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid md:grid-cols-3 gap-4 fade-in">
+        <img src="https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Team collaboration in office" class="rounded-2xl w-full h-52 object-cover border border-slate-800">
+        <img src="https://images.pexels.com/photos/3184357/pexels-photo-3184357.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Team meeting and strategy discussion" class="rounded-2xl w-full h-52 object-cover border border-slate-800">
+        <img src="https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Professional work environment" class="rounded-2xl w-full h-52 object-cover border border-slate-800">
       </div>
     </div>
   </section>

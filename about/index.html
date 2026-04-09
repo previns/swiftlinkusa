@@ -21,6 +21,9 @@
   <style>
     .fade-in { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
     .fade-in.visible { opacity: 1; transform: translateY(0); }
+    .hero-video-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: 0; }
+    .hero-video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 1; }
+    .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0,0,0,0.45), rgba(0,0,0,0.85)); z-index: 1; }
   </style>
 </head>
 <body class="bg-slate-950 text-white font-sans overflow-x-hidden">
@@ -62,9 +65,14 @@
   </nav>
 
   <!-- HERO -->
-  <section class="relative bg-slate-900 py-28 text-center">
-    <div class="absolute inset-0 bg-gradient-to-b from-slate-950/60 to-slate-900"></div>
-    <div class="relative max-w-4xl mx-auto px-6">
+  <section class="relative bg-slate-900 py-28 text-center overflow-hidden">
+    <div class="hero-video-container">
+      <video class="hero-video" autoplay muted loop playsinline>
+        <source src="https://videos.pexels.com/video-files/3129671/3129671-uhd_2560_1440_30fps.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="hero-overlay"></div>
+    <div class="relative z-10 max-w-4xl mx-auto px-6">
       <p class="text-orange-500 font-semibold text-sm tracking-widest uppercase mb-4 fade-in">About Us</p>
       <h2 class="text-5xl md:text-6xl font-extrabold tracking-tight leading-tight fade-in">About SwiftLink Logistics</h2>
       <p class="mt-6 text-xl text-slate-300 max-w-2xl mx-auto fade-in">Your trusted partner for freight transportation across the continental United States.</p>
@@ -79,7 +87,8 @@
           <p class="text-orange-500 font-semibold text-sm tracking-widest uppercase mb-3">Our Story</p>
           <h3 class="text-4xl font-bold mb-6">Built on the Principle That Every Shipment Matters</h3>
           <p class="text-slate-300 leading-relaxed mb-5">SwiftLink Logistics, LLC is a third-party logistics (3PL) provider headquartered in Michigan. Founded on the principle that every shipment matters, we connect shippers with a vetted network of 5,000+ carrier partners across all 48 contiguous states.</p>
-          <p class="text-slate-300 leading-relaxed">Our team combines deep industry expertise with technology-driven solutions to deliver reliable, transparent freight management. From a single pallet to a full truckload, we treat every load with the same level of care and urgency.</p>
+          <p class="text-slate-300 leading-relaxed mb-6">Our team combines deep industry expertise with technology-driven solutions to deliver reliable, transparent freight management. From a single pallet to a full truckload, we treat every load with the same level of care and urgency.</p>
+          <img src="https://images.pexels.com/photos/2199293/pexels-photo-2199293.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Freight trucks at a logistics hub" class="rounded-2xl w-full h-56 object-cover border border-slate-800">
         </div>
         <div class="fade-in bg-slate-900 rounded-3xl p-10 border border-slate-800">
           <div class="flex items-center gap-4 mb-6">
@@ -154,6 +163,17 @@
           <h4 class="text-xl font-bold mb-3">24/7 Support</h4>
           <p class="text-slate-400 leading-relaxed">Around-the-clock dispatch and customer service. Day or night, weekday or weekend, someone is always here to help with your shipment.</p>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- IMAGE BREAK -->
+  <section class="py-0 bg-slate-950">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid md:grid-cols-3 gap-4 fade-in">
+        <img src="https://images.pexels.com/photos/2226458/pexels-photo-2226458.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Warehouse logistics operations" class="rounded-2xl w-full h-52 object-cover border border-slate-800">
+        <img src="https://images.pexels.com/photos/1267338/pexels-photo-1267338.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Freight trucks on highway" class="rounded-2xl w-full h-52 object-cover border border-slate-800">
+        <img src="https://images.pexels.com/photos/3862379/pexels-photo-3862379.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Team working in logistics office" class="rounded-2xl w-full h-52 object-cover border border-slate-800">
       </div>
     </div>
   </section>
