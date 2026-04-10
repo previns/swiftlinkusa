@@ -1,0 +1,347 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  serviceType: "Hazardous Materials (Hazmat) Shipping",
+  name: "Hazardous Materials Shipping",
+  description:
+    "DOT-compliant hazardous materials transport with certified drivers, proper placarding, and full regulatory compliance across all 9 hazmat classes nationwide.",
+  provider: {
+    "@type": "LocalBusiness",
+    name: "SwiftLink Logistics, LLC",
+    url: "https://www.swiftlinkusa.com",
+    telephone: "+1-248-987-6776",
+  },
+  areaServed: { "@type": "Country", name: "US" },
+  url: "https://www.swiftlinkusa.com/hazmat/",
+};
+---
+
+<BaseLayout
+  title="Hazardous Materials Shipping • SwiftLink Logistics"
+  description="DOT-compliant hazmat shipping by SwiftLink Logistics. Certified drivers, proper placarding, and full regulatory compliance for all 9 hazmat classes."
+  keywords="hazmat shipping, hazardous materials transport, DOT compliant shipping, hazmat certified drivers, dangerous goods freight, hazmat placarding, chemical shipping, hazmat logistics, HAZMAT carrier"
+  canonicalPath="/hazmat"
+  ogTitle="Hazardous Materials (Hazmat) Shipping | SwiftLink Logistics"
+  ogDescription="DOT-compliant hazmat transport with certified drivers, proper placarding, and full regulatory compliance for all 9 hazmat classes."
+>
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} slot="head" />
+
+  <!-- HERO -->
+  <section class="relative py-32 bg-slate-900 overflow-hidden">
+    <div class="hero-video-container" aria-hidden="true">
+      <video class="hero-video" autoplay muted loop playsinline preload="metadata">
+        <source src="/videos/hazmat.mp4" type="video/mp4" />
+      </video>
+    </div>
+    <div class="hero-overlay" aria-hidden="true"></div>
+    <div class="max-w-7xl mx-auto px-6 text-center relative z-10">
+      <div class="fade-in">
+        <div class="inline-flex items-center gap-2 bg-orange-500/10 border border-orange-500/20 rounded-full px-5 py-2 mb-8">
+          <i class="fa-solid fa-biohazard text-orange-500" aria-hidden="true"></i>
+          <span class="text-orange-500 text-sm font-semibold">DOT-Certified Hazmat Transport</span>
+        </div>
+        <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight leading-tight mb-6">Hazardous Materials<br><span class="text-orange-500">Shipping</span></h1>
+        <p class="text-xl text-slate-400 max-w-2xl mx-auto mb-10">Safe, compliant transport of dangerous goods across all 9 DOT hazmat classes. Certified drivers, proper documentation, and zero-compromise safety protocols.</p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="/quote/?service=Hazmat" class="bg-orange-500 hover:bg-orange-600 px-10 py-4 rounded-2xl font-semibold text-lg transition inline-flex items-center justify-center gap-2"><i class="fa-solid fa-biohazard" aria-hidden="true"></i> Get Hazmat Quote</a>
+          <a href="#what-is-hazmat" class="border border-slate-700 hover:border-orange-500 px-10 py-4 rounded-2xl font-semibold text-lg transition inline-flex items-center justify-center gap-2"><i class="fa-solid fa-arrow-down" aria-hidden="true"></i> Learn More</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHAT IS HAZMAT -->
+  <section id="what-is-hazmat" class="py-24 bg-slate-900">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid md:grid-cols-2 gap-16 items-center">
+        <div class="fade-in">
+          <h2 class="text-4xl font-bold mb-6">What is <span class="text-orange-500">Hazmat Shipping?</span></h2>
+          <p class="text-slate-400 text-lg leading-relaxed mb-6">Hazmat shipping is the transport of dangerous goods regulated by the U.S. Department of Transportation under Title 49 of the Code of Federal Regulations (49 CFR). These materials pose risks to health, safety, property, or the environment during transportation and require specialized handling at every stage.</p>
+          <p class="text-slate-400 text-lg leading-relaxed mb-6">Hazmat freight demands more than just a truck and a driver. It requires carriers with specific certifications, drivers with hazmat endorsements on their CDL, proper placarding on the vehicle, detailed shipping papers, emergency response information, and compliant packaging — all verified before a single mile is driven.</p>
+          <p class="text-slate-400 text-lg leading-relaxed">SwiftLink maintains a network of hazmat-certified carriers and drivers who meet the stringent requirements of DOT, FMCSA, and EPA regulations. We handle the complexity so you can ship dangerous goods with confidence and full regulatory compliance.</p>
+        </div>
+        <div class="fade-in">
+          <div class="bg-slate-800/50 border border-slate-700 rounded-3xl p-8">
+            <h3 class="text-xl font-bold mb-6 text-center">Key Regulatory Framework</h3>
+            <div class="space-y-5">
+              <div class="flex items-start gap-4">
+                <div class="w-12 h-12 bg-orange-500/10 rounded-xl flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-gavel text-orange-500" aria-hidden="true"></i></div>
+                <div><h4 class="font-semibold mb-1">49 CFR (DOT)</h4><p class="text-slate-400 text-sm">The primary federal regulation governing hazmat transport — covers classification, packaging, marking, labeling, placarding, and shipping papers.</p></div>
+              </div>
+              <div class="flex items-start gap-4">
+                <div class="w-12 h-12 bg-orange-500/10 rounded-xl flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-id-card text-orange-500" aria-hidden="true"></i></div>
+                <div><h4 class="font-semibold mb-1">FMCSA Compliance</h4><p class="text-slate-400 text-sm">Carriers must hold proper operating authority and safety ratings. Drivers require hazmat endorsement (H) with TSA background check.</p></div>
+              </div>
+              <div class="flex items-start gap-4">
+                <div class="w-12 h-12 bg-orange-500/10 rounded-xl flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-book text-orange-500" aria-hidden="true"></i></div>
+                <div><h4 class="font-semibold mb-1">ERG (Emergency Response Guide)</h4><p class="text-slate-400 text-sm">Required in every hazmat vehicle — provides first responders with immediate guidance for handling hazmat incidents during transport.</p></div>
+              </div>
+              <div class="flex items-start gap-4">
+                <div class="w-12 h-12 bg-orange-500/10 rounded-xl flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-shield-halved text-orange-500" aria-hidden="true"></i></div>
+                <div><h4 class="font-semibold mb-1">EPA & OSHA Standards</h4><p class="text-slate-400 text-sm">Environmental protection and worker safety regulations that apply to hazmat handling, storage, and spill response.</p></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HAZMAT CLASSES -->
+  <section class="py-24 bg-slate-950">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16 fade-in">
+        <h2 class="text-4xl font-bold mb-4">Hazmat Classes <span class="text-orange-500">We Handle</span></h2>
+        <p class="text-slate-400 text-lg max-w-2xl mx-auto">SwiftLink arranges compliant transport for all nine DOT hazardous materials classes, each with its own unique handling and safety requirements.</p>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="fade-in bg-slate-900 border border-slate-800 rounded-2xl p-6 hover:border-orange-500/50 transition-all duration-300">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="w-10 h-10 bg-red-500/20 text-red-400 rounded-lg flex items-center justify-center font-bold text-sm">1</span>
+            <h3 class="text-lg font-bold">Explosives</h3>
+          </div>
+          <p class="text-slate-400 text-sm">Dynamite, detonators, fireworks, ammunition, and blasting agents. Divided into six divisions (1.1-1.6) based on blast and projection hazard levels. Requires specific separation distances and route restrictions.</p>
+        </div>
+        <div class="fade-in bg-slate-900 border border-slate-800 rounded-2xl p-6 hover:border-orange-500/50 transition-all duration-300">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="w-10 h-10 bg-green-500/20 text-green-400 rounded-lg flex items-center justify-center font-bold text-sm">2</span>
+            <h3 class="text-lg font-bold">Gases</h3>
+          </div>
+          <p class="text-slate-400 text-sm">Flammable gases (propane, acetylene), non-flammable compressed gases (nitrogen, CO2), and toxic gases (chlorine, ammonia). Requires pressure-rated containers and proper ventilation protocols during transport.</p>
+        </div>
+        <div class="fade-in bg-slate-900 border border-slate-800 rounded-2xl p-6 hover:border-orange-500/50 transition-all duration-300">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="w-10 h-10 bg-red-500/20 text-red-400 rounded-lg flex items-center justify-center font-bold text-sm">3</span>
+            <h3 class="text-lg font-bold">Flammable Liquids</h3>
+          </div>
+          <p class="text-slate-400 text-sm">Gasoline, diesel, acetone, alcohols, paint, adhesives, and solvents. One of the most commonly shipped hazmat classes. Requires ground straps, no-smoking protocols, and specific loading/unloading procedures.</p>
+        </div>
+        <div class="fade-in bg-slate-900 border border-slate-800 rounded-2xl p-6 hover:border-orange-500/50 transition-all duration-300">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="w-10 h-10 bg-red-600/20 text-red-300 rounded-lg flex items-center justify-center font-bold text-sm">4</span>
+            <h3 class="text-lg font-bold">Flammable Solids</h3>
+          </div>
+          <p class="text-slate-400 text-sm">Matches, magnesium, lithium batteries, sulfur, and self-reactive substances. Includes spontaneously combustible materials and substances that are dangerous when wet. Requires moisture protection and temperature monitoring.</p>
+        </div>
+        <div class="fade-in bg-slate-900 border border-slate-800 rounded-2xl p-6 hover:border-orange-500/50 transition-all duration-300">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="w-10 h-10 bg-yellow-500/20 text-yellow-400 rounded-lg flex items-center justify-center font-bold text-sm">5</span>
+            <h3 class="text-lg font-bold">Oxidizers & Organic Peroxides</h3>
+          </div>
+          <p class="text-slate-400 text-sm">Hydrogen peroxide, potassium permanganate, ammonium nitrate, and organic peroxides. These substances can cause or enhance combustion of other materials. Must be segregated from flammables and combustibles.</p>
+        </div>
+        <div class="fade-in bg-slate-900 border border-slate-800 rounded-2xl p-6 hover:border-orange-500/50 transition-all duration-300">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="w-10 h-10 bg-purple-500/20 text-purple-400 rounded-lg flex items-center justify-center font-bold text-sm">6</span>
+            <h3 class="text-lg font-bold">Toxic & Infectious Substances</h3>
+          </div>
+          <p class="text-slate-400 text-sm">Pesticides, medical waste, biological samples, cyanide, and arsenic compounds. Division 6.1 covers poisons and toxins; Division 6.2 covers infectious substances. Requires leak-proof packaging and biohazard containment.</p>
+        </div>
+        <div class="fade-in bg-slate-900 border border-slate-800 rounded-2xl p-6 hover:border-orange-500/50 transition-all duration-300">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="w-10 h-10 bg-yellow-600/20 text-yellow-300 rounded-lg flex items-center justify-center font-bold text-sm">7</span>
+            <h3 class="text-lg font-bold">Radioactive Materials</h3>
+          </div>
+          <p class="text-slate-400 text-sm">Medical isotopes, industrial radiography sources, nuclear fuel, and research materials. Requires radiation monitoring, shielded packaging, transport index calculations, and NRC compliance in addition to DOT regulations.</p>
+        </div>
+        <div class="fade-in bg-slate-900 border border-slate-800 rounded-2xl p-6 hover:border-orange-500/50 transition-all duration-300">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="w-10 h-10 bg-slate-500/20 text-slate-300 rounded-lg flex items-center justify-center font-bold text-sm">8</span>
+            <h3 class="text-lg font-bold">Corrosives</h3>
+          </div>
+          <p class="text-slate-400 text-sm">Sulfuric acid, hydrochloric acid, sodium hydroxide, battery acid, and industrial cleaning chemicals. These destroy living tissue and corrode metals on contact. Requires corrosion-resistant containers and secondary containment.</p>
+        </div>
+        <div class="fade-in bg-slate-900 border border-slate-800 rounded-2xl p-6 hover:border-orange-500/50 transition-all duration-300">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="w-10 h-10 bg-blue-500/20 text-blue-400 rounded-lg flex items-center justify-center font-bold text-sm">9</span>
+            <h3 class="text-lg font-bold">Miscellaneous Dangerous Goods</h3>
+          </div>
+          <p class="text-slate-400 text-sm">Lithium ion batteries, dry ice, asbestos, magnetized materials, and environmentally hazardous substances. While not fitting neatly into other classes, these materials still pose transport risks and require hazmat compliance.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OUR CAPABILITIES -->
+  <section class="py-24 bg-slate-900">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16 fade-in">
+        <h2 class="text-4xl font-bold mb-4">Our Hazmat <span class="text-orange-500">Capabilities</span></h2>
+        <p class="text-slate-400 text-lg max-w-2xl mx-auto">SwiftLink's hazmat program covers every aspect of dangerous goods transportation — from certified personnel to emergency preparedness.</p>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="fade-in bg-slate-800/50 border border-slate-700 rounded-2xl p-8 text-center">
+          <div class="w-16 h-16 bg-orange-500/10 rounded-full flex items-center justify-center mx-auto mb-6"><i class="fa-solid fa-id-badge text-orange-500 text-2xl" aria-hidden="true"></i></div>
+          <h4 class="text-xl font-bold mb-3">Certified Hazmat Drivers</h4>
+          <p class="text-slate-400 text-sm">Every driver holding a CDL with hazmat endorsement (H), TSA security threat assessment clearance, and current hazmat training certification as required by 49 CFR 172.704.</p>
+        </div>
+        <div class="fade-in bg-slate-800/50 border border-slate-700 rounded-2xl p-8 text-center">
+          <div class="w-16 h-16 bg-orange-500/10 rounded-full flex items-center justify-center mx-auto mb-6"><i class="fa-solid fa-tags text-orange-500 text-2xl" aria-hidden="true"></i></div>
+          <h4 class="text-xl font-bold mb-3">Placarding & Labeling</h4>
+          <p class="text-slate-400 text-sm">Correct diamond-shaped placards displayed on all four sides of the vehicle per DOT requirements. Package labels, markings, and UN identification numbers verified before departure.</p>
+        </div>
+        <div class="fade-in bg-slate-800/50 border border-slate-700 rounded-2xl p-8 text-center">
+          <div class="w-16 h-16 bg-orange-500/10 rounded-full flex items-center justify-center mx-auto mb-6"><i class="fa-solid fa-file-lines text-orange-500 text-2xl" aria-hidden="true"></i></div>
+          <h4 class="text-xl font-bold mb-3">Shipping Documentation</h4>
+          <p class="text-slate-400 text-sm">Complete hazmat shipping papers including Bill of Lading with proper shipping name, hazard class, UN number, packing group, and emergency response telephone number. Safety Data Sheets (SDS) accompany every shipment.</p>
+        </div>
+        <div class="fade-in bg-slate-800/50 border border-slate-700 rounded-2xl p-8 text-center">
+          <div class="w-16 h-16 bg-orange-500/10 rounded-full flex items-center justify-center mx-auto mb-6"><i class="fa-solid fa-triangle-exclamation text-orange-500 text-2xl" aria-hidden="true"></i></div>
+          <h4 class="text-xl font-bold mb-3">Emergency Response Plans</h4>
+          <p class="text-slate-400 text-sm">Comprehensive emergency response plans for every hazmat shipment. Drivers carry the Emergency Response Guidebook (ERG) and are trained in initial response procedures for spills, leaks, and exposure incidents.</p>
+        </div>
+        <div class="fade-in bg-slate-800/50 border border-slate-700 rounded-2xl p-8 text-center">
+          <div class="w-16 h-16 bg-orange-500/10 rounded-full flex items-center justify-center mx-auto mb-6"><i class="fa-solid fa-droplet-slash text-orange-500 text-2xl" aria-hidden="true"></i></div>
+          <h4 class="text-xl font-bold mb-3">Spill Containment</h4>
+          <p class="text-slate-400 text-sm">Vehicles equipped with appropriate spill containment kits, absorbent materials, and personal protective equipment. Secondary containment protocols for bulk liquid hazmat shipments.</p>
+        </div>
+        <div class="fade-in bg-slate-800/50 border border-slate-700 rounded-2xl p-8 text-center">
+          <div class="w-16 h-16 bg-orange-500/10 rounded-full flex items-center justify-center mx-auto mb-6"><i class="fa-solid fa-clipboard-check text-orange-500 text-2xl" aria-hidden="true"></i></div>
+          <h4 class="text-xl font-bold mb-3">DOT & FMCSA Compliance</h4>
+          <p class="text-slate-400 text-sm">Full compliance with all federal hazmat transportation regulations including 49 CFR Parts 171-180. Regular audits, inspections, and compliance monitoring ensure zero regulatory gaps.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SHIPPER REQUIREMENTS -->
+  <section class="py-24 bg-slate-950">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid md:grid-cols-2 gap-16 items-center">
+        <div class="fade-in">
+          <h2 class="text-4xl font-bold mb-6">Hazmat Shipping <span class="text-orange-500">Requirements</span></h2>
+          <p class="text-slate-400 text-lg leading-relaxed mb-8">As a shipper of hazardous materials, you have regulatory responsibilities under 49 CFR. SwiftLink helps you meet every requirement, but here is what you need to have ready when shipping hazmat freight:</p>
+          <div class="space-y-5">
+            <div class="flex items-start gap-4">
+              <div class="w-10 h-10 bg-orange-500/10 rounded-lg flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-flask text-orange-500 text-sm" aria-hidden="true"></i></div>
+              <div><h4 class="font-semibold mb-1">Proper Classification</h4><p class="text-slate-400 text-sm">Identify the correct DOT hazard class and division for your material. Misclassification is a serious violation and safety risk.</p></div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="w-10 h-10 bg-orange-500/10 rounded-lg flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-hashtag text-orange-500 text-sm" aria-hidden="true"></i></div>
+              <div><h4 class="font-semibold mb-1">UN Numbers</h4><p class="text-slate-400 text-sm">Every hazardous material has an assigned four-digit UN identification number (e.g., UN1203 for gasoline). This number must appear on all shipping documents and package labels.</p></div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="w-10 h-10 bg-orange-500/10 rounded-lg flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-box text-orange-500 text-sm" aria-hidden="true"></i></div>
+              <div><h4 class="font-semibold mb-1">Packaging Standards</h4><p class="text-slate-400 text-sm">Materials must be packaged in UN-specification containers appropriate for the hazard class and packing group (I, II, or III based on danger level).</p></div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="w-10 h-10 bg-orange-500/10 rounded-lg flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-file-medical text-orange-500 text-sm" aria-hidden="true"></i></div>
+              <div><h4 class="font-semibold mb-1">Safety Data Sheets (SDS)</h4><p class="text-slate-400 text-sm">A current 16-section SDS must be available for each hazardous material being shipped, detailing composition, hazards, handling, and emergency measures.</p></div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="w-10 h-10 bg-orange-500/10 rounded-lg flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-phone-volume text-orange-500 text-sm" aria-hidden="true"></i></div>
+              <div><h4 class="font-semibold mb-1">Emergency Contact</h4><p class="text-slate-400 text-sm">A 24-hour emergency response telephone number must appear on all hazmat shipping papers — typically through CHEMTREC or an equivalent service.</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="fade-in">
+          <div class="bg-gradient-to-br from-orange-500/10 to-orange-600/5 border border-orange-500/20 rounded-3xl p-8">
+            <div class="text-center mb-8">
+              <i class="fa-solid fa-circle-info text-orange-500 text-4xl mb-4" aria-hidden="true"></i>
+              <h3 class="text-2xl font-bold">Not Sure About Your Requirements?</h3>
+            </div>
+            <p class="text-slate-400 text-center mb-6">Hazmat regulations are complex. Our team can review your material specifications, help determine the correct classification, and ensure all documentation is complete before scheduling pickup.</p>
+            <div class="space-y-3">
+              <a href="/quote/?service=Hazmat" class="block w-full bg-orange-500 hover:bg-orange-600 text-center px-6 py-3 rounded-xl font-semibold transition">Request Hazmat Consultation</a>
+              <a href="/contact" class="block w-full border border-slate-700 hover:border-orange-500 text-center px-6 py-3 rounded-xl font-semibold transition">Contact Our Hazmat Team</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EQUIPMENT FOR HAZMAT -->
+  <section class="py-24 bg-slate-900">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16 fade-in">
+        <h2 class="text-4xl font-bold mb-4">Equipment for <span class="text-orange-500">Hazmat Transport</span></h2>
+        <p class="text-slate-400 text-lg max-w-2xl mx-auto">Different hazmat classes require different equipment. We match the right trailer and containment configuration to your specific materials.</p>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-6">
+        <div class="fade-in bg-slate-800/50 border border-slate-700 rounded-2xl p-7">
+          <div class="flex items-center gap-3 mb-4">
+            <i class="fa-solid fa-warehouse text-orange-500 text-xl" aria-hidden="true"></i>
+            <h4 class="text-lg font-bold">Dry Van</h4>
+          </div>
+          <p class="text-slate-400 text-sm mb-3">Enclosed trailer suitable for most packaged hazmat freight — drums, totes, boxes, and palletized goods across multiple hazmat classes. Protects cargo from weather and provides security.</p>
+          <p class="text-xs text-slate-500"><span class="text-orange-500 font-semibold">Common classes:</span> 3, 4, 5, 6, 8, 9</p>
+        </div>
+        <div class="fade-in bg-slate-800/50 border border-slate-700 rounded-2xl p-7">
+          <div class="flex items-center gap-3 mb-4">
+            <i class="fa-solid fa-oil-can text-orange-500 text-xl" aria-hidden="true"></i>
+            <h4 class="text-lg font-bold">Tanker</h4>
+          </div>
+          <p class="text-slate-400 text-sm mb-3">Specialized tank trailers for bulk liquid hazmat — fuels, chemicals, and industrial liquids. Available in stainless steel, aluminum, and lined configurations with multiple compartments and vapor recovery systems.</p>
+          <p class="text-xs text-slate-500"><span class="text-orange-500 font-semibold">Common classes:</span> 2, 3, 5, 6, 8</p>
+        </div>
+        <div class="fade-in bg-slate-800/50 border border-slate-700 rounded-2xl p-7">
+          <div class="flex items-center gap-3 mb-4">
+            <i class="fa-solid fa-trailer text-orange-500 text-xl" aria-hidden="true"></i>
+            <h4 class="text-lg font-bold">Flatbed</h4>
+          </div>
+          <p class="text-slate-400 text-sm mb-3">Open deck trailers for drums, totes, IBCs, and oversized hazmat containers. Allows crane loading and easy inspection access. Requires weatherproof tarping for materials sensitive to precipitation.</p>
+          <p class="text-xs text-slate-500"><span class="text-orange-500 font-semibold">Common classes:</span> 2, 4, 5, 8, 9</p>
+        </div>
+        <div class="fade-in bg-slate-800/50 border border-slate-700 rounded-2xl p-7">
+          <div class="flex items-center gap-3 mb-4">
+            <i class="fa-solid fa-temperature-low text-orange-500 text-xl" aria-hidden="true"></i>
+            <h4 class="text-lg font-bold">Reefer (Temperature-Controlled)</h4>
+          </div>
+          <p class="text-slate-400 text-sm mb-3">Refrigerated or heated trailers for hazmat that requires specific temperature ranges during transit — certain pharmaceuticals, biological materials, temperature-sensitive chemicals, and reactive substances.</p>
+          <p class="text-xs text-slate-500"><span class="text-orange-500 font-semibold">Common classes:</span> 4, 5, 6</p>
+        </div>
+        <div class="fade-in bg-slate-800/50 border border-slate-700 rounded-2xl p-7 md:col-span-2 lg:col-span-2">
+          <div class="flex items-center gap-3 mb-4">
+            <i class="fa-solid fa-shield-virus text-orange-500 text-xl" aria-hidden="true"></i>
+            <h4 class="text-lg font-bold">Specialized Containment</h4>
+          </div>
+          <p class="text-slate-400 text-sm mb-3">For the most dangerous materials — radioactive isotopes, highly toxic substances, and explosive materials — we arrange specialized containment vehicles with shielding, reinforced structures, GPS monitoring, and security escorts. These vehicles meet the highest DOT and NRC standards for the transport of high-consequence dangerous goods.</p>
+          <p class="text-xs text-slate-500"><span class="text-orange-500 font-semibold">Common classes:</span> 1, 6.2, 7</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SAFETY FIRST -->
+  <section class="py-24 bg-slate-950">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16 fade-in">
+        <h2 class="text-4xl font-bold mb-4">Safety <span class="text-orange-500">First — Always</span></h2>
+        <p class="text-slate-400 text-lg max-w-2xl mx-auto">Safety is not a priority at SwiftLink — it is a prerequisite. Every hazmat shipment is backed by rigorous safety protocols, ongoing training, and proactive compliance monitoring.</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="fade-in bg-slate-900 border border-slate-800 rounded-2xl p-8">
+          <div class="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-6"><i class="fa-solid fa-award text-green-400 text-2xl" aria-hidden="true"></i></div>
+          <h4 class="text-xl font-bold mb-3 text-center">Exceptional Safety Record</h4>
+          <p class="text-slate-400 text-sm text-center">Our carrier partners maintain satisfactory or better FMCSA safety ratings with zero critical hazmat violations. We continuously monitor CSA scores and remove any carrier that falls below our safety thresholds.</p>
+        </div>
+        <div class="fade-in bg-slate-900 border border-slate-800 rounded-2xl p-8">
+          <div class="w-16 h-16 bg-blue-500/10 rounded-full flex items-center justify-center mx-auto mb-6"><i class="fa-solid fa-graduation-cap text-blue-400 text-2xl" aria-hidden="true"></i></div>
+          <h4 class="text-xl font-bold mb-3 text-center">Training Programs</h4>
+          <p class="text-slate-400 text-sm text-center">All hazmat drivers complete initial and recurrent training per 49 CFR 172.704 covering general awareness, function-specific duties, safety protocols, and security awareness. Training records are maintained and auditable.</p>
+        </div>
+        <div class="fade-in bg-slate-900 border border-slate-800 rounded-2xl p-8">
+          <div class="w-16 h-16 bg-orange-500/10 rounded-full flex items-center justify-center mx-auto mb-6"><i class="fa-solid fa-magnifying-glass text-orange-400 text-2xl" aria-hidden="true"></i></div>
+          <h4 class="text-xl font-bold mb-3 text-center">Compliance Monitoring</h4>
+          <p class="text-slate-400 text-sm text-center">Ongoing audits of carrier certifications, driver endorsements, vehicle inspections, and documentation accuracy. We catch and correct compliance issues before they become violations or safety incidents.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-24 bg-slate-900">
+    <div class="max-w-4xl mx-auto px-6 text-center fade-in">
+      <h2 class="text-4xl md:text-5xl font-bold mb-6">Ship Hazmat with <span class="text-orange-500">Confidence</span></h2>
+      <p class="text-xl text-slate-400 mb-10 max-w-2xl mx-auto">Whether it is a single pallet of Class 3 flammables or a full tanker of industrial chemicals, SwiftLink delivers compliant, safe hazmat transport every time.</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/quote/?service=Hazmat" class="bg-orange-500 hover:bg-orange-600 px-10 py-4 rounded-2xl font-semibold text-lg transition inline-flex items-center justify-center gap-2"><i class="fa-solid fa-biohazard" aria-hidden="true"></i> Get Hazmat Quote</a>
+        <a href="tel:+12489876776" class="border border-slate-700 hover:border-orange-500 px-10 py-4 rounded-2xl font-semibold text-lg transition inline-flex items-center justify-center gap-2"><i class="fa-solid fa-phone" aria-hidden="true"></i> Call (248) 987-6776</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

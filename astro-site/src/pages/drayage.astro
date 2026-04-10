@@ -1,0 +1,325 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import HeroService from "../components/HeroService.astro";
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  serviceType: "Drayage & Port Services",
+  name: "Drayage and Port Services",
+  description:
+    "Container pickup, port drayage, rail drayage, transloading, and chassis management services at major US ports with reliable scheduling and tracking.",
+  provider: {
+    "@type": "LocalBusiness",
+    name: "SwiftLink Logistics, LLC",
+    url: "https://www.swiftlinkusa.com",
+    telephone: "+1-248-987-6776",
+  },
+  areaServed: { "@type": "Country", name: "US" },
+  url: "https://www.swiftlinkusa.com/drayage/",
+};
+---
+
+<BaseLayout
+  title="Drayage & Port Services • SwiftLink Logistics"
+  description="Drayage and port services from SwiftLink Logistics. Container pickup, transloading, and chassis management at all major US ports."
+  keywords="drayage, port services, container shipping, intermodal, transloading, chassis management, port drayage, rail drayage, demurrage avoidance"
+  canonicalPath="/drayage"
+  ogTitle="Drayage & Port Services | SwiftLink Logistics"
+  ogDescription="Container pickup and delivery from all major US ports. Transloading, chassis management, and demurrage avoidance from a logistics expert."
+>
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} slot="head" />
+
+  <HeroService
+    videoSrc="/videos/drayage.mp4"
+    pillIcon="fa-ship"
+    pillText="Port-to-Door Container Services"
+    titleStart="Drayage &"
+    titleAccent="Port Services"
+    subtitle="The critical first and last mile of your ocean freight supply chain. We move containers from ports and rail yards to your warehouse — fast, reliable, and demurrage-free."
+    primaryCta={{ href: "/quote/?service=Drayage", text: "Get a Drayage Quote" }}
+    secondaryCta={{ href: "#what-is-drayage", text: "Learn More" }}
+  />
+
+  <!-- WHAT IS DRAYAGE -->
+  <section id="what-is-drayage" class="py-24 bg-slate-950">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid md:grid-cols-2 gap-16 items-center">
+        <div class="fade-in">
+          <h2 class="text-4xl font-bold mb-6">What is Drayage?</h2>
+          <p class="text-slate-300 text-lg leading-relaxed mb-6">Drayage is the short-distance transport of shipping containers — typically from ocean ports or rail intermodal yards to nearby warehouses, distribution centers, or transloading facilities. While the distance is short (usually under 100 miles), drayage is one of the most operationally complex segments of the supply chain.</p>
+          <p class="text-slate-300 text-lg leading-relaxed mb-6">It involves coordinating with port terminals, steamship lines, customs brokers, chassis providers, and receiving facilities — all while racing against <strong class="text-white">free time</strong> clocks to avoid costly <strong class="text-white">demurrage</strong> (port storage fees) and <strong class="text-white">detention</strong> (chassis/container holding fees).</p>
+          <p class="text-slate-300 text-lg leading-relaxed">SwiftLink's drayage team manages this entire process. From the moment your container is discharged from the vessel, we track it through customs clearance, dispatch a driver with a chassis, pick up the container, and deliver it to your door — or transload it into a domestic 53-foot trailer for inland distribution.</p>
+        </div>
+        <div class="fade-in">
+          <div class="bg-slate-900 rounded-3xl p-8 border border-slate-800">
+            <h3 class="text-xl font-bold mb-6 text-orange-500">Key Drayage Terms</h3>
+            <div class="space-y-5">
+              <div class="border-b border-slate-800 pb-4">
+                <p class="font-semibold mb-1">Demurrage</p>
+                <p class="text-sm text-slate-400">Charges assessed by the port/terminal when a container sits beyond its allotted free time (typically 3–5 days). Can reach $150–$400+ per day.</p>
+              </div>
+              <div class="border-b border-slate-800 pb-4">
+                <p class="font-semibold mb-1">Detention</p>
+                <p class="text-sm text-slate-400">Charges from the steamship line when you hold their container or chassis beyond the allowed period after leaving the port. Billed per day.</p>
+              </div>
+              <div class="border-b border-slate-800 pb-4">
+                <p class="font-semibold mb-1">Per Diem</p>
+                <p class="text-sm text-slate-400">Daily rental fee for the chassis used to transport the container. Can be carrier-owned, pool chassis, or steamship-line provided.</p>
+              </div>
+              <div class="border-b border-slate-800 pb-4">
+                <p class="font-semibold mb-1">Transloading</p>
+                <p class="text-sm text-slate-400">Unloading an ocean container (20' or 40') and reloading the cargo into a 53' domestic trailer for more efficient inland transportation.</p>
+              </div>
+              <div>
+                <p class="font-semibold mb-1">Last Free Day (LFD)</p>
+                <p class="text-sm text-slate-400">The final day a container can sit at the port without incurring demurrage charges. Missing LFD can cost hundreds per day.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OUR DRAYAGE SERVICES -->
+  <section class="py-24 bg-slate-900">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16 fade-in">
+        <h2 class="text-4xl font-bold mb-4">Our Drayage Services</h2>
+        <p class="text-slate-400 text-lg max-w-2xl mx-auto">End-to-end container logistics from port discharge to final destination, including transloading, storage, and empty container return.</p>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="fade-in bg-slate-950 rounded-2xl p-8 border border-slate-800 hover:border-orange-500/50 transition-all duration-300">
+          <div class="w-14 h-14 bg-orange-500/10 rounded-xl flex items-center justify-center mb-6">
+            <i class="fa-solid fa-anchor text-orange-500 text-2xl" aria-hidden="true"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Port Drayage</h3>
+          <p class="text-slate-400">Container pickup from marine terminals and delivery to your warehouse, distribution center, or transload facility. We manage terminal appointments, chassis procurement, and same-day dispatch to beat your last free day.</p>
+        </div>
+        <div class="fade-in bg-slate-950 rounded-2xl p-8 border border-slate-800 hover:border-orange-500/50 transition-all duration-300">
+          <div class="w-14 h-14 bg-orange-500/10 rounded-xl flex items-center justify-center mb-6">
+            <i class="fa-solid fa-train text-orange-500 text-2xl" aria-hidden="true"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Rail Drayage</h3>
+          <p class="text-slate-400">Container pickup from intermodal rail ramps (BNSF, UP, CSX, NS) and delivery to final destination. Includes ramp notification monitoring, appointment scheduling, and chassis coordination for seamless rail-to-road transitions.</p>
+        </div>
+        <div class="fade-in bg-slate-950 rounded-2xl p-8 border border-slate-800 hover:border-orange-500/50 transition-all duration-300">
+          <div class="w-14 h-14 bg-orange-500/10 rounded-xl flex items-center justify-center mb-6">
+            <i class="fa-solid fa-arrows-rotate text-orange-500 text-2xl" aria-hidden="true"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Transloading</h3>
+          <p class="text-slate-400">Unload ocean containers (20' or 40') and reload cargo into 53' domestic trailers for cost-effective inland distribution. Reduces per-mile transportation costs and eliminates ocean container detention charges on long-haul moves.</p>
+        </div>
+        <div class="fade-in bg-slate-950 rounded-2xl p-8 border border-slate-800 hover:border-orange-500/50 transition-all duration-300">
+          <div class="w-14 h-14 bg-orange-500/10 rounded-xl flex items-center justify-center mb-6">
+            <i class="fa-solid fa-gears text-orange-500 text-2xl" aria-hidden="true"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Chassis Management</h3>
+          <p class="text-slate-400">We source chassis from pool providers (DCLI, TRAC, Flexi-Van), steamship lines, or our carrier partners. Chassis availability and per diem are managed proactively to prevent delays and control costs.</p>
+        </div>
+        <div class="fade-in bg-slate-950 rounded-2xl p-8 border border-slate-800 hover:border-orange-500/50 transition-all duration-300">
+          <div class="w-14 h-14 bg-orange-500/10 rounded-xl flex items-center justify-center mb-6">
+            <i class="fa-solid fa-warehouse text-orange-500 text-2xl" aria-hidden="true"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Container Storage &amp; Yard Management</h3>
+          <p class="text-slate-400">Short-term container storage at port-area yards when your warehouse isn't ready to receive. Avoids port demurrage by pulling containers before LFD and holding them at lower-cost off-dock locations.</p>
+        </div>
+        <div class="fade-in bg-slate-950 rounded-2xl p-8 border border-slate-800 hover:border-orange-500/50 transition-all duration-300">
+          <div class="w-14 h-14 bg-orange-500/10 rounded-xl flex items-center justify-center mb-6">
+            <i class="fa-solid fa-file-export text-orange-500 text-2xl" aria-hidden="true"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Export Drayage</h3>
+          <p class="text-slate-400">Load empty containers at your facility, transport to the port, and deliver to the designated terminal for vessel loading. We coordinate cut-off times, ERD (earliest return date), and terminal gate appointments.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PORTS WE SERVE -->
+  <section class="py-24 bg-slate-950">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16 fade-in">
+        <h2 class="text-4xl font-bold mb-4">Ports &amp; Intermodal Ramps We Serve</h2>
+        <p class="text-slate-400 text-lg max-w-2xl mx-auto">SwiftLink provides drayage coverage at every major US port and rail intermodal facility, with local drivers who know the terminals inside and out.</p>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="fade-in bg-slate-900 rounded-2xl p-6 border border-slate-800 hover:border-orange-500/50 transition">
+          <div class="flex items-center gap-3 mb-4">
+            <i class="fa-solid fa-location-dot text-orange-500" aria-hidden="true"></i>
+            <h3 class="font-bold">Los Angeles / Long Beach</h3>
+          </div>
+          <p class="text-slate-400 text-sm">The busiest port complex in North America. Handles over 9 million TEUs annually. Terminals include APM, Pier 400, TTI, ITS, PCT, LBCT, and more.</p>
+        </div>
+        <div class="fade-in bg-slate-900 rounded-2xl p-6 border border-slate-800 hover:border-orange-500/50 transition">
+          <div class="flex items-center gap-3 mb-4">
+            <i class="fa-solid fa-location-dot text-orange-500" aria-hidden="true"></i>
+            <h3 class="font-bold">New York / New Jersey</h3>
+          </div>
+          <p class="text-slate-400 text-sm">The largest port on the East Coast. Terminals at Elizabeth, Newark, Bayonne, and Staten Island serve the entire Northeast corridor and Midwest via rail.</p>
+        </div>
+        <div class="fade-in bg-slate-900 rounded-2xl p-6 border border-slate-800 hover:border-orange-500/50 transition">
+          <div class="flex items-center gap-3 mb-4">
+            <i class="fa-solid fa-location-dot text-orange-500" aria-hidden="true"></i>
+            <h3 class="font-bold">Savannah, GA</h3>
+          </div>
+          <p class="text-slate-400 text-sm">The fastest-growing port in the US. Garden City Terminal is the largest single-operator container terminal in North America with direct rail to the Southeast and Midwest.</p>
+        </div>
+        <div class="fade-in bg-slate-900 rounded-2xl p-6 border border-slate-800 hover:border-orange-500/50 transition">
+          <div class="flex items-center gap-3 mb-4">
+            <i class="fa-solid fa-location-dot text-orange-500" aria-hidden="true"></i>
+            <h3 class="font-bold">Houston, TX</h3>
+          </div>
+          <p class="text-slate-400 text-sm">A major Gulf Coast gateway. Barbours Cut and Bayport terminals serve the energy, petrochemical, and manufacturing sectors across Texas and the South Central US.</p>
+        </div>
+        <div class="fade-in bg-slate-900 rounded-2xl p-6 border border-slate-800 hover:border-orange-500/50 transition">
+          <div class="flex items-center gap-3 mb-4">
+            <i class="fa-solid fa-location-dot text-orange-500" aria-hidden="true"></i>
+            <h3 class="font-bold">Charleston, SC</h3>
+          </div>
+          <p class="text-slate-400 text-sm">Deep-water port with the new Hugh K. Leatherman Terminal. Strong Southeast distribution network serving automotive, manufacturing, and retail importers.</p>
+        </div>
+        <div class="fade-in bg-slate-900 rounded-2xl p-6 border border-slate-800 hover:border-orange-500/50 transition">
+          <div class="flex items-center gap-3 mb-4">
+            <i class="fa-solid fa-location-dot text-orange-500" aria-hidden="true"></i>
+            <h3 class="font-bold">Oakland, CA</h3>
+          </div>
+          <p class="text-slate-400 text-sm">Northern California's primary port. Key gateway for agricultural exports and imports serving the Bay Area, Sacramento Valley, and Central California markets.</p>
+        </div>
+        <div class="fade-in bg-slate-900 rounded-2xl p-6 border border-slate-800 hover:border-orange-500/50 transition">
+          <div class="flex items-center gap-3 mb-4">
+            <i class="fa-solid fa-location-dot text-orange-500" aria-hidden="true"></i>
+            <h3 class="font-bold">Seattle / Tacoma</h3>
+          </div>
+          <p class="text-slate-400 text-sm">The Northwest Seaport Alliance. Closest US port to Asia with strong intermodal connections to the Pacific Northwest, Mountain West, and Midwest regions.</p>
+        </div>
+        <div class="fade-in bg-slate-900 rounded-2xl p-6 border border-slate-800 hover:border-orange-500/50 transition">
+          <div class="flex items-center gap-3 mb-4">
+            <i class="fa-solid fa-location-dot text-orange-500" aria-hidden="true"></i>
+            <h3 class="font-bold">Norfolk / Virginia</h3>
+          </div>
+          <p class="text-slate-400 text-sm">One of the deepest natural harbors on the East Coast. Virginia International Terminals serve as a key mid-Atlantic hub with excellent inland rail connectivity.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="py-24 bg-slate-900">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16 fade-in">
+        <h2 class="text-4xl font-bold mb-4">How Drayage Works</h2>
+        <p class="text-slate-400 text-lg max-w-2xl mx-auto">From vessel arrival to warehouse delivery, here's the step-by-step process SwiftLink manages on every drayage move.</p>
+      </div>
+      <div class="grid md:grid-cols-5 gap-6">
+        <div class="fade-in text-center">
+          <div class="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">1</div>
+          <h3 class="font-bold mb-2">Vessel Arrives</h3>
+          <p class="text-slate-400 text-sm">Your container is discharged from the vessel and placed on the terminal yard. We monitor vessel ETAs and terminal availability notifications in real time.</p>
+        </div>
+        <div class="fade-in text-center">
+          <div class="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">2</div>
+          <h3 class="font-bold mb-2">We Dispatch</h3>
+          <p class="text-slate-400 text-sm">Once the container is available and customs-cleared, we dispatch a local drayage driver with the appropriate chassis. Terminal appointment is secured in advance.</p>
+        </div>
+        <div class="fade-in text-center">
+          <div class="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">3</div>
+          <h3 class="font-bold mb-2">Clear Customs</h3>
+          <p class="text-slate-400 text-sm">We coordinate with your customs broker to ensure the container has a freight release and customs release before the driver arrives. No release = no pickup.</p>
+        </div>
+        <div class="fade-in text-center">
+          <div class="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">4</div>
+          <h3 class="font-bold mb-2">Container Pickup</h3>
+          <p class="text-slate-400 text-sm">Driver enters the terminal, mounts the container on the chassis, and departs through the out-gate. We confirm pickup with a gate-out timestamp and photo.</p>
+        </div>
+        <div class="fade-in text-center">
+          <div class="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">5</div>
+          <h3 class="font-bold mb-2">Deliver or Transload</h3>
+          <p class="text-slate-400 text-sm">Container delivered directly to your warehouse for live unload — or taken to a transload facility to be cross-docked into a 53' domestic trailer for inland shipping.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY SWIFTLINK -->
+  <section class="py-24 bg-slate-950">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16 fade-in">
+        <h2 class="text-4xl font-bold mb-4">Why SwiftLink for Drayage</h2>
+        <p class="text-slate-400 text-lg max-w-2xl mx-auto">Drayage is where delays are most expensive and most common. Our port expertise and carrier relationships keep your containers moving and your costs down.</p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-8">
+        <div class="fade-in flex items-start gap-4 bg-slate-900 rounded-xl p-6 border border-slate-800">
+          <div class="w-12 h-12 bg-orange-500/10 rounded-xl flex items-center justify-center flex-shrink-0">
+            <i class="fa-solid fa-handshake text-orange-500 text-lg" aria-hidden="true"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-lg mb-2">Port Terminal Relationships</h3>
+            <p class="text-slate-400 text-sm">Our drayage carriers have established relationships at every major terminal. This means priority appointment slots, faster gate processing, and fewer turn-aways during congestion events.</p>
+          </div>
+        </div>
+        <div class="fade-in flex items-start gap-4 bg-slate-900 rounded-xl p-6 border border-slate-800">
+          <div class="w-12 h-12 bg-orange-500/10 rounded-xl flex items-center justify-center flex-shrink-0">
+            <i class="fa-solid fa-circle-dollar-to-slot text-orange-500 text-lg" aria-hidden="true"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-lg mb-2">Avoid Demurrage &amp; Detention</h3>
+            <p class="text-slate-400 text-sm">We monitor last free days and proactively dispatch before deadlines. If your warehouse isn't ready, we'll pull to an off-dock yard to stop the demurrage clock and save you hundreds per day.</p>
+          </div>
+        </div>
+        <div class="fade-in flex items-start gap-4 bg-slate-900 rounded-xl p-6 border border-slate-800">
+          <div class="w-12 h-12 bg-orange-500/10 rounded-xl flex items-center justify-center flex-shrink-0">
+            <i class="fa-solid fa-trailer text-orange-500 text-lg" aria-hidden="true"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-lg mb-2">Chassis Pool Access</h3>
+            <p class="text-slate-400 text-sm">Chassis shortages are a leading cause of drayage delays. Our carriers maintain access to multiple chassis pools (DCLI, TRAC, Flexi-Van) and private fleets to ensure equipment availability.</p>
+          </div>
+        </div>
+        <div class="fade-in flex items-start gap-4 bg-slate-900 rounded-xl p-6 border border-slate-800">
+          <div class="w-12 h-12 bg-orange-500/10 rounded-xl flex items-center justify-center flex-shrink-0">
+            <i class="fa-solid fa-passport text-orange-500 text-lg" aria-hidden="true"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-lg mb-2">Customs Coordination</h3>
+            <p class="text-slate-400 text-sm">We work directly with your customs broker and freight forwarder to ensure both freight release and customs release are in place before we dispatch. No wasted trips, no terminal fees for failed pickups.</p>
+          </div>
+        </div>
+        <div class="fade-in flex items-start gap-4 bg-slate-900 rounded-xl p-6 border border-slate-800">
+          <div class="w-12 h-12 bg-orange-500/10 rounded-xl flex items-center justify-center flex-shrink-0">
+            <i class="fa-solid fa-satellite-dish text-orange-500 text-lg" aria-hidden="true"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-lg mb-2">Real-Time Container Tracking</h3>
+            <p class="text-slate-400 text-sm">Track your container from vessel discharge through terminal availability, gate-out, en route, and delivery. Automated milestone alerts keep you and your team informed at every step.</p>
+          </div>
+        </div>
+        <div class="fade-in flex items-start gap-4 bg-slate-900 rounded-xl p-6 border border-slate-800">
+          <div class="w-12 h-12 bg-orange-500/10 rounded-xl flex items-center justify-center flex-shrink-0">
+            <i class="fa-solid fa-recycle text-orange-500 text-lg" aria-hidden="true"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-lg mb-2">Empty Container Return</h3>
+            <p class="text-slate-400 text-sm">After unloading, we return empty containers to the steamship line's designated depot or terminal — on time and to the correct location to avoid per diem charges and off-hire disputes.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-24 bg-slate-900">
+    <div class="max-w-4xl mx-auto px-6 text-center fade-in">
+      <div class="bg-gradient-to-br from-slate-950 to-slate-950/50 rounded-3xl p-12 border border-slate-800">
+        <i class="fa-solid fa-ship text-orange-500 text-5xl mb-6" aria-hidden="true"></i>
+        <h2 class="text-4xl font-bold mb-4">Need Drayage? Let's Move Your Containers.</h2>
+        <p class="text-slate-300 text-lg mb-8 max-w-xl mx-auto">Tell us your port, container number, and destination. We'll provide a competitive drayage rate and have a driver dispatched before your last free day.</p>
+        <div class="flex flex-wrap justify-center gap-4">
+          <a href="/quote/?service=Drayage" class="bg-orange-500 hover:bg-orange-600 px-10 py-4 rounded-2xl font-semibold text-lg transition">Get a Drayage Quote</a>
+          <a href="/contact" class="border border-slate-600 hover:border-orange-500 px-10 py-4 rounded-2xl font-semibold text-lg transition">Talk to a Specialist</a>
+        </div>
+        <p class="text-sm text-slate-500 mt-6">Coverage at all major US ports &bull; Same-day dispatch available &bull; Demurrage-free guarantee</p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

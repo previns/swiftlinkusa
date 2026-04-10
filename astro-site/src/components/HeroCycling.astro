@@ -1,0 +1,170 @@
+---
+/**
+ * Home page hero — three videos cross-fade on `ended`, with clickable progress dots.
+ * IntersectionObserver pauses video playback when the hero is off-screen
+ * (saves bandwidth + CPU on long pages).
+ */
+interface CyclingVideo {
+  src: string;
+  /** Accessible label describing the video subject */
+  label: string;
+}
+
+interface Props {
+  videos: CyclingVideo[];
+  /** Optional poster shown before the first video buffers */
+  poster?: string;
+}
+
+const { videos, poster } = Astro.props;
+---
+
+<header class="relative h-screen flex items-center overflow-hidden" data-hero-cycling>
+  <div class="hero-video-container" data-video-container aria-hidden="true">
+    {
+      videos.map((v, i) => (
+        <video
+          class:list={["hero-video-cycling", { active: i === 0 }]}
+          src={v.src}
+          muted
+          playsinline
+          preload={i === 0 ? "auto" : "metadata"}
+          poster={poster}
+          data-video-index={i}
+          aria-label={v.label}
+        />
+      ))
+    }
+  </div>
+  <div class="hero-overlay absolute inset-0" aria-hidden="true"></div>
+
+  <div class="relative max-w-7xl mx-auto px-6 z-10">
+    <div class="max-w-2xl">
+      <h1 class="text-6xl md:text-7xl font-bold tracking-tighter leading-none mb-6 fade-in">
+        Ship with Confidence.<br />
+        <span class="text-orange-500">SwiftLink Logistics.</span>
+      </h1>
+      <p class="text-xl text-slate-300 mb-10 fade-in">
+        Expert transportation management with Full Truckload, Less-Than-Truckload, Drayage and Port
+        services. Nationwide coverage with real-time visibility.
+      </p>
+      <div class="flex flex-wrap gap-4 fade-in">
+        <a
+          href="/quote"
+          class="bg-white text-black hover:bg-orange-500 hover:text-white px-10 py-5 rounded-3xl text-lg font-semibold inline-flex items-center gap-3 transition"
+        >
+          Get Free Quote <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Video progress dots -->
+  <div
+    class="absolute bottom-10 left-1/2 -translate-x-1/2 flex gap-3 z-20"
+    data-video-dots
+    role="tablist"
+    aria-label="Hero video selector"
+  ></div>
+</header>
+
+<script>
+  type CyclingVideo = { src: string; label: string };
+
+  const root = document.querySelector<HTMLElement>("[data-hero-cycling]");
+  if (root) {
+    const videoEls = Array.from(root.querySelectorAll<HTMLVideoElement>(".hero-video-cycling"));
+    const dotsContainer = root.querySelector<HTMLElement>("[data-video-dots]");
+
+    let currentIndex = 0;
+    let isVisible = true;
+
+    const renderDots = () => {
+      if (!dotsContainer) return;
+      dotsContainer.innerHTML = videoEls
+        .map(
+          (_, i) =>
+            `<button type="button" role="tab" aria-selected="${i === currentIndex}"
+              aria-label="Show video ${i + 1} of ${videoEls.length}"
+              data-dot-index="${i}"
+              class="w-3 h-3 rounded-full cursor-pointer transition-all ${
+                i === currentIndex ? "bg-orange-500 scale-125" : "bg-white/40"
+              }"></button>`,
+        )
+        .join("");
+      dotsContainer.querySelectorAll<HTMLButtonElement>("[data-dot-index]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const idx = Number(btn.dataset.dotIndex);
+          jumpTo(idx);
+        });
+      });
+    };
+
+    const playCurrent = () => {
+      if (!isVisible) return;
+      const v = videoEls[currentIndex];
+      if (!v) return;
+      const playPromise = v.play();
+      if (playPromise && typeof playPromise.catch === "function") {
+        playPromise.catch(() => {
+          /* ignore autoplay rejections (e.g. low-power mode) */
+        });
+      }
+    };
+
+    const showIndex = (idx: number) => {
+      videoEls[currentIndex]?.classList.remove("active");
+      videoEls[currentIndex]?.pause();
+      currentIndex = idx;
+      const next = videoEls[currentIndex];
+      if (next) {
+        next.classList.add("active");
+        next.currentTime = 0;
+        playCurrent();
+      }
+      renderDots();
+    };
+
+    const nextVideo = () => {
+      const next = (currentIndex + 1) % videoEls.length;
+      showIndex(next);
+    };
+
+    const jumpTo = (idx: number) => {
+      if (idx === currentIndex) return;
+      showIndex(idx);
+    };
+
+    videoEls.forEach((v) => v.addEventListener("ended", nextVideo));
+
+    // IntersectionObserver — pause when off-screen, resume when back in view.
+    if ("IntersectionObserver" in window) {
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            isVisible = entry.isIntersecting;
+            if (isVisible) {
+              playCurrent();
+            } else {
+              videoEls.forEach((v) => v.pause());
+            }
+          });
+        },
+        { threshold: 0.1 },
+      );
+      io.observe(root);
+    }
+
+    // Pause when tab is hidden (saves CPU/battery on background tabs).
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        videoEls.forEach((v) => v.pause());
+      } else if (isVisible) {
+        playCurrent();
+      }
+    });
+
+    renderDots();
+    playCurrent();
+  }
+</script>

@@ -1,0 +1,165 @@
+---
+import { services } from "../data/services";
+---
+
+<nav
+  class="bg-slate-900/95 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50"
+  aria-label="Primary"
+>
+  <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+    <a href="/" class="flex items-center gap-3" aria-label="SwiftLink Logistics — home">
+      <i class="fa-solid fa-truck-fast text-3xl text-orange-500" aria-hidden="true"></i>
+      <div>
+        <span class="block text-2xl font-bold tracking-tighter">SwiftLink</span>
+        <span class="block text-[10px] text-orange-500 -mt-1">LOGISTICS, LLC</span>
+      </div>
+    </a>
+
+    <!-- Desktop nav -->
+    <div class="hidden md:flex items-center gap-8 text-sm font-medium">
+      <!-- Solutions mega dropdown -->
+      <div class="relative" data-sol-dropdown>
+        <button
+          type="button"
+          data-sol-toggle
+          aria-haspopup="true"
+          aria-expanded="false"
+          aria-controls="sol-menu"
+          class="flex items-center gap-1.5 hover:text-orange-500 transition py-2"
+        >
+          Solutions <i class="fa-solid fa-chevron-down text-[10px] opacity-50" aria-hidden="true"></i>
+        </button>
+        <div
+          id="sol-menu"
+          data-sol-menu
+          class="hidden absolute top-full left-1/2 -translate-x-1/2 pt-3 z-50"
+        >
+          <div
+            class="bg-slate-900 border border-slate-800 rounded-2xl p-5 w-[540px] shadow-2xl grid grid-cols-2 gap-1"
+            style="box-shadow: 0 25px 60px rgba(0,0,0,0.7);"
+          >
+            {
+              services.map((s) => (
+                <a
+                  href={`/${s.slug}`}
+                  class="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-800 focus-visible:bg-slate-800 transition"
+                >
+                  <i class={`fa-solid ${s.icon} text-orange-500 mt-0.5 text-sm`} aria-hidden="true" />
+                  <div>
+                    <p class="font-semibold text-sm">{s.name}</p>
+                    <p class="text-xs text-slate-500 mt-0.5">{s.tagline}</p>
+                  </div>
+                </a>
+              ))
+            }
+            <div class="col-span-2 mt-2 pt-3 border-t border-slate-800">
+              <a
+                href="/quote"
+                class="flex items-center justify-center gap-2 text-sm text-orange-500 hover:text-orange-400 font-semibold transition"
+              >
+                <i class="fa-solid fa-arrow-right" aria-hidden="true"></i> Request a Quote for Any Service
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <a href="/about" class="hover:text-orange-500 transition">About</a>
+      <a href="/contact" class="hover:text-orange-500 transition">Contact</a>
+      <a href="/careers" class="hover:text-orange-500 transition">Careers</a>
+      <a href="/faq" class="hover:text-orange-500 transition">FAQ</a>
+    </div>
+
+    <!-- Mobile menu toggle -->
+    <button
+      type="button"
+      data-mobile-toggle
+      aria-controls="mobile-menu"
+      aria-expanded="false"
+      aria-label="Toggle navigation menu"
+      class="md:hidden text-2xl text-white hover:text-orange-500 transition"
+    >
+      <i class="fa-solid fa-bars" aria-hidden="true"></i>
+    </button>
+
+    <a
+      href="/quote"
+      class="hidden md:inline-flex bg-orange-500 hover:bg-orange-600 px-8 py-2.5 rounded-2xl font-semibold text-sm transition"
+    >
+      Get Instant Quote
+    </a>
+  </div>
+
+  <!-- Mobile menu drawer -->
+  <div id="mobile-menu" data-mobile-menu class="md:hidden hidden border-t border-slate-800 bg-slate-900">
+    <div class="px-6 py-6 space-y-4 text-sm font-medium">
+      <p class="text-orange-500 text-xs uppercase tracking-widest">Solutions</p>
+      <ul class="space-y-3">
+        {
+          services.map((s) => (
+            <li>
+              <a href={`/${s.slug}`} class="flex items-center gap-3 hover:text-orange-500 transition">
+                <i class={`fa-solid ${s.icon} text-orange-500 w-5`} aria-hidden="true" />
+                <span>{s.name}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <div class="border-t border-slate-800 pt-4 space-y-3">
+        <a href="/about" class="block hover:text-orange-500 transition">About</a>
+        <a href="/contact" class="block hover:text-orange-500 transition">Contact</a>
+        <a href="/careers" class="block hover:text-orange-500 transition">Careers</a>
+        <a href="/faq" class="block hover:text-orange-500 transition">FAQ</a>
+      </div>
+      <a
+        href="/quote"
+        class="block text-center bg-orange-500 hover:bg-orange-600 px-6 py-3 rounded-2xl font-semibold transition"
+      >
+        Get Instant Quote
+      </a>
+    </div>
+  </div>
+</nav>
+
+<script>
+  // Solutions mega-dropdown — open on hover (desktop), toggle on click,
+  // close on outside click + Escape key.
+  const dd = document.querySelector<HTMLElement>("[data-sol-dropdown]");
+  const toggleBtn = document.querySelector<HTMLButtonElement>("[data-sol-toggle]");
+  const menu = document.querySelector<HTMLElement>("[data-sol-menu]");
+
+  if (dd && toggleBtn && menu) {
+    const openMenu = () => {
+      menu.classList.remove("hidden");
+      toggleBtn.setAttribute("aria-expanded", "true");
+    };
+    const closeMenu = () => {
+      menu.classList.add("hidden");
+      toggleBtn.setAttribute("aria-expanded", "false");
+    };
+
+    toggleBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      menu.classList.contains("hidden") ? openMenu() : closeMenu();
+    });
+    dd.addEventListener("mouseenter", openMenu);
+    dd.addEventListener("mouseleave", closeMenu);
+    document.addEventListener("click", (e) => {
+      if (!dd.contains(e.target as Node)) closeMenu();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeMenu();
+    });
+  }
+
+  // Mobile menu drawer
+  const mobileToggle = document.querySelector<HTMLButtonElement>("[data-mobile-toggle]");
+  const mobileMenu = document.querySelector<HTMLElement>("[data-mobile-menu]");
+  if (mobileToggle && mobileMenu) {
+    mobileToggle.addEventListener("click", () => {
+      const isOpen = mobileMenu.classList.toggle("hidden") === false;
+      mobileToggle.setAttribute("aria-expanded", String(isOpen));
+    });
+  }
+</script>

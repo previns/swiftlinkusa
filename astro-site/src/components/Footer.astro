@@ -1,0 +1,67 @@
+---
+import { services } from "../data/services";
+
+const year = new Date().getFullYear();
+---
+
+<footer class="bg-slate-950 py-20 border-t border-slate-800">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="flex flex-col md:flex-row justify-between gap-12">
+      <div>
+        <div class="flex items-center gap-3 mb-6">
+          <i class="fa-solid fa-truck-fast text-3xl text-orange-500" aria-hidden="true"></i>
+          <p class="text-3xl font-bold tracking-tighter">SwiftLink Logistics, LLC</p>
+        </div>
+        <p class="text-slate-400 max-w-xs">
+          Expert freight transportation and logistics solutions across the United States.
+        </p>
+        <p class="mt-8 text-sm text-slate-500">
+          © {year} SwiftLink Logistics, LLC • swiftlinkusa.com
+        </p>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-12">
+        <div>
+          <h2 class="font-semibold mb-4">Company</h2>
+          <ul class="space-y-3 text-sm text-slate-400">
+            <li><a href="/about" class="hover:text-white">About Us</a></li>
+            <li><a href="/careers" class="hover:text-white">Careers</a></li>
+            <li><a href="/contact" class="hover:text-white">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2 class="font-semibold mb-4">Solutions</h2>
+          <ul class="space-y-3 text-sm text-slate-400">
+            {
+              services.map((s) => (
+                <li>
+                  <a href={`/${s.slug}`} class="hover:text-white">
+                    {s.name}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+        <div>
+          <h2 class="font-semibold mb-4">Support</h2>
+          <ul class="space-y-3 text-sm text-slate-400">
+            <li><a href="/quote" class="hover:text-white">Get Quote</a></li>
+            <li><a href="/faq" class="hover:text-white">FAQ</a></li>
+            <li><a href="/terms" class="hover:text-white">Terms & Conditions</a></li>
+            <li><a href="/privacy" class="hover:text-white">Privacy Policy</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2 class="font-semibold mb-4">Contact</h2>
+          <p class="text-sm text-slate-400">
+            <a href="mailto:info@swiftlinkusa.com" class="hover:text-white">info@swiftlinkusa.com</a>
+          </p>
+          <p class="text-sm text-slate-400">
+            <a href="tel:+12489876776" class="hover:text-white">(248) 987-6776</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>

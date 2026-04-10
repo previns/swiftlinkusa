@@ -1,0 +1,19 @@
+---
+interface Props {
+  href: string;
+  icon: string;
+  title: string;
+  description: string;
+}
+
+const { href, icon, title, description } = Astro.props;
+---
+
+<a
+  href={href}
+  class="service-card bg-slate-950 border border-slate-800 rounded-3xl p-8 fade-in block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
+>
+  <i class={`fa-solid ${icon} text-5xl text-orange-500 mb-6`} aria-hidden="true"></i>
+  <h3 class="text-2xl font-semibold mb-3">{title}</h3>
+  <p class="text-slate-400">{description}</p>
+</a>

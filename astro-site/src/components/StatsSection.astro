@@ -1,0 +1,25 @@
+---
+const stats = [
+  { value: "48", label: "States Served" },
+  { value: "1,200+", label: "Active Clients" },
+  { value: "99.8%", label: "On-Time Delivery" },
+  { value: "5000+", label: "Carrier Partners" },
+];
+---
+
+<section class="py-20 bg-slate-950">
+  <div class="max-w-7xl mx-auto px-6 text-center">
+    <p class="text-orange-500 font-medium tracking-widest">OUR SCALE</p>
+    <h2 class="text-5xl font-bold tracking-tighter mt-3 mb-12">Numbers That Matter</h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-10">
+      {
+        stats.map((s) => (
+          <div class="fade-in">
+            <div class="stat-number text-orange-500">{s.value}</div>
+            <p class="text-slate-400 mt-3 text-lg">{s.label}</p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

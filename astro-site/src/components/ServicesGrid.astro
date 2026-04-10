@@ -1,0 +1,28 @@
+---
+import { services } from "../data/services";
+import ServiceCard from "./ServiceCard.astro";
+---
+
+<section id="solutions" class="py-24 bg-slate-900">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="text-center mb-16">
+      <p class="text-orange-500 font-medium tracking-widest">SOLUTIONS</p>
+      <h2 class="text-5xl font-bold tracking-tighter mt-3">Transportation Services</h2>
+      <p class="text-slate-400 mt-4 max-w-2xl mx-auto">
+        Reliable freight solutions tailored to your shipping needs.
+      </p>
+    </div>
+    <div class="grid md:grid-cols-3 gap-8">
+      {
+        services.map((s) => (
+          <ServiceCard
+            href={`/${s.slug}`}
+            icon={s.icon}
+            title={s.name}
+            description={s.blurb}
+          />
+        ))
+      }
+    </div>
+  </div>
+</section>

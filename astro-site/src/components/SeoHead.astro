@@ -1,0 +1,78 @@
+---
+interface Props {
+  /** Browser tab title — also used for og:title / twitter:title if `ogTitle` not given */
+  title: string;
+  /** Meta description — also used for og:description / twitter:description if not overridden */
+  description: string;
+  /** Comma-separated SEO keywords */
+  keywords?: string;
+  /**
+   * Path-only canonical (e.g. "/ftl"). Joined with `Astro.site` and emitted with a trailing slash
+   * so canonicals always look like https://www.swiftlinkusa.com/ftl/. Pass "/" for home.
+   */
+  canonicalPath: string;
+  /** Override og:title (defaults to `title`) */
+  ogTitle?: string;
+  /** Override og:description (defaults to `description`) */
+  ogDescription?: string;
+  /** Path or absolute URL to the social share image */
+  ogImage?: string;
+}
+
+const {
+  title,
+  description,
+  keywords,
+  canonicalPath,
+  ogTitle,
+  ogDescription,
+  ogImage,
+} = Astro.props;
+
+const site = Astro.site ?? new URL("https://www.swiftlinkusa.com");
+
+// Always emit canonicals with a single trailing slash for consistency.
+const cleanPath = canonicalPath.startsWith("/") ? canonicalPath : `/${canonicalPath}`;
+const withTrailing = cleanPath === "/" ? "/" : cleanPath.replace(/\/?$/, "/");
+const canonical = new URL(withTrailing, site).toString();
+
+const resolvedOgTitle = ogTitle ?? title;
+const resolvedOgDescription = ogDescription ?? description;
+const resolvedOgImage = ogImage ? new URL(ogImage, site).toString() : undefined;
+---
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="generator" content={Astro.generator} />
+
+<title>{title}</title>
+<meta name="description" content={description} />
+{keywords && <meta name="keywords" content={keywords} />}
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href={canonical} />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="SwiftLink Logistics" />
+<meta property="og:title" content={resolvedOgTitle} />
+<meta property="og:description" content={resolvedOgDescription} />
+<meta property="og:url" content={canonical} />
+{resolvedOgImage && <meta property="og:image" content={resolvedOgImage} />}
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={resolvedOgTitle} />
+<meta name="twitter:description" content={resolvedOgDescription} />
+{resolvedOgImage && <meta name="twitter:image" content={resolvedOgImage} />}
+
+<!-- Favicon -->
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="icon" href="/favicon.ico" />
+
+<!-- Font Awesome (CDN — kept as-is for migration; consider self-hosted subset later) -->
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+/>

@@ -1,0 +1,96 @@
+---
+/**
+ * Service-page hero: video background + pill badge + headline (with accent span)
+ * + subtitle + primary/secondary CTAs.
+ *
+ * Used by: ftl, ltl, drayage, expedited, heavy-haul, hazmat.
+ */
+interface CTA {
+  href: string;
+  text: string;
+}
+
+interface Props {
+  videoSrc: string;
+  /** Font Awesome icon for the pill badge (e.g. "fa-truck") */
+  pillIcon: string;
+  pillText: string;
+  /** Plain text part of the headline */
+  titleStart: string;
+  /** Highlighted (orange) part of the headline */
+  titleAccent: string;
+  /** Optional plain text part after the accent */
+  titleEnd?: string;
+  subtitle: string;
+  primaryCta: CTA;
+  secondaryCta?: CTA;
+  poster?: string;
+}
+
+const {
+  videoSrc,
+  pillIcon,
+  pillText,
+  titleStart,
+  titleAccent,
+  titleEnd,
+  subtitle,
+  primaryCta,
+  secondaryCta,
+  poster,
+} = Astro.props;
+---
+
+<section class="relative bg-slate-900 py-28 overflow-hidden">
+  <div class="hero-video-container" aria-hidden="true">
+    <video
+      class="hero-video"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="metadata"
+      poster={poster}
+    >
+      <source src={videoSrc} type="video/mp4" />
+    </video>
+  </div>
+  <div class="hero-overlay" aria-hidden="true"></div>
+
+  <div class="max-w-7xl mx-auto px-6 relative z-10 text-center">
+    <div
+      class="inline-flex items-center gap-2 bg-orange-500/10 border border-orange-500/30 rounded-full px-5 py-2 mb-8"
+    >
+      <i class={`fa-solid ${pillIcon} text-orange-500`} aria-hidden="true"></i>
+      <span class="text-sm text-orange-400 font-medium">{pillText}</span>
+    </div>
+
+    <h1 class="text-5xl md:text-6xl font-extrabold tracking-tight mb-6">
+      {titleStart}
+      {titleStart && " "}
+      <span class="text-orange-500">{titleAccent}</span>
+      {titleEnd && <> {titleEnd}</>}
+    </h1>
+
+    <p class="text-xl text-slate-300 max-w-3xl mx-auto mb-10">{subtitle}</p>
+
+    <div class="flex flex-wrap justify-center gap-4">
+      <a
+        href={primaryCta.href}
+        class="bg-orange-500 hover:bg-orange-600 px-10 py-4 rounded-2xl font-semibold text-lg transition"
+      >
+        {primaryCta.text}
+      </a>
+      {
+        secondaryCta && (
+          <a
+            href={secondaryCta.href}
+            class="border border-slate-600 hover:border-orange-500 px-10 py-4 rounded-2xl font-semibold text-lg transition"
+          >
+            {secondaryCta.text}
+          </a>
+        )
+      }
+    </div>
+  </div>
+</section>

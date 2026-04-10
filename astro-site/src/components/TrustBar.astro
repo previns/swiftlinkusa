@@ -1,0 +1,23 @@
+---
+const items = [
+  { icon: "fa-truck", text: "Nationwide Coverage" },
+  { icon: "fa-clock", text: "On-Time Delivery" },
+  { icon: "fa-ship", text: "Port & Drayage Experts" },
+  { icon: "fa-shield-halved", text: "Fully Insured" },
+];
+---
+
+<div class="bg-slate-900 py-6 border-b border-slate-800">
+  <div
+    class="max-w-7xl mx-auto px-6 flex flex-wrap justify-center gap-x-12 gap-y-4 items-center text-sm opacity-75"
+  >
+    {
+      items.map((item) => (
+        <div class="flex items-center gap-3">
+          <i class={`fa-solid ${item.icon}`} aria-hidden="true" />
+          <span>{item.text}</span>
+        </div>
+      ))
+    }
+  </div>
+</div>

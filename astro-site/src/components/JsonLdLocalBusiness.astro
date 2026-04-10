@@ -1,0 +1,36 @@
+---
+// Structured data for LocalBusiness — emitted on the home page.
+// Generated as a JSON.stringify so values stay HTML-safe.
+const data = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "@id": "https://www.swiftlinkusa.com/#organization",
+  name: "SwiftLink Logistics, LLC",
+  url: "https://www.swiftlinkusa.com",
+  telephone: "+1-248-987-6776",
+  email: "info@swiftlinkusa.com",
+  address: {
+    "@type": "PostalAddress",
+    addressRegion: "MI",
+    addressCountry: "US",
+  },
+  areaServed: {
+    "@type": "Country",
+    name: "US",
+    description: "48 contiguous states",
+  },
+  description:
+    "SwiftLink Logistics is a Michigan-based 3PL freight brokerage offering full truckload, less-than-truckload, drayage, expedited, heavy haul, and hazmat shipping services across 48 states.",
+  serviceType: [
+    "Full Truckload (FTL) Shipping",
+    "Less-Than-Truckload (LTL) Shipping",
+    "Drayage & Port Services",
+    "Expedited Freight Shipping",
+    "Heavy Haul & Oversize Freight",
+    "Hazardous Materials (Hazmat) Shipping",
+  ],
+  sameAs: [],
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(data)} />

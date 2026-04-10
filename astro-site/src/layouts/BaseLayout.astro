@@ -1,0 +1,78 @@
+---
+import "../styles/global.css";
+import SeoHead from "../components/SeoHead.astro";
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+
+interface Props {
+  title: string;
+  description: string;
+  canonicalPath: string;
+  keywords?: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  ogImage?: string;
+}
+
+const { title, description, canonicalPath, keywords, ogTitle, ogDescription, ogImage } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <SeoHead
+      title={title}
+      description={description}
+      canonicalPath={canonicalPath}
+      keywords={keywords}
+      ogTitle={ogTitle}
+      ogDescription={ogDescription}
+      ogImage={ogImage}
+    />
+    <slot name="head" />
+  </head>
+  <body class="bg-slate-950 text-white font-sans overflow-x-hidden">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:bg-orange-500 focus:text-white focus:px-4 focus:py-2 focus:rounded-lg focus:font-semibold"
+    >
+      Skip to main content
+    </a>
+
+    <Nav />
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <Footer />
+
+    <script>
+      // Shared scroll-triggered fade-in observer (used by .fade-in everywhere).
+      const animate = () => {
+        const els = document.querySelectorAll<HTMLElement>(".fade-in");
+        if (!("IntersectionObserver" in window) || els.length === 0) {
+          els.forEach((el) => el.classList.add("visible"));
+          return;
+        }
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("visible");
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.1 },
+        );
+        els.forEach((el) => observer.observe(el));
+      };
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", animate);
+      } else {
+        animate();
+      }
+    </script>
+  </body>
+</html>

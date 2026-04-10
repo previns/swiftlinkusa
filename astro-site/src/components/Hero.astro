@@ -1,0 +1,58 @@
+---
+/**
+ * Simple content-page hero with a single looping background video.
+ * Used by: about, contact, careers, faq.
+ *
+ * Service pages use HeroService.astro instead (centered, pill badge, CTAs).
+ * The home page uses HeroCycling.astro.
+ */
+interface Props {
+  /** Path to the hero MP4 in /public/videos/ */
+  videoSrc: string;
+  /** Optional small uppercase eyebrow line above the title */
+  eyebrow?: string;
+  /** Main headline */
+  title: string;
+  /** Supporting subtitle paragraph */
+  subtitle?: string;
+  /** Optional poster image path (improves LCP perceived load) */
+  poster?: string;
+}
+
+const { videoSrc, eyebrow, title, subtitle, poster } = Astro.props;
+---
+
+<section class="relative bg-slate-900 py-28 text-center overflow-hidden">
+  <div class="hero-video-container" aria-hidden="true">
+    <video
+      class="hero-video"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="metadata"
+      poster={poster}
+    >
+      <source src={videoSrc} type="video/mp4" />
+    </video>
+  </div>
+  <div class="hero-overlay" aria-hidden="true"></div>
+
+  <div class="relative z-10 max-w-4xl mx-auto px-6">
+    {
+      eyebrow && (
+        <p class="text-orange-500 font-semibold text-sm tracking-widest uppercase mb-4 fade-in">
+          {eyebrow}
+        </p>
+      )
+    }
+    <h1 class="text-5xl md:text-6xl font-extrabold tracking-tight leading-tight fade-in">
+      {title}
+    </h1>
+    {
+      subtitle && (
+        <p class="mt-6 text-xl text-slate-300 max-w-2xl mx-auto fade-in">{subtitle}</p>
+      )
+    }
+  </div>
+</section>

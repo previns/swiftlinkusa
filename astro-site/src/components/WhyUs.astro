@@ -1,0 +1,39 @@
+---
+const reasons = [
+  {
+    icon: "fa-clock",
+    title: "Speed & Precision",
+    text: "Industry-leading on-time performance with proactive updates.",
+  },
+  {
+    icon: "fa-eye",
+    title: "Full Transparency",
+    text: "Real-time GPS tracking and detailed reporting at every step.",
+  },
+  {
+    icon: "fa-handshake",
+    title: "Dedicated Support",
+    text: "Personal account managers who know your shipping patterns.",
+  },
+];
+---
+
+<section id="why-us" class="py-24 bg-slate-950">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="text-center mb-16">
+      <p class="text-orange-500 font-medium">WHY CHOOSE SWIFTLINK</p>
+      <h2 class="text-5xl font-bold tracking-tighter mt-3">Built for Reliability</h2>
+    </div>
+    <div class="grid md:grid-cols-3 gap-8">
+      {
+        reasons.map((r) => (
+          <div class="text-center fade-in">
+            <i class={`fa-solid ${r.icon} text-5xl text-orange-500 mb-6`} aria-hidden="true" />
+            <h3 class="text-2xl font-semibold mb-3">{r.title}</h3>
+            <p class="text-slate-400">{r.text}</p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

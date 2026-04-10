@@ -1,0 +1,305 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  serviceType: "Heavy Haul & Oversize Freight",
+  name: "Heavy Haul and Oversize Freight Shipping",
+  description:
+    "Permitted overweight and oversized load transport with route planning, escort coordination, and specialized trailers for heavy equipment and machinery nationwide.",
+  provider: {
+    "@type": "LocalBusiness",
+    name: "SwiftLink Logistics, LLC",
+    url: "https://www.swiftlinkusa.com",
+    telephone: "+1-248-987-6776",
+  },
+  areaServed: { "@type": "Country", name: "US" },
+  url: "https://www.swiftlinkusa.com/heavy-haul/",
+};
+---
+
+<BaseLayout
+  title="Heavy Haul & Oversize Freight • SwiftLink Logistics"
+  description="Heavy haul and oversize freight shipping by SwiftLink Logistics. Permitted loads, route planning, escort coordination, and specialized trailers nationwide."
+  keywords="heavy haul shipping, oversize freight, overweight load transport, oversized load, specialized trailers, route planning, escort coordination, heavy equipment transport, wide load shipping"
+  canonicalPath="/heavy-haul"
+  ogTitle="Heavy Haul & Oversize Freight | SwiftLink Logistics"
+  ogDescription="Oversize and overweight freight transport with permitted loads, route planning, escort coordination, and specialized trailers."
+>
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} slot="head" />
+
+  <!-- HERO -->
+  <section class="relative py-32 bg-slate-900 overflow-hidden">
+    <div class="hero-video-container" aria-hidden="true">
+      <video class="hero-video" autoplay muted loop playsinline preload="metadata">
+        <source src="/videos/heavy-haul.mp4" type="video/mp4" />
+      </video>
+    </div>
+    <div class="hero-overlay" aria-hidden="true"></div>
+    <div class="max-w-7xl mx-auto px-6 text-center relative z-10">
+      <div class="fade-in">
+        <div class="inline-flex items-center gap-2 bg-orange-500/10 border border-orange-500/20 rounded-full px-5 py-2 mb-8">
+          <i class="fa-solid fa-weight-hanging text-orange-500" aria-hidden="true"></i>
+          <span class="text-orange-500 text-sm font-semibold">Oversize & Overweight Specialists</span>
+        </div>
+        <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight leading-tight mb-6">Heavy Haul &<br><span class="text-orange-500">Oversize Freight</span></h1>
+        <p class="text-xl text-slate-400 max-w-2xl mx-auto mb-10">Loads that exceed standard legal limits demand specialized equipment, expert route planning, and meticulous permitting. SwiftLink handles all of it — so you don't have to.</p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="/quote/?service=Heavy Haul" class="bg-orange-500 hover:bg-orange-600 px-10 py-4 rounded-2xl font-semibold text-lg transition inline-flex items-center justify-center gap-2"><i class="fa-solid fa-weight-hanging" aria-hidden="true"></i> Get Heavy Haul Quote</a>
+          <a href="#what-is-heavy-haul" class="border border-slate-700 hover:border-orange-500 px-10 py-4 rounded-2xl font-semibold text-lg transition inline-flex items-center justify-center gap-2"><i class="fa-solid fa-arrow-down" aria-hidden="true"></i> Learn More</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHAT IS HEAVY HAUL -->
+  <section id="what-is-heavy-haul" class="py-24 bg-slate-900">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid md:grid-cols-2 gap-16 items-center">
+        <div class="fade-in">
+          <h2 class="text-4xl font-bold mb-6">What is <span class="text-orange-500">Heavy Haul?</span></h2>
+          <p class="text-slate-400 text-lg leading-relaxed mb-6">Heavy haul freight refers to any shipment that exceeds standard legal limits for weight or dimensions on U.S. highways. Federal regulations set the standard limits at 80,000 lbs gross vehicle weight (GVW), 8.5 feet wide, 13.5 feet tall, and 53 feet long. Any load surpassing these thresholds requires special handling.</p>
+          <p class="text-slate-400 text-lg leading-relaxed mb-6">Moving oversize and overweight loads is not as simple as loading a trailer and driving. Each state has its own permitting requirements, weight restrictions, and designated routes. Bridge weight limits, overhead power lines, road width restrictions, and low-clearance underpasses all factor into route planning.</p>
+          <p class="text-slate-400 text-lg leading-relaxed">SwiftLink's heavy haul division manages every aspect of the process — from initial load assessment and permit acquisition to escort vehicle coordination and final delivery — ensuring your oversized freight arrives safely, legally, and on schedule.</p>
+        </div>
+        <div class="fade-in space-y-4">
+          <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6 flex items-center gap-4">
+            <div class="w-14 h-14 bg-orange-500/10 rounded-xl flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-weight-scale text-orange-500 text-xl" aria-hidden="true"></i></div>
+            <div><h4 class="font-bold">Overweight Threshold</h4><p class="text-slate-400 text-sm">Exceeds 80,000 lbs GVW — requires overweight permits per state</p></div>
+          </div>
+          <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6 flex items-center gap-4">
+            <div class="w-14 h-14 bg-orange-500/10 rounded-xl flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-arrows-left-right text-orange-500 text-xl" aria-hidden="true"></i></div>
+            <div><h4 class="font-bold">Overwide Threshold</h4><p class="text-slate-400 text-sm">Exceeds 8.5 feet wide — requires oversize permits and possible escorts</p></div>
+          </div>
+          <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6 flex items-center gap-4">
+            <div class="w-14 h-14 bg-orange-500/10 rounded-xl flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-arrows-up-down text-orange-500 text-xl" aria-hidden="true"></i></div>
+            <div><h4 class="font-bold">Over-Height Threshold</h4><p class="text-slate-400 text-sm">Exceeds 13.5 feet tall — route surveys for bridge and wire clearances</p></div>
+          </div>
+          <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6 flex items-center gap-4">
+            <div class="w-14 h-14 bg-orange-500/10 rounded-xl flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-ruler-horizontal text-orange-500 text-xl" aria-hidden="true"></i></div>
+            <div><h4 class="font-bold">Over-Length Threshold</h4><p class="text-slate-400 text-sm">Exceeds 53 feet long — requires extended trailer and permit coordination</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EQUIPMENT -->
+  <section class="py-24 bg-slate-950">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16 fade-in">
+        <h2 class="text-4xl font-bold mb-4">Equipment <span class="text-orange-500">We Provide</span></h2>
+        <p class="text-slate-400 text-lg max-w-2xl mx-auto">We match the right trailer type to your load's weight, dimensions, and loading requirements for safe, legal transport.</p>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="fade-in bg-slate-900 border border-slate-800 rounded-2xl p-8 hover:border-orange-500/50 transition-all duration-300 hover:-translate-y-2">
+          <div class="w-14 h-14 bg-orange-500/10 rounded-2xl flex items-center justify-center mb-6"><i class="fa-solid fa-trailer text-orange-500 text-2xl" aria-hidden="true"></i></div>
+          <h3 class="text-xl font-bold mb-3">Flatbed</h3>
+          <p class="text-slate-400 mb-4">The workhorse of heavy haul. Standard flatbed trailers provide an open deck for easy loading from the sides or above via crane. Ideal for steel, lumber, machinery, and construction materials.</p>
+          <div class="border-t border-slate-800 pt-4 mt-4 space-y-2 text-sm text-slate-400">
+            <p><span class="text-white font-semibold">Capacity:</span> Up to 48,000 lbs</p>
+            <p><span class="text-white font-semibold">Deck:</span> 48' length standard</p>
+            <p><span class="text-white font-semibold">Best for:</span> Steel, lumber, equipment</p>
+          </div>
+        </div>
+        <div class="fade-in bg-slate-900 border border-slate-800 rounded-2xl p-8 hover:border-orange-500/50 transition-all duration-300 hover:-translate-y-2">
+          <div class="w-14 h-14 bg-orange-500/10 rounded-2xl flex items-center justify-center mb-6"><i class="fa-solid fa-truck-ramp-box text-orange-500 text-2xl" aria-hidden="true"></i></div>
+          <h3 class="text-xl font-bold mb-3">Step Deck / Drop Deck</h3>
+          <p class="text-slate-400 mb-4">Features a lower rear deck that provides extra vertical clearance for taller loads without exceeding over-height limits. The upper deck accommodates the tractor while the lower deck carries the freight.</p>
+          <div class="border-t border-slate-800 pt-4 mt-4 space-y-2 text-sm text-slate-400">
+            <p><span class="text-white font-semibold">Capacity:</span> Up to 44,000 lbs</p>
+            <p><span class="text-white font-semibold">Lower deck height:</span> ~38 inches</p>
+            <p><span class="text-white font-semibold">Best for:</span> Tall equipment, vehicles</p>
+          </div>
+        </div>
+        <div class="fade-in bg-slate-900 border border-slate-800 rounded-2xl p-8 hover:border-orange-500/50 transition-all duration-300 hover:-translate-y-2">
+          <div class="w-14 h-14 bg-orange-500/10 rounded-2xl flex items-center justify-center mb-6"><i class="fa-solid fa-truck-monster text-orange-500 text-2xl" aria-hidden="true"></i></div>
+          <h3 class="text-xl font-bold mb-3">Lowboy</h3>
+          <p class="text-slate-400 mb-4">The lowest deck height of any trailer, sitting just 18-24 inches off the ground. Designed for extremely tall and heavy machinery like excavators, bulldozers, cranes, and industrial equipment.</p>
+          <div class="border-t border-slate-800 pt-4 mt-4 space-y-2 text-sm text-slate-400">
+            <p><span class="text-white font-semibold">Capacity:</span> Up to 40,000 lbs</p>
+            <p><span class="text-white font-semibold">Deck height:</span> 18-24 inches</p>
+            <p><span class="text-white font-semibold">Best for:</span> Heavy machinery, crawlers</p>
+          </div>
+        </div>
+        <div class="fade-in bg-slate-900 border border-slate-800 rounded-2xl p-8 hover:border-orange-500/50 transition-all duration-300 hover:-translate-y-2">
+          <div class="w-14 h-14 bg-orange-500/10 rounded-2xl flex items-center justify-center mb-6"><i class="fa-solid fa-tractor text-orange-500 text-2xl" aria-hidden="true"></i></div>
+          <h3 class="text-xl font-bold mb-3">RGN / Removable Gooseneck</h3>
+          <p class="text-slate-400 mb-4">The gooseneck detaches and the front of the trailer lowers to the ground, creating a ramp. Equipment can be driven directly onto the deck — no crane needed. Essential for tracked and wheeled machinery.</p>
+          <div class="border-t border-slate-800 pt-4 mt-4 space-y-2 text-sm text-slate-400">
+            <p><span class="text-white font-semibold">Capacity:</span> Up to 42,000 lbs</p>
+            <p><span class="text-white font-semibold">Loading:</span> Drive-on / drive-off</p>
+            <p><span class="text-white font-semibold">Best for:</span> Self-propelled equipment</p>
+          </div>
+        </div>
+        <div class="fade-in bg-slate-900 border border-slate-800 rounded-2xl p-8 hover:border-orange-500/50 transition-all duration-300 hover:-translate-y-2">
+          <div class="w-14 h-14 bg-orange-500/10 rounded-2xl flex items-center justify-center mb-6"><i class="fa-solid fa-maximize text-orange-500 text-2xl" aria-hidden="true"></i></div>
+          <h3 class="text-xl font-bold mb-3">Multi-Axle / Perimeter</h3>
+          <p class="text-slate-400 mb-4">For the heaviest loads that far exceed standard weight limits. Multi-axle and perimeter trailers distribute massive weight across many axles to meet per-axle weight regulations and protect road surfaces.</p>
+          <div class="border-t border-slate-800 pt-4 mt-4 space-y-2 text-sm text-slate-400">
+            <p><span class="text-white font-semibold">Capacity:</span> 80,000+ lbs</p>
+            <p><span class="text-white font-semibold">Axles:</span> 9-20+ axle configurations</p>
+            <p><span class="text-white font-semibold">Best for:</span> Transformers, reactors, turbines</p>
+          </div>
+        </div>
+        <div class="fade-in bg-slate-900 border border-slate-800 rounded-2xl p-8 hover:border-orange-500/50 transition-all duration-300 hover:-translate-y-2">
+          <div class="w-14 h-14 bg-orange-500/10 rounded-2xl flex items-center justify-center mb-6"><i class="fa-solid fa-ruler-combined text-orange-500 text-2xl" aria-hidden="true"></i></div>
+          <h3 class="text-xl font-bold mb-3">Extendable Trailers</h3>
+          <p class="text-slate-400 mb-4">Telescoping trailers that extend to accommodate extra-long loads such as wind turbine blades, bridge beams, utility poles, and structural steel. Available in flatbed and step deck configurations.</p>
+          <div class="border-t border-slate-800 pt-4 mt-4 space-y-2 text-sm text-slate-400">
+            <p><span class="text-white font-semibold">Length:</span> Up to 80+ feet extended</p>
+            <p><span class="text-white font-semibold">Configurations:</span> Single & double extend</p>
+            <p><span class="text-white font-semibold">Best for:</span> Blades, beams, poles</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OUR PROCESS -->
+  <section class="py-24 bg-slate-900">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16 fade-in">
+        <h2 class="text-4xl font-bold mb-4">Our Heavy Haul <span class="text-orange-500">Process</span></h2>
+        <p class="text-slate-400 text-lg max-w-2xl mx-auto">Every heavy haul shipment follows a rigorous six-step process to ensure safety, compliance, and on-time delivery.</p>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="fade-in bg-slate-800/50 border border-slate-700 rounded-2xl p-8 relative">
+          <div class="absolute -top-4 -left-2 w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center font-bold text-lg">1</div>
+          <h3 class="text-xl font-bold mb-3 mt-2">Assessment & Survey</h3>
+          <p class="text-slate-400">We begin with a comprehensive assessment of your load — exact weight, dimensions, center of gravity, and any special handling requirements. For ultra-heavy or oversized loads, we may conduct an on-site survey to plan loading and securement.</p>
+        </div>
+        <div class="fade-in bg-slate-800/50 border border-slate-700 rounded-2xl p-8 relative">
+          <div class="absolute -top-4 -left-2 w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center font-bold text-lg">2</div>
+          <h3 class="text-xl font-bold mb-3 mt-2">Permit Acquisition</h3>
+          <p class="text-slate-400">Every state along the route requires its own overweight and/or oversize permits. Our permitting team secures all necessary documentation — single-trip permits, annual permits, and superload permits — well in advance of the move date.</p>
+        </div>
+        <div class="fade-in bg-slate-800/50 border border-slate-700 rounded-2xl p-8 relative">
+          <div class="absolute -top-4 -left-2 w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center font-bold text-lg">3</div>
+          <h3 class="text-xl font-bold mb-3 mt-2">Route Planning</h3>
+          <p class="text-slate-400">Our logistics team maps the optimal route considering bridge weight limits, overhead clearances (power lines, signs, overpasses), road width restrictions, construction zones, and turn radius limitations. Every obstacle is identified and accounted for.</p>
+        </div>
+        <div class="fade-in bg-slate-800/50 border border-slate-700 rounded-2xl p-8 relative">
+          <div class="absolute -top-4 -left-2 w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center font-bold text-lg">4</div>
+          <h3 class="text-xl font-bold mb-3 mt-2">Escort & Pilot Cars</h3>
+          <p class="text-slate-400">Many states require one or more escort/pilot cars for oversized loads. We coordinate certified pilot car services that travel ahead of and behind the load, warning oncoming traffic and ensuring safe passage through intersections and narrow corridors.</p>
+        </div>
+        <div class="fade-in bg-slate-800/50 border border-slate-700 rounded-2xl p-8 relative">
+          <div class="absolute -top-4 -left-2 w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center font-bold text-lg">5</div>
+          <h3 class="text-xl font-bold mb-3 mt-2">Loading & Securement</h3>
+          <p class="text-slate-400">Proper load securement is critical for safety and DOT compliance. Our experienced operators use chains, binders, straps, edge protectors, and blocking to secure your cargo per FMCSA regulations. Weight distribution is carefully balanced across all axles.</p>
+        </div>
+        <div class="fade-in bg-slate-800/50 border border-slate-700 rounded-2xl p-8 relative">
+          <div class="absolute -top-4 -left-2 w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center font-bold text-lg">6</div>
+          <h3 class="text-xl font-bold mb-3 mt-2">Transport & Delivery</h3>
+          <p class="text-slate-400">With permits in hand, route confirmed, and load secured, transport begins. You receive real-time GPS tracking and proactive updates throughout the journey. Our team coordinates delivery logistics including crane services and offloading at the destination.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INDUSTRIES -->
+  <section class="py-24 bg-slate-950">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16 fade-in">
+        <h2 class="text-4xl font-bold mb-4">Industries <span class="text-orange-500">We Serve</span></h2>
+        <p class="text-slate-400 text-lg max-w-2xl mx-auto">Our heavy haul expertise spans the industries that build America's infrastructure, power its economy, and drive its growth.</p>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="fade-in flex items-start gap-4 bg-slate-900 border border-slate-800 rounded-2xl p-6">
+          <div class="w-12 h-12 bg-yellow-500/10 rounded-xl flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-helmet-safety text-yellow-400 text-lg" aria-hidden="true"></i></div>
+          <div>
+            <h4 class="font-bold text-lg mb-2">Construction</h4>
+            <p class="text-slate-400 text-sm">Excavators, bulldozers, cranes, concrete beams, structural steel, and prefabricated building components. We move the heavy equipment that builds everything from skyscrapers to highways.</p>
+          </div>
+        </div>
+        <div class="fade-in flex items-start gap-4 bg-slate-900 border border-slate-800 rounded-2xl p-6">
+          <div class="w-12 h-12 bg-green-500/10 rounded-xl flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-wind text-green-400 text-lg" aria-hidden="true"></i></div>
+          <div>
+            <h4 class="font-bold text-lg mb-2">Energy / Wind / Solar</h4>
+            <p class="text-slate-400 text-sm">Wind turbine blades (up to 230+ feet), nacelles, tower sections, solar panel arrays, transformers, and substation equipment. Renewable energy projects rely on heavy haul logistics.</p>
+          </div>
+        </div>
+        <div class="fade-in flex items-start gap-4 bg-slate-900 border border-slate-800 rounded-2xl p-6">
+          <div class="w-12 h-12 bg-stone-500/10 rounded-xl flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-gem text-stone-400 text-lg" aria-hidden="true"></i></div>
+          <div>
+            <h4 class="font-bold text-lg mb-2">Mining</h4>
+            <p class="text-slate-400 text-sm">Haul trucks, crushers, conveyors, draglines, and processing equipment. Mining operations often require moving massive machinery to remote locations with limited road infrastructure.</p>
+          </div>
+        </div>
+        <div class="fade-in flex items-start gap-4 bg-slate-900 border border-slate-800 rounded-2xl p-6">
+          <div class="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-oil-well text-blue-400 text-lg" aria-hidden="true"></i></div>
+          <div>
+            <h4 class="font-bold text-lg mb-2">Oil & Gas</h4>
+            <p class="text-slate-400 text-sm">Drilling rigs, pressure vessels, pipe racks, compressors, and refinery modules. The oil and gas industry demands heavy haul expertise for both upstream exploration and downstream refining operations.</p>
+          </div>
+        </div>
+        <div class="fade-in flex items-start gap-4 bg-slate-900 border border-slate-800 rounded-2xl p-6">
+          <div class="w-12 h-12 bg-lime-500/10 rounded-xl flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-wheat-awn text-lime-400 text-lg" aria-hidden="true"></i></div>
+          <div>
+            <h4 class="font-bold text-lg mb-2">Agriculture</h4>
+            <p class="text-slate-400 text-sm">Combines, harvesters, grain silos, irrigation equipment, and large farm implements. Agricultural machinery is often too wide and heavy for standard transport and requires oversize permits.</p>
+          </div>
+        </div>
+        <div class="fade-in flex items-start gap-4 bg-slate-900 border border-slate-800 rounded-2xl p-6">
+          <div class="w-12 h-12 bg-orange-500/10 rounded-xl flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-road-bridge text-orange-400 text-lg" aria-hidden="true"></i></div>
+          <div>
+            <h4 class="font-bold text-lg mb-2">Infrastructure</h4>
+            <p class="text-slate-400 text-sm">Bridge girders, water treatment equipment, tunnel boring components, and utility-scale electrical systems. Public infrastructure projects depend on reliable heavy haul coordination.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PERMITS & COMPLIANCE -->
+  <section class="py-24 bg-slate-900">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid md:grid-cols-2 gap-16 items-center">
+        <div class="fade-in">
+          <h2 class="text-4xl font-bold mb-6">Permits & <span class="text-orange-500">Compliance</span></h2>
+          <p class="text-slate-400 text-lg leading-relaxed mb-6">Navigating the patchwork of state-by-state oversize/overweight regulations is one of the most complex aspects of heavy haul logistics. Each state has different permit requirements, fee structures, travel time restrictions, and escort requirements.</p>
+          <p class="text-slate-400 text-lg leading-relaxed mb-8">SwiftLink's permitting team handles the entire process so you can focus on your project. We manage it all:</p>
+          <ul class="space-y-4">
+            <li class="flex items-start gap-3"><i class="fa-solid fa-check-circle text-orange-500 mt-1" aria-hidden="true"></i><span class="text-slate-300">State-by-state overweight and oversize permit applications</span></li>
+            <li class="flex items-start gap-3"><i class="fa-solid fa-check-circle text-orange-500 mt-1" aria-hidden="true"></i><span class="text-slate-300">Superload permits for extremely heavy or wide loads</span></li>
+            <li class="flex items-start gap-3"><i class="fa-solid fa-check-circle text-orange-500 mt-1" aria-hidden="true"></i><span class="text-slate-300">DOT compliance documentation and inspections</span></li>
+            <li class="flex items-start gap-3"><i class="fa-solid fa-check-circle text-orange-500 mt-1" aria-hidden="true"></i><span class="text-slate-300">Escort and pilot car coordination per state requirements</span></li>
+            <li class="flex items-start gap-3"><i class="fa-solid fa-check-circle text-orange-500 mt-1" aria-hidden="true"></i><span class="text-slate-300">Time-of-day and day-of-week travel restrictions</span></li>
+            <li class="flex items-start gap-3"><i class="fa-solid fa-check-circle text-orange-500 mt-1" aria-hidden="true"></i><span class="text-slate-300">Route surveys and bridge analysis reports</span></li>
+          </ul>
+        </div>
+        <div class="fade-in bg-slate-800/50 border border-slate-700 rounded-3xl p-8">
+          <h3 class="text-2xl font-bold mb-6 text-center">Common Permit Types</h3>
+          <div class="space-y-4">
+            <div class="bg-slate-900/80 rounded-xl p-5 border border-slate-700">
+              <h4 class="font-semibold text-orange-500 mb-2">Single-Trip Permit</h4>
+              <p class="text-slate-400 text-sm">Issued for one specific move between defined origin and destination. Most common permit type, valid for a set number of days.</p>
+            </div>
+            <div class="bg-slate-900/80 rounded-xl p-5 border border-slate-700">
+              <h4 class="font-semibold text-orange-500 mb-2">Annual / Blanket Permit</h4>
+              <p class="text-slate-400 text-sm">Covers multiple trips within a state for a year, up to specified weight/dimension limits. Cost-effective for frequent heavy haul shippers.</p>
+            </div>
+            <div class="bg-slate-900/80 rounded-xl p-5 border border-slate-700">
+              <h4 class="font-semibold text-orange-500 mb-2">Superload Permit</h4>
+              <p class="text-slate-400 text-sm">Required for loads exceeding even oversize/overweight thresholds — typically 150,000+ lbs or 16+ feet wide. Involves engineering analysis and state DOT review.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-24 bg-slate-950">
+    <div class="max-w-4xl mx-auto px-6 text-center fade-in">
+      <h2 class="text-4xl md:text-5xl font-bold mb-6">Got a <span class="text-orange-500">Big Load?</span></h2>
+      <p class="text-xl text-slate-400 mb-10 max-w-2xl mx-auto">From a single piece of heavy equipment to a multi-load project move, our heavy haul team has the expertise, equipment, and permits to get it done right.</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/quote/?service=Heavy Haul" class="bg-orange-500 hover:bg-orange-600 px-10 py-4 rounded-2xl font-semibold text-lg transition inline-flex items-center justify-center gap-2"><i class="fa-solid fa-weight-hanging" aria-hidden="true"></i> Get Heavy Haul Quote</a>
+        <a href="tel:+12489876776" class="border border-slate-700 hover:border-orange-500 px-10 py-4 rounded-2xl font-semibold text-lg transition inline-flex items-center justify-center gap-2"><i class="fa-solid fa-phone" aria-hidden="true"></i> Call (248) 987-6776</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

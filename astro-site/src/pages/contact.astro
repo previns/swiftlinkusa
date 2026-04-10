@@ -1,0 +1,190 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Contact Us • SwiftLink Logistics"
+  description="Contact SwiftLink Logistics 24/7. Phone, email, and online form available around the clock for freight quotes, support, and inquiries nationwide."
+  keywords="contact SwiftLink Logistics, freight broker contact, logistics support, 24/7 dispatch, freight quote contact, Michigan logistics, customer service"
+  canonicalPath="/contact"
+  ogTitle="Contact SwiftLink Logistics | 24/7 Freight Support"
+  ogDescription="Reach our team 24/7 for freight quotes, dispatch, and support. Phone, email, and online form available around the clock."
+>
+  <!-- HERO -->
+  <section class="relative bg-slate-900 py-28 text-center overflow-hidden">
+    <div class="hero-video-container" aria-hidden="true">
+      <video class="hero-video" autoplay muted loop playsinline preload="metadata">
+        <source src="/videos/contact.mp4" type="video/mp4" />
+      </video>
+    </div>
+    <div class="hero-overlay" aria-hidden="true"></div>
+    <div class="relative z-10 max-w-4xl mx-auto px-6">
+      <p class="text-orange-500 font-semibold text-sm tracking-widest uppercase mb-4 fade-in">Contact Us</p>
+      <h1 class="text-5xl md:text-6xl font-extrabold tracking-tight leading-tight fade-in">Get in Touch</h1>
+      <p class="mt-6 text-xl text-slate-300 max-w-2xl mx-auto fade-in">Have a question or need a quote? Our team is ready to help you move freight with confidence.</p>
+    </div>
+  </section>
+
+  <!-- IMAGE STRIP -->
+  <section class="py-12 bg-slate-950">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid md:grid-cols-2 gap-6 fade-in">
+        <img src="https://images.pexels.com/photos/4481259/pexels-photo-4481259.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Customer service team helping clients" loading="lazy" class="rounded-2xl w-full h-64 object-cover border border-slate-800" />
+        <img src="https://images.pexels.com/photos/7709020/pexels-photo-7709020.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Logistics coordination center" loading="lazy" class="rounded-2xl w-full h-64 object-cover border border-slate-800" />
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT FORM + INFO -->
+  <section class="py-24 bg-slate-950">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid lg:grid-cols-5 gap-12">
+        <!-- LEFT: FORM (3 cols) -->
+        <div class="lg:col-span-3 fade-in">
+          <div class="bg-slate-900 border border-slate-800 rounded-3xl p-10">
+            <h2 class="text-2xl font-bold mb-2">Send Us a Message</h2>
+            <p class="text-slate-400 mb-8">Fill out the form below and we'll get back to you within one business day.</p>
+
+            <form action="https://formspree.io/f/meepzjzk" method="POST" class="space-y-6">
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <label for="contact-name" class="block text-sm font-medium mb-2">Full Name <span class="text-orange-500">*</span></label>
+                  <input id="contact-name" type="text" name="name" required placeholder="John Smith" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500 transition placeholder:text-slate-600" />
+                </div>
+                <div>
+                  <label for="contact-email" class="block text-sm font-medium mb-2">Email <span class="text-orange-500">*</span></label>
+                  <input id="contact-email" type="email" name="email" required placeholder="john@company.com" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500 transition placeholder:text-slate-600" />
+                </div>
+              </div>
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <label for="contact-phone" class="block text-sm font-medium mb-2">Phone</label>
+                  <input id="contact-phone" type="tel" name="phone" placeholder="(555) 123-4567" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500 transition placeholder:text-slate-600" />
+                </div>
+                <div>
+                  <label for="contact-company" class="block text-sm font-medium mb-2">Company Name</label>
+                  <input id="contact-company" type="text" name="company" placeholder="Your Company, Inc." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500 transition placeholder:text-slate-600" />
+                </div>
+              </div>
+              <div>
+                <label for="contact-subject" class="block text-sm font-medium mb-2">Subject <span class="text-orange-500">*</span></label>
+                <select id="contact-subject" name="subject" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500 transition text-slate-300">
+                  <option value="" disabled selected>Select a subject</option>
+                  <option value="General Inquiry">General Inquiry</option>
+                  <option value="Quote Request">Quote Request</option>
+                  <option value="Partnership">Partnership</option>
+                  <option value="Support">Support</option>
+                  <option value="Careers">Careers</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div>
+                <label for="contact-message" class="block text-sm font-medium mb-2">Message <span class="text-orange-500">*</span></label>
+                <textarea id="contact-message" name="message" required rows="5" placeholder="Tell us how we can help..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500 transition placeholder:text-slate-600 resize-none"></textarea>
+              </div>
+              <button type="submit" class="w-full bg-orange-500 hover:bg-orange-600 py-4 rounded-2xl font-semibold text-sm transition flex items-center justify-center gap-2">
+                <i class="fa-solid fa-paper-plane" aria-hidden="true"></i> Send Message
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- RIGHT: CONTACT INFO (2 cols) -->
+        <div class="lg:col-span-2 space-y-6">
+          <div class="fade-in bg-slate-900 border border-slate-800 rounded-2xl p-8">
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 bg-orange-500/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                <i class="fa-solid fa-phone text-orange-500 text-lg" aria-hidden="true"></i>
+              </div>
+              <div>
+                <h3 class="font-bold text-lg mb-1">Phone</h3>
+                <p class="text-xl font-semibold text-orange-500"><a href="tel:+12489876776" class="hover:text-orange-400 transition">(248) 987-6776</a></p>
+                <p class="text-sm text-slate-400 mt-1">Available 24/7, 365 days a year</p>
+              </div>
+            </div>
+          </div>
+          <div class="fade-in bg-slate-900 border border-slate-800 rounded-2xl p-8">
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 bg-orange-500/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                <i class="fa-solid fa-fax text-orange-500 text-lg" aria-hidden="true"></i>
+              </div>
+              <div>
+                <h3 class="font-bold text-lg mb-1">Fax</h3>
+                <p class="text-xl font-semibold text-orange-500">(248) 987-6672</p>
+              </div>
+            </div>
+          </div>
+          <div class="fade-in bg-slate-900 border border-slate-800 rounded-2xl p-8">
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 bg-orange-500/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                <i class="fa-solid fa-envelope text-orange-500 text-lg" aria-hidden="true"></i>
+              </div>
+              <div>
+                <h3 class="font-bold text-lg mb-1">Email</h3>
+                <p class="text-orange-500 font-medium"><a href="mailto:info@swiftlinkusa.com" class="hover:text-orange-400 transition">info@swiftlinkusa.com</a></p>
+                <p class="text-sm text-slate-400 mt-1">We respond within one business day</p>
+              </div>
+            </div>
+          </div>
+          <div class="fade-in bg-slate-900 border border-slate-800 rounded-2xl p-8">
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 bg-orange-500/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                <i class="fa-solid fa-location-dot text-orange-500 text-lg" aria-hidden="true"></i>
+              </div>
+              <div>
+                <h3 class="font-bold text-lg mb-1">Headquarters</h3>
+                <p class="text-slate-300 font-medium">Michigan, United States</p>
+                <p class="text-sm text-slate-400 mt-1">Serving all 48 contiguous states</p>
+              </div>
+            </div>
+          </div>
+          <div class="fade-in bg-slate-900 border border-slate-800 rounded-2xl p-8">
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 bg-orange-500/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                <i class="fa-solid fa-clock text-orange-500 text-lg" aria-hidden="true"></i>
+              </div>
+              <div>
+                <h3 class="font-bold text-lg mb-1">Business Hours</h3>
+                <p class="text-xl font-semibold text-orange-500 mt-2">24/7, 365 Days a Year</p>
+                <p class="text-sm text-slate-400 mt-1">We never close. Our team is available around the clock to handle your freight needs.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUICK LINKS -->
+  <section class="py-24 bg-slate-900">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-12 fade-in">
+        <p class="text-orange-500 font-semibold text-sm tracking-widest uppercase mb-3">Quick Links</p>
+        <h2 class="text-3xl font-bold">Looking for Something Else?</h2>
+      </div>
+      <div class="grid md:grid-cols-3 gap-8">
+        <a href="/quote" class="fade-in group bg-slate-950 border border-slate-800 rounded-2xl p-8 text-center hover:border-orange-500/30 transition-all duration-300">
+          <div class="w-16 h-16 bg-orange-500/10 rounded-2xl flex items-center justify-center mx-auto mb-5 group-hover:bg-orange-500/20 transition">
+            <i class="fa-solid fa-file-invoice-dollar text-orange-500 text-2xl" aria-hidden="true"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-2">Get a Quote</h3>
+          <p class="text-slate-400 text-sm">Request a free, no-obligation freight quote in minutes.</p>
+        </a>
+        <a href="/about" class="fade-in group bg-slate-950 border border-slate-800 rounded-2xl p-8 text-center hover:border-orange-500/30 transition-all duration-300">
+          <div class="w-16 h-16 bg-orange-500/10 rounded-2xl flex items-center justify-center mx-auto mb-5 group-hover:bg-orange-500/20 transition">
+            <i class="fa-solid fa-building text-orange-500 text-2xl" aria-hidden="true"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-2">About Us</h3>
+          <p class="text-slate-400 text-sm">Learn about our story, mission, and what sets us apart.</p>
+        </a>
+        <a href="/careers" class="fade-in group bg-slate-950 border border-slate-800 rounded-2xl p-8 text-center hover:border-orange-500/30 transition-all duration-300">
+          <div class="w-16 h-16 bg-orange-500/10 rounded-2xl flex items-center justify-center mx-auto mb-5 group-hover:bg-orange-500/20 transition">
+            <i class="fa-solid fa-briefcase text-orange-500 text-2xl" aria-hidden="true"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-2">Careers</h3>
+          <p class="text-slate-400 text-sm">Join our growing team and build a career in logistics.</p>
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

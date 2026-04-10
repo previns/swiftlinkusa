@@ -1,0 +1,772 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Request a Freight Quote • SwiftLink Logistics"
+  description="Get a free freight quote from SwiftLink Logistics. Fast pricing for FTL, LTL, drayage, expedited, heavy haul, and hazmat shipments across 48 states."
+  keywords="freight quote, shipping quote, FTL quote, LTL quote, drayage quote, expedited freight quote, logistics pricing, free freight estimate, 3PL quote"
+  canonicalPath="/quote"
+  ogTitle="Request a Free Freight Quote | SwiftLink Logistics"
+  ogDescription="Get fast, competitive freight pricing for FTL, LTL, drayage, expedited, heavy haul, and hazmat shipments nationwide."
+>
+  <!-- HERO BANNER -->
+  <section class="relative bg-slate-900 border-b border-slate-800 py-16 overflow-hidden">
+    <div
+      class="absolute inset-0 opacity-5"
+      aria-hidden="true"
+      style="background-image: radial-gradient(circle at 20% 50%, rgb(249 115 22) 0%, transparent 60%), radial-gradient(circle at 80% 50%, rgb(249 115 22) 0%, transparent 60%);"
+    >
+    </div>
+    <div class="relative max-w-4xl mx-auto px-6 text-center">
+      <span class="inline-flex items-center gap-2 bg-orange-500/10 border border-orange-500/30 text-orange-400 text-sm font-medium px-4 py-1.5 rounded-full mb-6">
+        <i class="fa-solid fa-bolt" aria-hidden="true"></i> Fast Response — Within 2 Business Hours
+      </span>
+      <h1 class="text-5xl md:text-6xl font-bold tracking-tighter mb-4">Request a Freight Quote</h1>
+      <p class="text-slate-400 text-xl max-w-2xl mx-auto">
+        Tell us about your shipment and a dedicated SwiftLink specialist will reach out with a competitive rate — fast.
+      </p>
+      <div class="mt-8 flex flex-wrap justify-center gap-8 text-sm text-slate-400">
+        <div class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-orange-500" aria-hidden="true"></i> No obligation</div>
+        <div class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-orange-500" aria-hidden="true"></i> Competitive rates</div>
+        <div class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-orange-500" aria-hidden="true"></i> Nationwide coverage</div>
+        <div class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-orange-500" aria-hidden="true"></i> 48-state service</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN CONTENT -->
+  <div class="max-w-5xl mx-auto px-6 py-16">
+    <div class="grid lg:grid-cols-3 gap-10">
+      <!-- FORM COLUMN (2/3) -->
+      <div class="lg:col-span-2">
+        <!-- Success State -->
+        <div
+          id="successCard"
+          class="hidden success-card bg-slate-900 border border-orange-500/40 rounded-3xl p-12 text-center"
+          role="status"
+          aria-live="polite"
+        >
+          <div class="w-20 h-20 bg-orange-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
+            <i class="fa-solid fa-circle-check text-4xl text-orange-500" aria-hidden="true"></i>
+          </div>
+          <h2 class="text-3xl font-bold mb-3">Quote Request Received!</h2>
+          <p class="text-slate-400 text-lg mb-2">
+            A SwiftLink specialist will contact you within <span class="text-white font-semibold">2 business hours</span>.
+          </p>
+          <p class="text-slate-500 text-sm mb-10">Check your email for a confirmation. Have your BOL and shipment details ready.</p>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="/" class="bg-orange-500 hover:bg-orange-600 px-8 py-3.5 rounded-2xl font-semibold transition">Back to Home</a>
+            <button
+              type="button"
+              id="resetFormBtn"
+              class="border border-slate-700 hover:border-slate-500 px-8 py-3.5 rounded-2xl font-semibold transition"
+            >
+              Submit Another Quote
+            </button>
+          </div>
+        </div>
+
+        <!-- Error Banner -->
+        <div
+          id="errorBanner"
+          class="hidden mb-6 bg-red-500/10 border border-red-500/40 rounded-2xl px-6 py-4 text-red-400 text-sm flex items-center gap-3"
+          role="alert"
+        >
+          <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+          <span>
+            Something went wrong sending your request. Please try again or email us directly at
+            <a href="mailto:info@swiftlinkusa.com" class="underline">info@swiftlinkusa.com</a>.
+          </span>
+        </div>
+
+        <!-- Quote Form -->
+        <form id="quoteForm" class="space-y-8" novalidate>
+          <!-- Service Type Tabs -->
+          <div class="fade-in">
+            <span class="block text-sm font-semibold text-slate-400 uppercase tracking-widest mb-4">
+              <i class="fa-solid fa-list-check mr-2 text-orange-500" aria-hidden="true"></i>Service Type
+            </span>
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-3" role="tablist" aria-label="Service type">
+              <button type="button" data-service="FTL" class="tab-btn active flex items-center justify-center gap-2 border border-slate-700 rounded-2xl px-4 py-3.5 text-sm font-semibold">
+                <i class="fa-solid fa-truck" aria-hidden="true"></i> Full Truckload
+              </button>
+              <button type="button" data-service="LTL" class="tab-btn flex items-center justify-center gap-2 border border-slate-700 rounded-2xl px-4 py-3.5 text-sm font-semibold">
+                <i class="fa-solid fa-boxes-stacked" aria-hidden="true"></i> LTL
+              </button>
+              <button type="button" data-service="Drayage" class="tab-btn flex items-center justify-center gap-2 border border-slate-700 rounded-2xl px-4 py-3.5 text-sm font-semibold">
+                <i class="fa-solid fa-ship" aria-hidden="true"></i> Drayage
+              </button>
+              <button type="button" data-service="Expedited" class="tab-btn flex items-center justify-center gap-2 border border-slate-700 rounded-2xl px-4 py-3.5 text-sm font-semibold">
+                <i class="fa-solid fa-bolt" aria-hidden="true"></i> Expedited
+              </button>
+              <button type="button" data-service="Heavy Haul" class="tab-btn flex items-center justify-center gap-2 border border-slate-700 rounded-2xl px-4 py-3.5 text-sm font-semibold">
+                <i class="fa-solid fa-weight-hanging" aria-hidden="true"></i> Heavy Haul
+              </button>
+              <button type="button" data-service="Hazmat" class="tab-btn flex items-center justify-center gap-2 border border-slate-700 rounded-2xl px-4 py-3.5 text-sm font-semibold">
+                <i class="fa-solid fa-biohazard" aria-hidden="true"></i> Hazmat
+              </button>
+            </div>
+            <input type="hidden" id="serviceType" name="serviceType" value="FTL" />
+          </div>
+
+          <!-- Origin & Destination with Autocomplete -->
+          <div class="fade-in z-top">
+            <span class="block text-sm font-semibold text-slate-400 uppercase tracking-widest mb-4">
+              <i class="fa-solid fa-route mr-2 text-orange-500" aria-hidden="true"></i>Origin & Destination
+            </span>
+            <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4">
+              <p class="text-xs font-semibold text-orange-500 uppercase tracking-widest">Origin</p>
+              <div class="autocomplete-wrapper">
+                <div class="relative">
+                  <div class="absolute left-4 top-1/2 -translate-y-1/2 w-8 h-8 bg-orange-500/15 rounded-full flex items-center justify-center pointer-events-none">
+                    <i class="fa-solid fa-location-dot text-orange-500 text-sm" aria-hidden="true"></i>
+                  </div>
+                  <label for="originInput" class="sr-only">Origin street address</label>
+                  <input
+                    type="text"
+                    id="originInput"
+                    name="originAddress"
+                    placeholder="Street Address — e.g. 123 Main St, Detroit, MI"
+                    class="input-field pl-16"
+                    autocomplete="off"
+                  />
+                </div>
+                <div id="originDropdown" class="autocomplete-dropdown" role="listbox"></div>
+              </div>
+              <label for="originSuite" class="sr-only">Origin suite/unit/dock</label>
+              <input id="originSuite" type="text" name="originSuite" placeholder="Suite / Unit / Dock # (optional)" class="input-field" />
+
+              <div class="flex items-center gap-3 px-2 py-1" aria-hidden="true">
+                <div class="flex-1 h-px bg-slate-800"></div>
+                <div class="w-8 h-8 bg-slate-800 rounded-full flex items-center justify-center">
+                  <i class="fa-solid fa-arrow-down text-orange-500 text-xs"></i>
+                </div>
+                <div class="flex-1 h-px bg-slate-800"></div>
+              </div>
+
+              <p class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Destination</p>
+              <div class="autocomplete-wrapper">
+                <div class="relative">
+                  <div class="absolute left-4 top-1/2 -translate-y-1/2 w-8 h-8 bg-slate-800 rounded-full flex items-center justify-center pointer-events-none">
+                    <i class="fa-solid fa-flag-checkered text-slate-400 text-sm" aria-hidden="true"></i>
+                  </div>
+                  <label for="destInput" class="sr-only">Destination street address</label>
+                  <input
+                    type="text"
+                    id="destInput"
+                    name="destAddress"
+                    placeholder="Street Address — e.g. 456 Commerce Blvd, Chicago, IL"
+                    class="input-field pl-16"
+                    autocomplete="off"
+                  />
+                </div>
+                <div id="destDropdown" class="autocomplete-dropdown" role="listbox"></div>
+              </div>
+              <label for="destSuite" class="sr-only">Destination suite/unit/dock</label>
+              <input id="destSuite" type="text" name="destSuite" placeholder="Suite / Unit / Dock # (optional)" class="input-field" />
+            </div>
+          </div>
+
+          <!-- Dates -->
+          <div class="fade-in">
+            <span class="block text-sm font-semibold text-slate-400 uppercase tracking-widest mb-4">
+              <i class="fa-solid fa-calendar-days mr-2 text-orange-500" aria-hidden="true"></i>Timeline
+            </span>
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label for="pickupDate" class="block text-xs text-slate-500 mb-2 ml-1">Pickup Date</label>
+                <input id="pickupDate" type="date" name="pickupDate" class="input-field" />
+                <p class="field-error" id="pickupDateError"></p>
+              </div>
+              <div>
+                <label for="pickupTime" class="block text-xs text-slate-500 mb-2 ml-1">Pickup Time (EST)</label>
+                <input id="pickupTime" type="time" name="pickupTime" class="input-field" />
+              </div>
+              <div>
+                <label for="deliveryDate" class="block text-xs text-slate-500 mb-2 ml-1">Delivery Date (estimated)</label>
+                <input id="deliveryDate" type="date" name="deliveryDate" class="input-field" />
+                <p class="field-error" id="deliveryDateError"></p>
+              </div>
+              <div>
+                <label for="deliveryTime" class="block text-xs text-slate-500 mb-2 ml-1">Delivery Time (EST)</label>
+                <input id="deliveryTime" type="time" name="deliveryTime" class="input-field" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Shipment Details -->
+          <div class="fade-in">
+            <span class="block text-sm font-semibold text-slate-400 uppercase tracking-widest mb-4">
+              <i class="fa-solid fa-box mr-2 text-orange-500" aria-hidden="true"></i>Shipment Details
+            </span>
+            <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4">
+              <div class="grid sm:grid-cols-2 gap-4">
+                <div>
+                  <label for="commodity" class="block text-xs text-slate-500 mb-2 ml-1">Commodity / Freight Type</label>
+                  <input id="commodity" type="text" name="commodity" placeholder="e.g. Automotive Parts, Food" class="input-field" />
+                </div>
+                <div>
+                  <label for="weight" class="block text-xs text-slate-500 mb-2 ml-1">Estimated Weight (lbs)</label>
+                  <input id="weight" type="number" name="weight" placeholder="e.g. 42,000" class="input-field" />
+                </div>
+              </div>
+              <div class="grid sm:grid-cols-3 gap-4">
+                <div>
+                  <label for="trailerType" class="block text-xs text-slate-500 mb-2 ml-1">Trailer Type</label>
+                  <select id="trailerType" name="trailerType" class="input-field">
+                    <option value="" disabled selected>Select trailer</option>
+                    <option>Dry Van</option>
+                    <option>Flatbed</option>
+                    <option>Reefer</option>
+                    <option>Step Deck</option>
+                    <option>Lowboy</option>
+                    <option>Box Truck</option>
+                    <option>Other</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="pieces" class="block text-xs text-slate-500 mb-2 ml-1">No. of Pieces / Pallets</label>
+                  <input id="pieces" type="number" name="pieces" placeholder="e.g. 26" class="input-field" />
+                </div>
+                <div>
+                  <label for="hazmat" class="block text-xs text-slate-500 mb-2 ml-1">Hazmat?</label>
+                  <select id="hazmat" name="hazmat" class="input-field">
+                    <option value="no">No</option>
+                    <option value="yes">Yes</option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label for="notes" class="block text-xs text-slate-500 mb-2 ml-1">Special Requirements / Notes</label>
+                <textarea
+                  id="notes"
+                  name="notes"
+                  rows="3"
+                  placeholder="Temperature control, liftgate, inside delivery, appointment required..."
+                  class="input-field resize-none"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Contact Info -->
+          <div class="fade-in">
+            <span class="block text-sm font-semibold text-slate-400 uppercase tracking-widest mb-4">
+              <i class="fa-solid fa-user mr-2 text-orange-500" aria-hidden="true"></i>Your Contact Info
+            </span>
+            <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4">
+              <div class="grid sm:grid-cols-2 gap-4">
+                <div>
+                  <label for="firstName" class="block text-xs text-slate-500 mb-2 ml-1">First Name <span class="text-orange-500">*</span></label>
+                  <input id="firstName" type="text" name="firstName" placeholder="John" class="input-field" required />
+                  <p class="field-error" id="firstNameError">First name is required.</p>
+                </div>
+                <div>
+                  <label for="lastName" class="block text-xs text-slate-500 mb-2 ml-1">Last Name <span class="text-orange-500">*</span></label>
+                  <input id="lastName" type="text" name="lastName" placeholder="Smith" class="input-field" required />
+                  <p class="field-error" id="lastNameError">Last name is required.</p>
+                </div>
+              </div>
+              <div class="grid sm:grid-cols-2 gap-4">
+                <div>
+                  <label for="email" class="block text-xs text-slate-500 mb-2 ml-1">Business Email <span class="text-orange-500">*</span></label>
+                  <input id="email" type="email" name="email" placeholder="john@company.com" class="input-field" required />
+                  <p class="field-error" id="emailError">A valid email address is required.</p>
+                </div>
+                <div>
+                  <label for="phone" class="block text-xs text-slate-500 mb-2 ml-1">Phone Number <span class="text-orange-500">*</span></label>
+                  <input id="phone" type="tel" name="phone" placeholder="(248) 555-0100" class="input-field" required />
+                  <p class="field-error" id="phoneError">Phone number is required.</p>
+                </div>
+              </div>
+              <div>
+                <label for="company" class="block text-xs text-slate-500 mb-2 ml-1">Company Name <span class="text-orange-500">*</span></label>
+                <input id="company" type="text" name="company" placeholder="Your Company, Inc." class="input-field" required />
+                <p class="field-error" id="companyError">Company name is required.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Terms & Submit -->
+          <div class="fade-in space-y-5">
+            <div>
+              <label class="flex items-start gap-3 cursor-pointer group">
+                <input
+                  type="checkbox"
+                  id="termsCheckbox"
+                  name="terms"
+                  required
+                  class="mt-1 w-5 h-5 rounded border-slate-600 bg-slate-800 accent-orange-500 cursor-pointer flex-shrink-0"
+                />
+                <span class="text-sm text-slate-400 group-hover:text-slate-300 transition">
+                  I agree to SwiftLink's <a href="/terms" target="_blank" rel="noopener noreferrer" class="text-orange-500 hover:underline">Terms & Conditions</a>
+                  and <a href="/privacy" target="_blank" rel="noopener noreferrer" class="text-orange-500 hover:underline">Privacy Policy</a>. I consent to being contacted regarding my quote request.
+                </span>
+              </label>
+              <p class="field-error ml-8" id="termsError">You must agree to the Terms & Conditions to continue.</p>
+            </div>
+
+            <button
+              type="submit"
+              id="submitBtn"
+              class="w-full bg-orange-500 hover:bg-orange-600 py-5 rounded-2xl text-lg font-bold tracking-wide transition flex items-center justify-center gap-3 group"
+              style="box-shadow: 0 0 30px rgb(249 115 22 / 0.3);"
+            >
+              <i id="submitIcon" class="fa-solid fa-paper-plane group-hover:translate-x-1 transition-transform" aria-hidden="true"></i>
+              <span id="submitText">Request a Freight Quote</span>
+            </button>
+            <p class="text-center text-xs text-slate-500">
+              <i class="fa-solid fa-lock mr-1" aria-hidden="true"></i>Your information is secure and never shared with third parties.
+            </p>
+          </div>
+        </form>
+      </div>
+
+      <!-- SIDEBAR (1/3) -->
+      <aside class="space-y-6">
+        <div class="fade-in bg-slate-900 border border-slate-800 rounded-3xl p-6">
+          <h2 class="font-bold text-lg mb-5">Why Ship with SwiftLink?</h2>
+          <ul class="space-y-4">
+            <li class="flex items-start gap-3">
+              <i class="fa-solid fa-bolt text-orange-500 mt-0.5" aria-hidden="true"></i>
+              <div><p class="font-semibold text-sm">Fast Quotes</p><p class="text-slate-400 text-xs mt-0.5">Response within 2 business hours, guaranteed.</p></div>
+            </li>
+            <li class="flex items-start gap-3">
+              <i class="fa-solid fa-shield-halved text-orange-500 mt-0.5" aria-hidden="true"></i>
+              <div><p class="font-semibold text-sm">Fully Insured</p><p class="text-slate-400 text-xs mt-0.5">Every load covered with full cargo insurance.</p></div>
+            </li>
+            <li class="flex items-start gap-3">
+              <i class="fa-solid fa-eye text-orange-500 mt-0.5" aria-hidden="true"></i>
+              <div><p class="font-semibold text-sm">Real-Time Tracking</p><p class="text-slate-400 text-xs mt-0.5">GPS visibility from pickup to final delivery.</p></div>
+            </li>
+            <li class="flex items-start gap-3">
+              <i class="fa-solid fa-handshake text-orange-500 mt-0.5" aria-hidden="true"></i>
+              <div><p class="font-semibold text-sm">Dedicated Support</p><p class="text-slate-400 text-xs mt-0.5">A personal account manager on every load.</p></div>
+            </li>
+            <li class="flex items-start gap-3">
+              <i class="fa-solid fa-network-wired text-orange-500 mt-0.5" aria-hidden="true"></i>
+              <div><p class="font-semibold text-sm">5000+ Carrier Network</p><p class="text-slate-400 text-xs mt-0.5">Vetted carriers across all 48 contiguous states.</p></div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="fade-in bg-orange-500/10 border border-orange-500/25 rounded-3xl p-6 text-center">
+          <div class="text-4xl font-black text-orange-500">99.8%</div>
+          <p class="text-sm text-slate-300 mt-1 font-medium">On-Time Delivery Rate</p>
+          <div class="my-4 border-t border-orange-500/20"></div>
+          <div class="text-4xl font-black text-orange-500">1,200+</div>
+          <p class="text-sm text-slate-300 mt-1 font-medium">Active Clients Nationwide</p>
+          <div class="my-4 border-t border-orange-500/20"></div>
+          <div class="text-4xl font-black text-orange-500">48</div>
+          <p class="text-sm text-slate-300 mt-1 font-medium">States Served</p>
+        </div>
+
+        <div class="fade-in bg-slate-900 border border-slate-800 rounded-3xl p-6">
+          <h2 class="font-bold text-base mb-4">Prefer to Talk?</h2>
+          <p class="text-slate-400 text-sm mb-4">Our team is available 24/7, 365 days a year.</p>
+          <a href="tel:+12489876776" class="flex items-center gap-3 bg-slate-800 hover:bg-slate-700 rounded-2xl px-4 py-3.5 transition mb-3">
+            <i class="fa-solid fa-phone text-orange-500" aria-hidden="true"></i>
+            <span class="font-semibold text-sm">(248) 987-6776</span>
+          </a>
+          <a href="mailto:info@swiftlinkusa.com" class="flex items-center gap-3 bg-slate-800 hover:bg-slate-700 rounded-2xl px-4 py-3.5 transition">
+            <i class="fa-solid fa-envelope text-orange-500" aria-hidden="true"></i>
+            <span class="font-semibold text-sm">info@swiftlinkusa.com</span>
+          </a>
+        </div>
+      </aside>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  /* Quote-page-only: lift the origin/destination section above the rest so the
+     autocomplete dropdown can overflow nicely. fade-in needs position+z-index
+     for this to work, so we set those locally only on this page. */
+  .fade-in {
+    position: relative;
+    z-index: 1;
+  }
+  .fade-in.z-top {
+    z-index: 20;
+  }
+</style>
+
+<script>
+  // ─── Types for Nominatim response ───────────────────────────────────────
+  interface NominatimAddress {
+    house_number?: string;
+    road?: string;
+    city?: string;
+    town?: string;
+    village?: string;
+    hamlet?: string;
+    county?: string;
+    state?: string;
+    postcode?: string;
+  }
+  interface NominatimPlace {
+    address: NominatimAddress;
+    display_name: string;
+    type?: string;
+    class?: string;
+  }
+
+  // ─── Formspree endpoint (shared with contact + careers) ────────────────
+  const FORMSPREE_URL = "https://formspree.io/f/meepzjzk";
+
+  // ─── Service tab selection ─────────────────────────────────────────────
+  const serviceTypeInput = document.getElementById("serviceType") as HTMLInputElement | null;
+  const tabBtns = document.querySelectorAll<HTMLButtonElement>(".tab-btn");
+
+  function selectTab(btn: HTMLButtonElement) {
+    tabBtns.forEach((b) => b.classList.remove("active"));
+    btn.classList.add("active");
+    if (serviceTypeInput) serviceTypeInput.value = btn.dataset.service || "";
+  }
+  tabBtns.forEach((btn) => btn.addEventListener("click", () => selectTab(btn)));
+
+  // ─── Location autocomplete (Nominatim/OSM) ─────────────────────────────
+  const debounceTimers: Record<string, number> = {};
+
+  function setupAutocomplete(inputId: string, dropdownId: string) {
+    const input = document.getElementById(inputId) as HTMLInputElement | null;
+    const dropdown = document.getElementById(dropdownId) as HTMLDivElement | null;
+    if (!input || !dropdown) return;
+    let highlighted = -1;
+
+    const closeDropdown = () => {
+      dropdown.classList.remove("open");
+      highlighted = -1;
+    };
+
+    const updateHighlight = (items: NodeListOf<HTMLElement>, idx: number) => {
+      items.forEach((item, i) => item.classList.toggle("highlighted", i === idx));
+    };
+
+    input.addEventListener("input", () => {
+      const q = input.value.trim();
+      window.clearTimeout(debounceTimers[inputId]);
+      if (q.length < 2) {
+        closeDropdown();
+        return;
+      }
+      debounceTimers[inputId] = window.setTimeout(() => fetchLocations(q, dropdown, input), 300);
+    });
+
+    input.addEventListener("keydown", (e: KeyboardEvent) => {
+      const items = dropdown.querySelectorAll<HTMLElement>(".autocomplete-item");
+      if (!items.length) return;
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        highlighted = Math.min(highlighted + 1, items.length - 1);
+        updateHighlight(items, highlighted);
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        highlighted = Math.max(highlighted - 1, 0);
+        updateHighlight(items, highlighted);
+      } else if (e.key === "Enter" && highlighted >= 0) {
+        e.preventDefault();
+        items[highlighted].click();
+      } else if (e.key === "Escape") {
+        closeDropdown();
+      }
+    });
+
+    document.addEventListener("click", (e) => {
+      const target = e.target as Node;
+      if (!input.contains(target) && !dropdown.contains(target)) closeDropdown();
+    });
+  }
+
+  async function fetchLocations(query: string, dropdown: HTMLDivElement, input: HTMLInputElement) {
+    dropdown.innerHTML =
+      '<div class="autocomplete-spinner"><i class="fa-solid fa-spinner fa-spin text-orange-500"></i> Searching...</div>';
+    dropdown.classList.add("open");
+
+    try {
+      const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&countrycodes=us&format=json&limit=8&addressdetails=1`;
+      const res = await fetch(url, { headers: { "Accept-Language": "en" } });
+      const data: NominatimPlace[] = await res.json();
+
+      if (!data.length) {
+        dropdown.innerHTML =
+          '<div class="autocomplete-spinner"><i class="fa-solid fa-circle-xmark text-slate-500"></i> No results found</div>';
+        return;
+      }
+
+      dropdown.innerHTML = "";
+      data.forEach((place) => {
+        const addr = place.address || {};
+        const houseNumber = addr.house_number || "";
+        const road = addr.road || "";
+        const city = addr.city || addr.town || addr.village || addr.hamlet || "";
+        const state = addr.state || "";
+        const zip = addr.postcode || "";
+
+        const streetParts = [houseNumber, road].filter(Boolean).join(" ");
+
+        let mainLabel: string;
+        let subLabel: string;
+        let fullLabel: string;
+        if (streetParts) {
+          mainLabel = streetParts;
+          subLabel = [city, state, zip].filter(Boolean).join(", ");
+          fullLabel = [streetParts, city, state, zip].filter(Boolean).join(", ");
+        } else if (city) {
+          mainLabel = city;
+          subLabel = [state, zip].filter(Boolean).join(" ");
+          fullLabel = [city, state, zip].filter(Boolean).join(", ");
+        } else {
+          const parts = place.display_name.split(",").map((s) => s.trim());
+          mainLabel = parts[0] || "";
+          subLabel = parts.slice(1, 3).join(", ");
+          fullLabel = parts.slice(0, 4).join(", ");
+        }
+
+        const typeIcon = getPlaceIcon(place.type, place.class);
+        const item = document.createElement("div");
+        item.className = "autocomplete-item";
+        item.setAttribute("role", "option");
+        item.innerHTML = `
+          <i class="${typeIcon} place-icon"></i>
+          <div>
+            <div class="place-main"></div>
+            <div class="place-sub"></div>
+          </div>
+        `;
+        const mainEl = item.querySelector(".place-main");
+        const subEl = item.querySelector(".place-sub");
+        if (mainEl) mainEl.textContent = mainLabel;
+        if (subEl) subEl.textContent = subLabel;
+
+        item.addEventListener("click", () => {
+          input.value = fullLabel;
+          dropdown.classList.remove("open");
+        });
+        dropdown.appendChild(item);
+      });
+    } catch {
+      dropdown.innerHTML =
+        '<div class="autocomplete-spinner"><i class="fa-solid fa-wifi text-slate-500"></i> Connection error — type manually</div>';
+    }
+  }
+
+  function getPlaceIcon(type?: string, cls?: string): string {
+    if (type === "city" || type === "town" || type === "village") return "fa-solid fa-city";
+    if (cls === "boundary" || type === "administrative") return "fa-solid fa-map";
+    if (type === "postcode") return "fa-solid fa-envelope";
+    if (cls === "highway" || type === "motorway") return "fa-solid fa-road";
+    if (cls === "place") return "fa-solid fa-location-dot";
+    return "fa-solid fa-location-dot";
+  }
+
+  // ─── Form validation helpers ───────────────────────────────────────────
+  function showError(inputId: string, errorId: string, message?: string) {
+    const input = document.getElementById(inputId);
+    const error = document.getElementById(errorId);
+    input?.classList.add("is-invalid");
+    if (error) {
+      if (message) error.textContent = message;
+      error.classList.add("show");
+    }
+  }
+
+  function clearError(inputId: string, errorId: string) {
+    const input = document.getElementById(inputId);
+    const error = document.getElementById(errorId);
+    input?.classList.remove("is-invalid");
+    error?.classList.remove("show");
+  }
+
+  function clearAllErrors() {
+    document.querySelectorAll<HTMLElement>(".is-invalid").forEach((el) => el.classList.remove("is-invalid"));
+    document.querySelectorAll<HTMLElement>(".field-error.show").forEach((el) => el.classList.remove("show"));
+  }
+
+  /** Returns today as YYYY-MM-DD string. */
+  function todayISO(): string {
+    const d = new Date();
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${y}-${m}-${day}`;
+  }
+
+  // ─── Date-field logic ──────────────────────────────────────────────────
+  const pickupDate = document.getElementById("pickupDate") as HTMLInputElement | null;
+  const deliveryDate = document.getElementById("deliveryDate") as HTMLInputElement | null;
+
+  // Set min to today for pickup
+  if (pickupDate) pickupDate.min = todayISO();
+
+  // When pickup date changes, enforce delivery >= pickup
+  pickupDate?.addEventListener("change", () => {
+    clearError("pickupDate", "pickupDateError");
+    if (pickupDate.value && pickupDate.value < todayISO()) {
+      showError("pickupDate", "pickupDateError", "Pickup date cannot be in the past.");
+      return;
+    }
+    if (deliveryDate) {
+      deliveryDate.min = pickupDate.value || todayISO();
+      if (deliveryDate.value && pickupDate.value && deliveryDate.value < pickupDate.value) {
+        deliveryDate.value = "";
+        showError("deliveryDate", "deliveryDateError", "Delivery date was before pickup — please re-select.");
+      }
+    }
+  });
+
+  deliveryDate?.addEventListener("change", () => {
+    clearError("deliveryDate", "deliveryDateError");
+    const minDate = pickupDate?.value || todayISO();
+    if (deliveryDate.value && deliveryDate.value < minDate) {
+      showError("deliveryDate", "deliveryDateError", "Delivery date cannot be before the pickup date.");
+    }
+  });
+
+  /** Validate all required fields. Returns true if form is valid. */
+  function validateForm(): boolean {
+    clearAllErrors();
+    let valid = true;
+    let firstBad: HTMLElement | null = null;
+
+    // Required text fields
+    const requiredFields: { id: string; errorId: string; label: string; type?: string }[] = [
+      { id: "firstName", errorId: "firstNameError", label: "First name" },
+      { id: "lastName", errorId: "lastNameError", label: "Last name" },
+      { id: "email", errorId: "emailError", label: "Email", type: "email" },
+      { id: "phone", errorId: "phoneError", label: "Phone number" },
+      { id: "company", errorId: "companyError", label: "Company name" },
+    ];
+
+    for (const f of requiredFields) {
+      const el = document.getElementById(f.id) as HTMLInputElement | null;
+      if (!el) continue;
+      const val = el.value.trim();
+      if (!val) {
+        showError(f.id, f.errorId, `${f.label} is required.`);
+        valid = false;
+        if (!firstBad) firstBad = el;
+      } else if (f.type === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
+        showError(f.id, f.errorId, "Please enter a valid email address.");
+        valid = false;
+        if (!firstBad) firstBad = el;
+      }
+    }
+
+    // Terms checkbox
+    const termsCheckbox = document.getElementById("termsCheckbox") as HTMLInputElement | null;
+    if (termsCheckbox && !termsCheckbox.checked) {
+      showError("termsCheckbox", "termsError");
+      valid = false;
+      if (!firstBad) firstBad = termsCheckbox;
+    }
+
+    // Date logic (non-required but must be logical if filled)
+    if (pickupDate?.value && pickupDate.value < todayISO()) {
+      showError("pickupDate", "pickupDateError", "Pickup date cannot be in the past.");
+      valid = false;
+      if (!firstBad) firstBad = pickupDate;
+    }
+    if (deliveryDate?.value) {
+      const minDate = pickupDate?.value || todayISO();
+      if (deliveryDate.value < minDate) {
+        showError("deliveryDate", "deliveryDateError", "Delivery date cannot be before the pickup date.");
+        valid = false;
+        if (!firstBad) firstBad = deliveryDate;
+      }
+    }
+
+    if (firstBad) firstBad.scrollIntoView({ behavior: "smooth", block: "center" });
+    return valid;
+  }
+
+  // Clear errors on input (real-time feedback)
+  const contactInputs: { id: string; errorId: string }[] = [
+    { id: "firstName", errorId: "firstNameError" },
+    { id: "lastName", errorId: "lastNameError" },
+    { id: "email", errorId: "emailError" },
+    { id: "phone", errorId: "phoneError" },
+    { id: "company", errorId: "companyError" },
+  ];
+  for (const f of contactInputs) {
+    document.getElementById(f.id)?.addEventListener("input", () => clearError(f.id, f.errorId));
+  }
+  document.getElementById("termsCheckbox")?.addEventListener("change", () => clearError("termsCheckbox", "termsError"));
+
+  // ─── Form submission via Formspree ─────────────────────────────────────
+  const quoteForm = document.getElementById("quoteForm") as HTMLFormElement | null;
+  const submitBtn = document.getElementById("submitBtn") as HTMLButtonElement | null;
+  const submitIcon = document.getElementById("submitIcon");
+  const submitText = document.getElementById("submitText");
+  const errorBanner = document.getElementById("errorBanner");
+  const successCard = document.getElementById("successCard");
+
+  quoteForm?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (!submitBtn || !submitIcon || !submitText || !errorBanner || !successCard || !quoteForm) return;
+
+    if (!validateForm()) return;
+
+    submitBtn.classList.add("btn-loading");
+    submitIcon.className = "fa-solid fa-spinner fa-spin";
+    submitText.textContent = "Sending...";
+    errorBanner.classList.add("hidden");
+
+    const formData = new FormData(quoteForm);
+
+    try {
+      const res = await fetch(FORMSPREE_URL, {
+        method: "POST",
+        body: formData,
+        headers: { Accept: "application/json" },
+      });
+
+      if (res.ok) {
+        quoteForm.classList.add("hidden");
+        successCard.classList.remove("hidden");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        throw new Error("Server error");
+      }
+    } catch {
+      errorBanner.classList.remove("hidden");
+      submitBtn.classList.remove("btn-loading");
+      submitIcon.className = "fa-solid fa-paper-plane";
+      submitText.textContent = "Request a Freight Quote";
+      errorBanner.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  });
+
+  // ─── Reset form (Submit Another Quote) ─────────────────────────────────
+  document.getElementById("resetFormBtn")?.addEventListener("click", () => {
+    if (!quoteForm || !successCard || !submitBtn || !submitIcon || !submitText) return;
+    quoteForm.reset();
+    clearAllErrors();
+    quoteForm.classList.remove("hidden");
+    successCard.classList.add("hidden");
+    tabBtns.forEach((b) => b.classList.remove("active"));
+    const firstTab = document.querySelector<HTMLButtonElement>(".tab-btn");
+    firstTab?.classList.add("active");
+    if (serviceTypeInput) serviceTypeInput.value = "FTL";
+    if (pickupDate) pickupDate.min = todayISO();
+    submitIcon.className = "fa-solid fa-paper-plane";
+    submitText.textContent = "Request a Freight Quote";
+    submitBtn.classList.remove("btn-loading");
+  });
+
+  // ─── Init ──────────────────────────────────────────────────────────────
+  setupAutocomplete("originInput", "originDropdown");
+  setupAutocomplete("destInput", "destDropdown");
+
+  // Auto-select service from URL param (e.g. ?service=LTL)
+  const params = new URLSearchParams(window.location.search);
+  const svc = params.get("service");
+  if (svc) {
+    const btn = document.querySelector<HTMLButtonElement>(`.tab-btn[data-service="${svc}"]`);
+    if (btn) selectTab(btn);
+    if (svc === "Hazmat") {
+      const hazmatSelect = document.querySelector<HTMLSelectElement>('select[name="hazmat"]');
+      if (hazmatSelect) hazmatSelect.value = "yes";
+    }
+  }
+</script>

@@ -1,0 +1,314 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "What is SwiftLink Logistics?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "SwiftLink Logistics, LLC is a Michigan-based third-party logistics (3PL) freight brokerage connecting shippers with over 5,000 vetted carriers across all 48 contiguous states.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "What types of freight do you handle?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "We handle Full Truckload (FTL), Less-Than-Truckload (LTL), Drayage & Port Services, Expedited Freight, Heavy Haul, and Hazmat Shipping across all 48 contiguous states.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "What is the difference between FTL and LTL?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "FTL gives your freight a dedicated trailer with no sharing, ideal for large volumes. LTL combines your freight with other shipments so you only pay for the space you use, ideal for 1-14 pallets.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Do you handle hazmat shipments?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Yes, we transport hazardous materials across all 9 DOT hazmat classes with fully certified carriers, proper documentation, placarding, and emergency response protocols.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "How do I get a freight quote?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Request a free quote through our online form, call (248) 987-6776, or email info@swiftlinkusa.com. Most quotes are returned within minutes during business hours.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "What is your on-time delivery rate?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "SwiftLink maintains a 99.8% on-time delivery rate across all service types through proactive monitoring and a vetted carrier network.",
+      },
+    },
+  ],
+};
+
+interface FaqItem {
+  q: string;
+  a: string; // HTML allowed
+}
+interface FaqSection {
+  icon: string;
+  title: string;
+  items: FaqItem[];
+}
+
+const sections: FaqSection[] = [
+  {
+    icon: "fa-info-circle",
+    title: "General Questions",
+    items: [
+      {
+        q: "What is SwiftLink Logistics?",
+        a: "SwiftLink Logistics, LLC is a Michigan-based third-party logistics (3PL) freight brokerage. We connect shippers with a network of over 5,000 vetted carriers to move freight across all 48 contiguous states. We handle everything from full truckloads and LTL shipments to specialized services like drayage, expedited freight, heavy haul, and hazmat transport.",
+      },
+      {
+        q: "What areas do you serve?",
+        a: "We provide freight transportation services across all 48 contiguous United States. Our carrier network covers every major market, including service to and from all major ports for drayage shipments. Whether your freight is moving coast-to-coast or within a single region, we have the coverage to handle it.",
+      },
+      {
+        q: "How do I get a freight quote?",
+        a: 'You can request a free freight quote through our <a href="/quote" class="text-orange-500 hover:underline">online quote form</a> — just enter your origin, destination, cargo details, and preferred service type. You can also call us directly at <span class="text-white font-medium">(248) 987-6776</span> or email <span class="text-white font-medium">info@swiftlinkusa.com</span>. Most quotes are returned within minutes during business hours.',
+      },
+      {
+        q: "What are your business hours?",
+        a: 'SwiftLink operates 24/7, 365 days a year. Our team is always available to take your call, book shipments, and handle emergencies — nights, weekends, and holidays included. Call us anytime at <span class="text-white font-medium">(248) 987-6776</span>.',
+      },
+      {
+        q: "How do I contact SwiftLink?",
+        a: 'You can reach us by phone at <span class="text-white font-medium">(248) 987-6776</span>, by fax at <span class="text-white font-medium">(248) 987-6672</span>, or by email at <span class="text-white font-medium">info@swiftlinkusa.com</span>. You can also use our <a href="/contact" class="text-orange-500 hover:underline">online contact form</a> and we\'ll respond within one business day.',
+      },
+    ],
+  },
+  {
+    icon: "fa-truck",
+    title: "Shipping & Services",
+    items: [
+      {
+        q: "What types of freight do you handle?",
+        a: "We handle virtually all types of freight: palletized goods, machinery, construction materials, consumer products, temperature-sensitive cargo, hazardous materials, oversized loads, and ocean containers. Our six core services are Full Truckload (FTL), Less-Than-Truckload (LTL), Drayage & Port Services, Expedited Freight, Heavy Haul, and Hazmat Shipping.",
+      },
+      {
+        q: "What is the difference between FTL and LTL?",
+        a: '<strong class="text-white">Full Truckload (FTL)</strong> means your freight gets a dedicated trailer — no sharing space with other shipments. It\'s ideal for large volumes (typically 10,000+ lbs or 10+ pallets) and offers the fastest transit times with no intermediate stops. <strong class="text-white">Less-Than-Truckload (LTL)</strong> combines your freight with other shipments on the same trailer, so you only pay for the space you use. It\'s the most cost-effective option for smaller shipments (1-14 pallets, 150-15,000 lbs).',
+      },
+      {
+        q: "Do you handle hazmat shipments?",
+        a: 'Yes. We transport hazardous materials across all 9 DOT hazmat classes, including flammable liquids, corrosives, gases, explosives, and radioactive materials. All of our hazmat carriers are fully certified with proper endorsements, and we handle all documentation including shipping papers, placarding, and emergency response information. <a href="/hazmat" class="text-orange-500 hover:underline">Learn more about our hazmat services</a>.',
+      },
+      {
+        q: "What is drayage?",
+        a: 'Drayage is the short-distance transport of shipping containers between ports, rail yards, and warehouses. It\'s the critical first and last mile of your ocean freight supply chain. SwiftLink handles container pickup from all major U.S. ports, chassis management, port fees, and last-mile delivery to your warehouse or distribution center. <a href="/drayage" class="text-orange-500 hover:underline">Learn more about our drayage services</a>.',
+      },
+      {
+        q: "Do you offer expedited shipping?",
+        a: 'Yes. Our expedited freight service includes dedicated team drivers, straight trucks, and sprinter vans for guaranteed delivery windows. We handle hot shots, emergency restocks, and production-line-down situations around the clock. <a href="/expedited" class="text-orange-500 hover:underline">Learn more about expedited freight</a>.',
+      },
+      {
+        q: "Can you ship oversized or overweight loads?",
+        a: 'Absolutely. Our heavy haul division specializes in oversize and overweight freight using flatbeds, step decks, lowboys, and RGN trailers. We handle all permits, route surveys, pilot car coordination, and escort vehicles required by each state. <a href="/heavy-haul" class="text-orange-500 hover:underline">Learn more about heavy haul</a>.',
+      },
+    ],
+  },
+  {
+    icon: "fa-dollar-sign",
+    title: "Pricing & Quotes",
+    items: [
+      {
+        q: "How is freight pricing determined?",
+        a: "Freight pricing depends on several factors: distance (origin and destination), shipment weight and dimensions, freight class, service type (FTL, LTL, expedited, etc.), equipment requirements, and current market conditions. Specialized services like hazmat, heavy haul, and temperature-controlled shipping may carry additional charges for compliance, permits, or specialized equipment.",
+      },
+      {
+        q: "Is there a minimum shipment size?",
+        a: "For LTL shipments, the minimum is typically one pallet (approximately 150 lbs). For FTL, there's no minimum weight — you're booking a full trailer regardless of how much you put on it. For expedited freight, we can accommodate everything from a single box in a sprinter van to a full dedicated truck.",
+      },
+      {
+        q: "Do you offer volume discounts?",
+        a: "Yes. If you're shipping regularly or in high volumes, we offer contract pricing and volume-based discounts. Your dedicated account manager will work with you to develop pricing structures that align with your shipping patterns and budget. Contact us to discuss volume pricing for your business.",
+      },
+      {
+        q: "How long is a quote valid?",
+        a: "Spot quotes are typically valid for 24-48 hours, as carrier pricing fluctuates based on market conditions and available capacity. Contract rates are locked in for the agreed-upon period (monthly, quarterly, or annually). We recommend booking as soon as possible after receiving your quote to lock in the rate.",
+      },
+    ],
+  },
+  {
+    icon: "fa-location-crosshairs",
+    title: "Tracking & Delivery",
+    items: [
+      {
+        q: "How do I track my shipment?",
+        a: 'Once your shipment is booked, your dedicated logistics coordinator will provide real-time updates on your freight\'s location and estimated arrival time. You\'ll receive proactive notifications at key milestones — pickup confirmation, in-transit updates, and delivery confirmation. For immediate status, call us at <span class="text-white font-medium">(248) 987-6776</span> with your reference number.',
+      },
+      {
+        q: "What is your on-time delivery rate?",
+        a: "SwiftLink maintains a 99.8% on-time delivery rate across all service types. We achieve this through proactive monitoring, a vetted carrier network, and a 24/7 dispatch team that identifies and resolves potential delays before they impact your supply chain.",
+      },
+      {
+        q: "What happens if my shipment is damaged?",
+        a: "All shipments moved through SwiftLink are covered by carrier cargo insurance. In the event of damage, document the damage at delivery, note it on the Bill of Lading, and contact your SwiftLink representative immediately. We'll initiate the claims process with the carrier and work to resolve it as quickly as possible. We recommend taking photos of any damage for documentation.",
+      },
+      {
+        q: "Do you offer delivery notifications?",
+        a: "Yes. We provide proactive notifications via email or phone at each stage of your shipment: booking confirmation, pickup confirmation, in-transit checkpoints, and delivery confirmation with proof of delivery (POD). Your logistics coordinator will also reach out proactively if there are any schedule changes or potential delays.",
+      },
+    ],
+  },
+];
+---
+
+<BaseLayout
+  title="FAQ • SwiftLink Logistics"
+  description="Frequently asked questions about SwiftLink Logistics freight services, pricing, shipping, tracking, and more. Get answers to common 3PL logistics questions."
+  keywords="freight FAQ, logistics questions, 3PL FAQ, shipping questions, FTL LTL FAQ, freight broker FAQ, hazmat shipping FAQ, drayage questions, SwiftLink Logistics FAQ"
+  canonicalPath="/faq"
+  ogTitle="FAQ | SwiftLink Logistics - Freight & Shipping Questions Answered"
+  ogDescription="Get answers to common questions about freight shipping, pricing, tracking, and logistics services from SwiftLink Logistics."
+>
+  <script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} slot="head" />
+
+  <!-- HERO -->
+  <section class="relative bg-slate-900 border-b border-slate-800 py-20 overflow-hidden">
+    <div class="hero-video-container" aria-hidden="true">
+      <video class="hero-video" autoplay muted loop playsinline preload="metadata">
+        <source src="/videos/faq.mp4" type="video/mp4" />
+      </video>
+    </div>
+    <div class="hero-overlay" aria-hidden="true"></div>
+    <div class="relative z-10 max-w-4xl mx-auto px-6 text-center">
+      <span class="inline-flex items-center gap-2 bg-orange-500/10 border border-orange-500/30 text-orange-400 text-sm font-medium px-4 py-1.5 rounded-full mb-6">
+        <i class="fa-solid fa-circle-question" aria-hidden="true"></i> Support
+      </span>
+      <h1 class="text-5xl md:text-6xl font-bold tracking-tighter mb-4">Frequently Asked Questions</h1>
+      <p class="text-slate-400 text-xl max-w-2xl mx-auto">Everything you need to know about shipping with SwiftLink Logistics. Can't find your answer? Contact our team directly.</p>
+    </div>
+  </section>
+
+  <!-- IMAGE STRIP -->
+  <section class="py-12 bg-slate-950">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid md:grid-cols-2 gap-6 fade-in">
+        <img src="https://images.pexels.com/photos/1427541/pexels-photo-1427541.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Shipping containers at port terminal" loading="lazy" class="rounded-2xl w-full h-60 object-cover border border-slate-800" />
+        <img src="https://images.pexels.com/photos/2199293/pexels-photo-2199293.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Freight trucks ready for dispatch" loading="lazy" class="rounded-2xl w-full h-60 object-cover border border-slate-800" />
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ CONTENT -->
+  <section class="py-24 bg-slate-950">
+    <div class="max-w-4xl mx-auto px-6">
+      {sections.map((section, sIdx) => (
+        <div class={`${sIdx === sections.length - 1 ? "mb-8" : "mb-16"} fade-in`}>
+          <div class="flex items-center gap-3 mb-8">
+            <div class="w-10 h-10 bg-orange-500/10 rounded-xl flex items-center justify-center">
+              <i class={`fa-solid ${section.icon} text-orange-500`} aria-hidden="true"></i>
+            </div>
+            <h2 class="text-2xl font-bold">{section.title}</h2>
+          </div>
+          <div class="space-y-3" data-faq-section>
+            {section.items.map((item, iIdx) => {
+              const id = `faq-${sIdx}-${iIdx}`;
+              return (
+                <div class="faq-item bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+                  <button
+                    type="button"
+                    class="faq-trigger w-full flex justify-between items-center p-5 text-left hover:bg-slate-800/50 transition"
+                    aria-expanded="false"
+                    aria-controls={id}
+                  >
+                    <span class="font-semibold pr-4">{item.q}</span>
+                    <i class="fa-solid fa-chevron-down text-orange-500 text-xs faq-chevron" aria-hidden="true"></i>
+                  </button>
+                  <div id={id} class="faq-answer px-5 text-slate-400 text-sm leading-relaxed" role="region">
+                    <div class="pb-5" set:html={item.a} />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-20 bg-slate-900 border-t border-slate-800">
+    <div class="max-w-4xl mx-auto px-6 text-center fade-in">
+      <h2 class="text-3xl font-bold mb-4">Still Have Questions?</h2>
+      <p class="text-slate-400 text-lg mb-8">Our team is ready to help. Reach out and we'll get you the answers you need.</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/contact" class="bg-orange-500 hover:bg-orange-600 px-10 py-4 rounded-2xl font-semibold text-lg transition inline-flex items-center justify-center gap-2">
+          <i class="fa-solid fa-phone" aria-hidden="true"></i> Contact Us
+        </a>
+        <a href="/quote" class="border border-slate-700 hover:border-orange-500 px-10 py-4 rounded-2xl font-semibold text-lg transition inline-flex items-center justify-center gap-2">
+          <i class="fa-solid fa-paper-plane" aria-hidden="true"></i> Get a Quote
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+  }
+  .faq-answer.open {
+    max-height: 600px;
+  }
+  .faq-chevron {
+    transition: transform 0.3s ease;
+  }
+  .faq-chevron.open {
+    transform: rotate(180deg);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .faq-answer,
+    .faq-chevron {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  // FAQ accordion: one open per section, ARIA-aware.
+  const triggers = document.querySelectorAll<HTMLButtonElement>(".faq-trigger");
+  triggers.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const answer = btn.nextElementSibling as HTMLElement | null;
+      const chevron = btn.querySelector<HTMLElement>(".faq-chevron");
+      if (!answer) return;
+
+      const isOpen = answer.classList.contains("open");
+      const section = btn.closest("[data-faq-section]");
+
+      // Close all in same section
+      section?.querySelectorAll<HTMLElement>(".faq-answer.open").forEach((a) => {
+        a.classList.remove("open");
+        const prevBtn = a.previousElementSibling as HTMLButtonElement | null;
+        prevBtn?.setAttribute("aria-expanded", "false");
+        prevBtn?.querySelector(".faq-chevron")?.classList.remove("open");
+      });
+
+      if (!isOpen) {
+        answer.classList.add("open");
+        chevron?.classList.add("open");
+        btn.setAttribute("aria-expanded", "true");
+      }
+    });
+  });
+</script>
