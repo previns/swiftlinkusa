@@ -1,5 +1,6 @@
 ---
 import { services } from "../data/services";
+import BrandMark from "./BrandMark.astro";
 ---
 
 <nav
@@ -7,12 +8,8 @@ import { services } from "../data/services";
   aria-label="Primary"
 >
   <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-    <a href="/" class="flex items-center gap-3" aria-label="SwiftLink Logistics — home">
-      <i class="fa-solid fa-truck-fast text-3xl text-orange-500" aria-hidden="true"></i>
-      <div>
-        <span class="block text-2xl font-bold tracking-tighter">SwiftLink</span>
-        <span class="block text-[10px] text-orange-500 -mt-1">LOGISTICS, LLC</span>
-      </div>
+    <a href="/" class="flex items-center" aria-label="SwiftLink Logistics — home">
+      <BrandMark iconClass="h-9" wordClass="text-2xl" subClass="text-[0.6rem]" />
     </a>
 
     <!-- Desktop nav -->

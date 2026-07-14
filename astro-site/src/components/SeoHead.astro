@@ -68,6 +68,16 @@ const resolvedOgImage = ogImage ? new URL(ogImage, site).toString() : undefined;
 <!-- Brand color for mobile browser chrome -->
 <meta name="theme-color" content="#1B2A4A" />
 
+<!-- Brand wordmark fallback webfonts. The real faces are Agency FB (SWIFTLINK)
+     and Aptos (LOGISTICS), which aren't web-distributable; Big Shoulders
+     Display and Inter are close free substitutes for visitors without them. -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap"
+/>
+
 <!-- Favicon -->
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="icon" href="/favicon.ico" />

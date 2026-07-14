@@ -1,0 +1,68 @@
+---
+/**
+ * SwiftLink Logistics brand lockup: the double-chevron mark + wordmark.
+ *
+ * The source logo (navy + gold) is designed for light backgrounds. On the
+ * site's dark navy surfaces the navy elements would disappear, so we use the
+ * standard reversed treatment here — left chevron and "SWIFT" render white,
+ * while "LINK" and the right chevron keep the brand gold.
+ *
+ * "SWIFTLINK" uses the Agency FB stack; "LOGISTICS" uses the Aptos stack
+ * (see --font-brand / --font-brand-body in global.css).
+ */
+interface Props {
+  /** Height utility for the chevron mark, e.g. "h-9" (nav) or "h-11" (footer). */
+  iconClass?: string;
+  /** Font-size utility for the SWIFTLINK wordmark. */
+  wordClass?: string;
+  /** Font-size utility for the LOGISTICS sub-line. */
+  subClass?: string;
+  /** Show the spaced "LOGISTICS" sub-line. */
+  showSub?: boolean;
+}
+
+const {
+  iconClass = "h-9",
+  wordClass = "text-2xl",
+  subClass = "text-[0.6rem]",
+  showSub = true,
+} = Astro.props;
+---
+
+<span class="flex items-center gap-3">
+  <svg
+    class={`${iconClass} w-auto shrink-0`}
+    viewBox="0 0 222 232"
+    fill="none"
+    role="img"
+    aria-hidden="true"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <g transform="translate(16,16)">
+      <path
+        d="M61.15,100.00L0.00,165.80L36.80,200.00L129.73,100.00L36.80,0.00L0.00,34.20L61.15,100.00Z"
+        fill="#FFFFFF"
+      />
+      <path
+        d="M97.09,200.00L190.02,100.00L97.09,0.00L70.26,24.93L135.25,94.87L135.74,95.45L136.16,96.07L136.52,96.73L136.81,97.42L137.04,98.14L137.18,98.88L137.26,99.62L137.26,100.38L137.18,101.12L137.04,101.86L136.81,102.58L136.52,103.27L136.16,103.93L135.74,104.55L135.25,105.13L70.26,175.07L97.09,200.00Z"
+        fill="#C9A227"
+      />
+    </g>
+  </svg>
+
+  <span class="leading-none">
+    <span class={`block font-brand font-bold tracking-wide ${wordClass}`}>
+      <span class="text-white">SWIFT</span><span class="text-[#C9A227]">LINK</span>
+    </span>
+    {
+      showSub && (
+        <span
+          class={`block font-brand-body text-slate-300 mt-0.5 ${subClass}`}
+          style="letter-spacing:0.42em"
+        >
+          LOGISTICS
+        </span>
+      )
+    }
+  </span>
+</span>

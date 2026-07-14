@@ -19,6 +19,14 @@
   --color-orange-500: #c9a227; /* brand gold */
   --color-orange-600: #a8851c;
 
+  /* Brand wordmark fonts. "Agency FB" (SWIFTLINK) and "Aptos" (LOGISTICS)
+     aren't web-available, so each stack falls back to a close free webfont
+     loaded in SeoHead: Big Shoulders Display for the condensed display face,
+     Inter for the humanist body face. Anyone who has the real fonts locally
+     (e.g. the brand owner on Windows) gets them first. */
+  --font-brand: "Agency FB", "Big Shoulders Display", "Oswald", "Arial Narrow", sans-serif;
+  --font-brand-body: "Aptos", "Inter", "Segoe UI", system-ui, sans-serif;
+
   /* Navy surface + text ramp (was slate) */
   --color-slate-300: #c3cbdc;
   --color-slate-400: #93a0be;
