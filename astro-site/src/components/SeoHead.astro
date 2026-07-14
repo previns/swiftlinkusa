@@ -65,6 +65,9 @@ const resolvedOgImage = ogImage ? new URL(ogImage, site).toString() : undefined;
 <meta name="twitter:description" content={resolvedOgDescription} />
 {resolvedOgImage && <meta name="twitter:image" content={resolvedOgImage} />}
 
+<!-- Brand color for mobile browser chrome -->
+<meta name="theme-color" content="#1B2A4A" />
+
 <!-- Favicon -->
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="icon" href="/favicon.ico" />

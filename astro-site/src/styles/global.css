@@ -1,8 +1,50 @@
 @import "tailwindcss";
 
+/* ───────────────────────────────────────────────────────────────
+   Brand palette — SwiftLink navy + gold.
+   The site was built with Tailwind's `orange` (accent) and `slate`
+   (dark surfaces/text) scales. Rather than rewrite ~1,100 class
+   usages, we remap those scales here so every existing utility
+   (backgrounds, text, borders, gradient stops, opacity variants)
+   picks up the brand colors automatically.
+
+     Accent  → gold  (base #C9A227)
+     Surface → navy  (brand #1B2A4A)
+   ─────────────────────────────────────────────────────────────── */
+@theme {
+  /* Gold accent ramp (was orange) */
+  --color-orange-50: #fbf7e8;
+  --color-orange-100: #f4ecc6;
+  --color-orange-400: #ddbe4f;
+  --color-orange-500: #c9a227; /* brand gold */
+  --color-orange-600: #a8851c;
+
+  /* Navy surface + text ramp (was slate) */
+  --color-slate-300: #c3cbdc;
+  --color-slate-400: #93a0be;
+  --color-slate-500: #64749b;
+  --color-slate-600: #3e527c;
+  --color-slate-700: #2c3e63;
+  --color-slate-800: #1b2a4a; /* brand navy */
+  --color-slate-900: #16233f;
+  --color-slate-950: #0c1424;
+}
+
 /* All buttons should show a pointer cursor. */
 button {
   cursor: pointer;
+}
+
+/* Gold is a light mid-tone, so white text on a solid gold fill is
+   low-contrast. Give gold-filled buttons/pills dark-navy text instead.
+   Unlayered rules win over Tailwind's layered `text-white` utility, so
+   this cleanly overrides the inherited/explicit white on those CTAs.
+   (Low-opacity chips like `bg-orange-500/10` are a different class token
+   and are intentionally left untouched.) */
+[class~="bg-orange-500"],
+[class~="bg-orange-600"],
+[class~="focus:bg-orange-500"]:focus {
+  color: #0c1424;
 }
 
 /* ───────────────────────────────────────────────────────────────
@@ -64,7 +106,7 @@ button {
 }
 .service-card:hover {
   transform: translateY(-12px) scale(1.03);
-  box-shadow: 0 25px 50px -12px rgb(249 115 22 / 0.4);
+  box-shadow: 0 25px 50px -12px rgb(201 162 39 / 0.4);
 }
 
 .stat-number {
@@ -81,19 +123,19 @@ button {
      HTML as a Tailwind utility) so .tab-btn.active can override it cleanly
      inside the same cascade layer. */
   .tab-btn {
-    background-color: rgb(30 41 59); /* slate-800 */
+    background-color: rgb(27 42 74); /* slate-800 */
     transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
   }
   .tab-btn.active {
-    background-color: rgb(249 115 22);
-    color: white;
-    box-shadow: 0 0 20px rgb(249 115 22 / 0.35);
+    background-color: rgb(201 162 39);
+    color: #0c1424;
+    box-shadow: 0 0 20px rgb(201 162 39 / 0.35);
   }
 
   .input-field {
     width: 100%;
-    background-color: rgb(15 23 42);
-    border: 1px solid rgb(51 65 85);
+    background-color: rgb(22 35 63);
+    border: 1px solid rgb(44 62 99);
     border-radius: 0.75rem;
     padding-block: 0.875rem;
     padding-inline: 1.25rem;
@@ -103,11 +145,11 @@ button {
     transition: border-color 0.2s, box-shadow 0.2s;
   }
   .input-field::placeholder {
-    color: rgb(100 116 139);
+    color: rgb(100 116 155);
   }
   .input-field:focus {
-    border-color: rgb(249 115 22);
-    box-shadow: 0 0 0 3px rgb(249 115 22 / 0.15);
+    border-color: rgb(201 162 39);
+    box-shadow: 0 0 0 3px rgb(201 162 39 / 0.15);
   }
 
   /* Validation error state for required fields. */
@@ -129,12 +171,12 @@ button {
 
   /* Resume drop-zone in the careers application modal. */
   .file-drop {
-    border: 2px dashed rgb(51 65 85);
+    border: 2px dashed rgb(44 62 99);
     transition: border-color 0.2s, background 0.2s;
   }
   .file-drop.dragover {
-    border-color: rgb(249 115 22);
-    background: rgb(249 115 22 / 0.05);
+    border-color: rgb(201 162 39);
+    background: rgb(201 162 39 / 0.05);
   }
 
   /* Careers application modal chrome. */
@@ -164,8 +206,8 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
   top: calc(100% + 6px);
   left: 0;
   right: 0;
-  background: rgb(15 23 42);
-  border: 1px solid rgb(51 65 85);
+  background: rgb(22 35 63);
+  border: 1px solid rgb(44 62 99);
   border-radius: 0.75rem;
   overflow: hidden;
   z-index: 100;
@@ -179,11 +221,11 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
   padding: 0.75rem 1.25rem;
   cursor: pointer;
   font-size: 0.9rem;
-  color: rgb(203 213 225);
+  color: rgb(195 203 220);
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  border-bottom: 1px solid rgb(30 41 59);
+  border-bottom: 1px solid rgb(27 42 74);
   transition: background 0.15s;
 }
 .autocomplete-item:last-child {
@@ -191,11 +233,11 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
 }
 .autocomplete-item:hover,
 .autocomplete-item.highlighted {
-  background: rgb(30 41 59);
+  background: rgb(27 42 74);
   color: white;
 }
 .autocomplete-item .place-icon {
-  color: rgb(249 115 22);
+  color: rgb(201 162 39);
   font-size: 0.75rem;
   flex-shrink: 0;
 }
@@ -203,13 +245,13 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
   font-weight: 600;
 }
 .autocomplete-item .place-sub {
-  color: rgb(100 116 139);
+  color: rgb(100 116 155);
   font-size: 0.8rem;
 }
 .autocomplete-spinner {
   padding: 0.75rem 1.25rem;
   font-size: 0.85rem;
-  color: rgb(100 116 139);
+  color: rgb(100 116 155);
   display: flex;
   align-items: center;
   gap: 0.5rem;
