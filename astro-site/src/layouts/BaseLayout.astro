@@ -48,6 +48,31 @@ const { title, description, canonicalPath, keywords, ogTitle, ogDescription, ogI
     <Footer />
 
     <script>
+
+      // Give decorative video a pause control and respect reduced-motion settings.
+      const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
+      document.querySelectorAll<HTMLElement>(".hero-video-container").forEach((container) => {
+        const hero = container.parentElement;
+        const videos = Array.from(container.querySelectorAll<HTMLVideoElement>("video"));
+        if (!hero || videos.length === 0) return;
+        let paused = motionPreference.matches;
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "absolute bottom-4 right-6 z-20 rounded-full border border-white/30 bg-slate-950/80 px-4 py-2 text-xs text-white hover:border-orange-500";
+        const update = () => {
+          hero.dataset.motionPaused = String(paused);
+          button.textContent = paused ? "Play background video" : "Pause background video";
+          videos.forEach((video) => {
+            if (paused) video.pause();
+            else if (videos.length === 1 || video.classList.contains("active")) video.play().catch(() => {});
+          });
+        };
+        button.addEventListener("click", () => { paused = !paused; update(); });
+        motionPreference.addEventListener("change", () => { paused = motionPreference.matches; update(); });
+        hero.append(button);
+        update();
+      });
+
       // Shared scroll-triggered fade-in observer (used by .fade-in everywhere).
       const animate = () => {
         const els = document.querySelectorAll<HTMLElement>(".fade-in");

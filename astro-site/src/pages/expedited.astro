@@ -7,7 +7,7 @@ const jsonLd = {
   serviceType: "Expedited Freight Shipping",
   name: "Expedited Freight Shipping",
   description:
-    "Time-critical expedited freight shipping with dedicated vehicles, team drivers, 24/7 dispatch, and real-time tracking for urgent deliveries across the US.",
+    "Time-critical expedited freight shipping with dedicated vehicles, team drivers, shipment coordination, and shipment updates for urgent deliveries across the US.",
   provider: {
     "@type": "LocalBusiness",
     name: "SwiftLink Logistics, LLC",
@@ -21,11 +21,11 @@ const jsonLd = {
 
 <BaseLayout
   title="Expedited Freight Shipping • SwiftLink Logistics"
-  description="Expedited freight shipping with SwiftLink Logistics. Dedicated vehicles, team drivers, and 24/7 dispatch for time-critical deliveries nationwide."
-  keywords="expedited freight, urgent shipping, hot shot, team drivers, sprinter van, 24/7 dispatch, time critical freight, expedited trucking"
+  description="Expedited freight shipping with SwiftLink Logistics. Dedicated vehicles, team drivers, and shipment coordination for time-critical deliveries nationwide."
+  keywords="expedited freight, urgent shipping, hot shot, team drivers, sprinter van, shipment coordination, time critical freight, expedited trucking"
   canonicalPath="/expedited"
   ogTitle="Expedited Freight Shipping | SwiftLink Logistics"
-  ogDescription="Time-critical freight delivered fast. Dedicated vehicles, team drivers, 24/7 dispatch, and real-time tracking nationwide."
+  ogDescription="Time-critical freight delivered fast. Dedicated vehicles, team drivers, shipment coordination, and shipment updates nationwide."
 >
   <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} slot="head" />
 
@@ -98,7 +98,7 @@ const jsonLd = {
         <div class="fade-in bg-slate-900 border border-slate-800 rounded-2xl p-8 hover:border-orange-500/50 transition-all duration-300 hover:-translate-y-2">
           <div class="w-14 h-14 bg-orange-500/10 rounded-2xl flex items-center justify-center mb-6"><i class="fa-solid fa-people-carry-box text-orange-500 text-2xl" aria-hidden="true"></i></div>
           <h3 class="text-xl font-bold mb-3">Team Drivers</h3>
-          <p class="text-slate-400 mb-4">Two professional drivers alternate behind the wheel, keeping your freight moving 24 hours a day with no mandatory rest stops. Ideal for full truckload shipments that need to cover maximum distance in minimum time.</p>
+          <p class="text-slate-400 mb-4">Team-driver options can help support time-sensitive, long-distance shipments. We review the route, available capacity, and delivery requirements before confirming a plan.</p>
           <ul class="space-y-2 text-sm text-slate-400">
             <li class="flex items-center gap-2"><i class="fa-solid fa-check text-orange-500 text-xs" aria-hidden="true"></i> Nonstop coast-to-coast transit</li>
             <li class="flex items-center gap-2"><i class="fa-solid fa-check text-orange-500 text-xs" aria-hidden="true"></i> Up to 44,000 lbs capacity</li>
@@ -166,7 +166,7 @@ const jsonLd = {
           <div class="w-12 h-12 bg-red-500/10 rounded-xl flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-industry text-red-400 text-lg" aria-hidden="true"></i></div>
           <div>
             <h3 class="font-bold text-lg mb-2">Production Line Down</h3>
-            <p class="text-slate-400 text-sm">A missing component has halted your manufacturing line. Every hour of downtime costs thousands. Expedited freight gets the part on-site in hours, not days.</p>
+            <p class="text-slate-400 text-sm">When a missing component interrupts production, expedited options can help move critical parts. Share the deadline and delivery requirements so we can assess the options.</p>
           </div>
         </div>
         <div class="fade-in flex items-start gap-4 bg-slate-800/50 border border-slate-700 rounded-2xl p-6">
@@ -201,7 +201,7 @@ const jsonLd = {
           <div class="w-12 h-12 bg-orange-500/10 rounded-xl flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-car text-orange-400 text-lg" aria-hidden="true"></i></div>
           <div>
             <h3 class="font-bold text-lg mb-2">Auto Plant JIT Delivery</h3>
-            <p class="text-slate-400 text-sm">Automotive manufacturers operate on just-in-time inventory systems with zero tolerance for late deliveries. A single missing part can shut down an entire assembly line costing millions per hour.</p>
+            <p class="text-slate-400 text-sm">Time-sensitive components can affect production schedules. We help coordinate transport around receiving appointments and plant requirements.</p>
           </div>
         </div>
       </div>
@@ -218,13 +218,13 @@ const jsonLd = {
       <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
         <div class="fade-in text-center bg-slate-900 border border-slate-800 rounded-2xl p-8">
           <div class="w-16 h-16 bg-orange-500/10 rounded-full flex items-center justify-center mx-auto mb-6"><i class="fa-solid fa-headset text-orange-500 text-2xl" aria-hidden="true"></i></div>
-          <h3 class="text-xl font-bold mb-3">24/7 Dispatch</h3>
-          <p class="text-slate-400 text-sm">Our dispatch team operates around the clock — nights, weekends, and holidays. When an emergency shipment arises at 2 AM, we answer the phone and have a truck rolling within hours.</p>
+          <h3 class="text-xl font-bold mb-3">Dispatch Coordination</h3>
+          <p class="text-slate-400 text-sm">Share your pickup location, freight details, and delivery deadline. Our team will review available capacity and discuss a practical plan.</p>
         </div>
         <div class="fade-in text-center bg-slate-900 border border-slate-800 rounded-2xl p-8">
           <div class="w-16 h-16 bg-orange-500/10 rounded-full flex items-center justify-center mx-auto mb-6"><i class="fa-solid fa-satellite-dish text-orange-500 text-2xl" aria-hidden="true"></i></div>
-          <h3 class="text-xl font-bold mb-3">Real-Time GPS</h3>
-          <p class="text-slate-400 text-sm">Track your shipment every mile of the way with live GPS updates. Know exactly where your freight is at all times and receive proactive ETA notifications so you can plan ahead.</p>
+          <h3 class="text-xl font-bold mb-3">Shipment Updates</h3>
+          <p class="text-slate-400 text-sm">Stay in touch with our team for pickup progress, in-transit updates, and estimated delivery timing. Tracking options depend on the carrier and service.</p>
         </div>
         <div class="fade-in text-center bg-slate-900 border border-slate-800 rounded-2xl p-8">
           <div class="w-16 h-16 bg-orange-500/10 rounded-full flex items-center justify-center mx-auto mb-6"><i class="fa-solid fa-user-shield text-orange-500 text-2xl" aria-hidden="true"></i></div>
@@ -234,31 +234,7 @@ const jsonLd = {
         <div class="fade-in text-center bg-slate-900 border border-slate-800 rounded-2xl p-8">
           <div class="w-16 h-16 bg-orange-500/10 rounded-full flex items-center justify-center mx-auto mb-6"><i class="fa-solid fa-calendar-days text-orange-500 text-2xl" aria-hidden="true"></i></div>
           <h3 class="text-xl font-bold mb-3">Flexible Scheduling</h3>
-          <p class="text-slate-400 text-sm">Need pickup in two hours or a guaranteed delivery window? We accommodate tight schedules, after-hours pickups, weekend deliveries, and custom appointment times to meet your needs.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- STATS BAR -->
-  <section class="py-16 bg-slate-900 border-y border-slate-800">
-    <div class="max-w-7xl mx-auto px-6">
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center fade-in">
-        <div>
-          <p class="text-4xl font-extrabold text-orange-500 mb-2">Same-Day</p>
-          <p class="text-slate-400 text-sm">Delivery Available</p>
-        </div>
-        <div>
-          <p class="text-4xl font-extrabold text-orange-500 mb-2">24/7</p>
-          <p class="text-slate-400 text-sm">Dispatch Availability</p>
-        </div>
-        <div>
-          <p class="text-4xl font-extrabold text-orange-500 mb-2">Team</p>
-          <p class="text-slate-400 text-sm">Driver Options</p>
-        </div>
-        <div>
-          <p class="text-4xl font-extrabold text-orange-500 mb-2">48</p>
-          <p class="text-slate-400 text-sm">States Covered</p>
+          <p class="text-slate-400 text-sm">Tell us about appointment times and any after-hours requirements. We will review feasibility with the carrier before confirming the shipment.</p>
         </div>
       </div>
     </div>
@@ -268,7 +244,7 @@ const jsonLd = {
   <section class="py-24 bg-slate-950">
     <div class="max-w-4xl mx-auto px-6 text-center fade-in">
       <h2 class="text-4xl md:text-5xl font-bold mb-6">Need It There <span class="text-orange-500">Yesterday?</span></h2>
-      <p class="text-xl text-slate-400 mb-10 max-w-2xl mx-auto">Tell us where it is, where it needs to go, and when it needs to arrive. We will make it happen — guaranteed.</p>
+      <p class="text-xl text-slate-400 mb-10 max-w-2xl mx-auto">Tell us where it is, where it needs to go, and when it needs to arrive. We’ll review available options and confirm what is feasible.</p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
         <a href="/quote/?service=Expedited" class="bg-orange-500 hover:bg-orange-600 px-10 py-4 rounded-2xl font-semibold text-lg transition inline-flex items-center justify-center gap-2"><i class="fa-solid fa-bolt" aria-hidden="true"></i> Get Expedited Quote</a>
         <a href="tel:+12489876776" class="border border-slate-700 hover:border-orange-500 px-10 py-4 rounded-2xl font-semibold text-lg transition inline-flex items-center justify-center gap-2"><i class="fa-solid fa-phone" aria-hidden="true"></i> Call (248) 987-6776</a>

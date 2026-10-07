@@ -1,173 +1,110 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 
-const faqJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: [
-    {
-      "@type": "Question",
-      name: "What is SwiftLink Logistics?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "SwiftLink Logistics, LLC is a Michigan-based third-party logistics (3PL) freight brokerage connecting shippers with a network of vetted carriers across all 48 contiguous states.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "What types of freight do you handle?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "We handle Full Truckload (FTL), Less-Than-Truckload (LTL), Drayage & Port Services, Expedited Freight, Heavy Haul, and Hazmat Shipping across all 48 contiguous states.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "What is the difference between FTL and LTL?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "FTL gives your freight a dedicated trailer with no sharing, ideal for large volumes. LTL combines your freight with other shipments so you only pay for the space you use, ideal for 1-14 pallets.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Do you handle hazmat shipments?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Yes, we transport hazardous materials across all 9 DOT hazmat classes with fully certified carriers, proper documentation, placarding, and emergency response protocols.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "How do I get a freight quote?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Request a free quote through our online form, call (248) 987-6776, or email info@swiftlinkusa.com. Most quotes are returned within minutes during business hours.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "How do you make sure my freight arrives on time?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "SwiftLink keeps freight on schedule across all service types through proactive monitoring, a vetted carrier network, and a 24/7 dispatch team.",
-      },
-    },
-  ],
-};
-
-interface FaqItem {
-  q: string;
-  a: string; // HTML allowed
-}
-interface FaqSection {
-  icon: string;
-  title: string;
-  items: FaqItem[];
-}
+interface FaqItem { q: string; a: string; }
+interface FaqSection { icon: string; title: string; items: FaqItem[]; }
 
 const sections: FaqSection[] = [
   {
-    icon: "fa-info-circle",
-    title: "General Questions",
-    items: [
+    "icon": "fa-info-circle",
+    "title": "Working with SwiftLink",
+    "items": [
       {
-        q: "What is SwiftLink Logistics?",
-        a: "SwiftLink Logistics, LLC is a Michigan-based third-party logistics (3PL) freight brokerage. We connect shippers with a network of vetted carriers to move freight across all 48 contiguous states. We handle everything from full truckloads and LTL shipments to specialized services like drayage, expedited freight, heavy haul, and hazmat transport.",
+        "q": "What is SwiftLink Logistics?",
+        "a": "SwiftLink Logistics, LLC is a Michigan-based freight brokerage. We connect shippers with carrier partners and help coordinate truckload, LTL, drayage, expedited, heavy haul, and hazardous materials shipments."
       },
       {
-        q: "What areas do you serve?",
-        a: "We provide freight transportation services across all 48 contiguous United States. Our carrier network covers every major market, including service to and from all major ports for drayage shipments. Whether your freight is moving coast-to-coast or within a single region, we have the coverage to handle it.",
+        "q": "What areas do you serve?",
+        "a": "We coordinate freight across the contiguous United States. Share your origin, destination, and equipment needs so we can review carrier availability for your route."
       },
       {
-        q: "How do I get a freight quote?",
-        a: 'You can request a free freight quote through our <a href="/quote" class="text-orange-500 hover:underline">online quote form</a> — just enter your origin, destination, cargo details, and preferred service type. You can also call us directly at <span class="text-white font-medium">(248) 987-6776</span> or email <span class="text-white font-medium">info@swiftlinkusa.com</span>. Most quotes are returned within minutes during business hours.',
+        "q": "How do I get a freight quote?",
+        "a": "Use our <a href=\"/quote\" class=\"text-orange-500 underline\">quote request form</a> with your route, freight details, and preferred dates. Our team will review the request and follow up with available options. Pricing and timing are confirmed before booking."
       },
       {
-        q: "What are your business hours?",
-        a: 'SwiftLink operates 24/7, 365 days a year. Our team is always available to take your call, book shipments, and handle emergencies — nights, weekends, and holidays included. Call us anytime at <span class="text-white font-medium">(248) 987-6776</span>.',
-      },
-      {
-        q: "How do I contact SwiftLink?",
-        a: 'You can reach us by phone at <span class="text-white font-medium">(248) 987-6776</span>, by fax at <span class="text-white font-medium">(248) 987-6672</span>, or by email at <span class="text-white font-medium">info@swiftlinkusa.com</span>. You can also use our <a href="/contact" class="text-orange-500 hover:underline">online contact form</a> and we\'ll respond within one business day.',
-      },
-    ],
+        "q": "How can I reach your team?",
+        "a": "Call <a href=\"tel:+12489876776\" class=\"text-orange-500 underline\">(248) 987-6776</a> or email <a href=\"mailto:info@swiftlinkusa.com\" class=\"text-orange-500 underline\">info@swiftlinkusa.com</a>. For an existing shipment, include your reference number. For a time-sensitive request, include your required pickup and delivery times."
+      }
+    ]
   },
   {
-    icon: "fa-truck",
-    title: "Shipping & Services",
-    items: [
+    "icon": "fa-truck",
+    "title": "Shipping & Services",
+    "items": [
       {
-        q: "What types of freight do you handle?",
-        a: "We handle virtually all types of freight: palletized goods, machinery, construction materials, consumer products, temperature-sensitive cargo, hazardous materials, oversized loads, and ocean containers. Our six core services are Full Truckload (FTL), Less-Than-Truckload (LTL), Drayage & Port Services, Expedited Freight, Heavy Haul, and Hazmat Shipping.",
+        "q": "What is the difference between FTL and LTL?",
+        "a": "Full truckload (FTL) reserves trailer space for your shipment. Less-than-truckload (LTL) shares trailer space with other shipments and can suit smaller, palletized freight. The right choice depends on the size, handling needs, timing, and route of your shipment."
       },
       {
-        q: "What is the difference between FTL and LTL?",
-        a: '<strong class="text-white">Full Truckload (FTL)</strong> means your freight gets a dedicated trailer — no sharing space with other shipments. It\'s ideal for large volumes (typically 10,000+ lbs or 10+ pallets) and offers the fastest transit times with no intermediate stops. <strong class="text-white">Less-Than-Truckload (LTL)</strong> combines your freight with other shipments on the same trailer, so you only pay for the space you use. It\'s the most cost-effective option for smaller shipments (1-14 pallets, 150-15,000 lbs).',
+        "q": "What is drayage?",
+        "a": "Drayage moves containers between ports, rail ramps, and nearby facilities. We help coordinate container pickup, appointments, and returns with carrier partners. <a href=\"/drayage\" class=\"text-orange-500 underline\">Explore drayage services</a>."
       },
       {
-        q: "Do you handle hazmat shipments?",
-        a: 'Yes. We transport hazardous materials across all 9 DOT hazmat classes, including flammable liquids, corrosives, gases, explosives, and radioactive materials. All of our hazmat carriers are fully certified with proper endorsements, and we handle all documentation including shipping papers, placarding, and emergency response information. <a href="/hazmat" class="text-orange-500 hover:underline">Learn more about our hazmat services</a>.',
+        "q": "Do you offer expedited shipping?",
+        "a": "We review dedicated vehicle and team-driver options for time-sensitive freight. Tell us your deadline so we can confirm available capacity and a feasible schedule. <a href=\"/expedited\" class=\"text-orange-500 underline\">Explore expedited freight</a>."
       },
       {
-        q: "What is drayage?",
-        a: 'Drayage is the short-distance transport of shipping containers between ports, rail yards, and warehouses. It\'s the critical first and last mile of your ocean freight supply chain. SwiftLink handles container pickup from all major U.S. ports, chassis management, port fees, and last-mile delivery to your warehouse or distribution center. <a href="/drayage" class="text-orange-500 hover:underline">Learn more about our drayage services</a>.',
+        "q": "Can you help with oversized freight?",
+        "a": "Contact us with the load dimensions, weight, pickup and delivery locations, and loading requirements. These details help us review suitable equipment and route planning. <a href=\"/heavy-haul\" class=\"text-orange-500 underline\">Explore heavy haul</a>."
       },
       {
-        q: "Do you offer expedited shipping?",
-        a: 'Yes. Our expedited freight service includes dedicated team drivers, straight trucks, and sprinter vans for guaranteed delivery windows. We handle hot shots, emergency restocks, and production-line-down situations around the clock. <a href="/expedited" class="text-orange-500 hover:underline">Learn more about expedited freight</a>.',
-      },
-      {
-        q: "Can you ship oversized or overweight loads?",
-        a: 'Absolutely. Our heavy haul division specializes in oversize and overweight freight using flatbeds, step decks, lowboys, and RGN trailers. We handle all permits, route surveys, pilot car coordination, and escort vehicles required by each state. <a href="/heavy-haul" class="text-orange-500 hover:underline">Learn more about heavy haul</a>.',
-      },
-    ],
+        "q": "Do you handle hazardous materials?",
+        "a": "Contact us with your commodity details and shipment documentation so we can review carrier suitability and service availability before booking. <a href=\"/hazmat\" class=\"text-orange-500 underline\">Explore hazmat shipping</a>."
+      }
+    ]
   },
   {
-    icon: "fa-dollar-sign",
-    title: "Pricing & Quotes",
-    items: [
+    "icon": "fa-dollar-sign",
+    "title": "Pricing & Preparation",
+    "items": [
       {
-        q: "How is freight pricing determined?",
-        a: "Freight pricing depends on several factors: distance (origin and destination), shipment weight and dimensions, freight class, service type (FTL, LTL, expedited, etc.), equipment requirements, and current market conditions. Specialized services like hazmat, heavy haul, and temperature-controlled shipping may carry additional charges for compliance, permits, or specialized equipment.",
+        "q": "What details should I have ready?",
+        "a": "Provide the pickup and delivery locations, commodity, weight, dimensions, packaging, and preferred dates. Include any appointment, temperature, loading, or special handling requirements."
       },
       {
-        q: "Is there a minimum shipment size?",
-        a: "For LTL shipments, the minimum is typically one pallet (approximately 150 lbs). For FTL, there's no minimum weight — you're booking a full trailer regardless of how much you put on it. For expedited freight, we can accommodate everything from a single box in a sprinter van to a full dedicated truck.",
+        "q": "How is freight pricing determined?",
+        "a": "Pricing depends on the route, freight size and weight, equipment, timing, available capacity, and any additional services. Accurate shipment details help us prepare a useful quote."
       },
       {
-        q: "Do you offer volume discounts?",
-        a: "Yes. If you're shipping regularly or in high volumes, we offer contract pricing and volume-based discounts. Your dedicated account manager will work with you to develop pricing structures that align with your shipping patterns and budget. Contact us to discuss volume pricing for your business.",
+        "q": "How long is a quote valid?",
+        "a": "Refer to the validity and service terms provided with your quote. Rates and capacity can change before booking, so contact our team when you are ready to proceed."
       },
       {
-        q: "How long is a quote valid?",
-        a: "Spot quotes are typically valid for 24-48 hours, as carrier pricing fluctuates based on market conditions and available capacity. Contract rates are locked in for the agreed-upon period (monthly, quarterly, or annually). We recommend booking as soon as possible after receiving your quote to lock in the rate.",
-      },
-    ],
+        "q": "Can you help with recurring shipments?",
+        "a": "Share your regular lanes, expected shipping frequency, and equipment requirements. We can discuss options that fit your shipping pattern."
+      }
+    ]
   },
   {
-    icon: "fa-location-crosshairs",
-    title: "Tracking & Delivery",
-    items: [
+    "icon": "fa-location-crosshairs",
+    "title": "Shipment Support",
+    "items": [
       {
-        q: "How do I track my shipment?",
-        a: 'Once your shipment is booked, your dedicated logistics coordinator will provide real-time updates on your freight\'s location and estimated arrival time. You\'ll receive proactive notifications at key milestones — pickup confirmation, in-transit updates, and delivery confirmation. For immediate status, call us at <span class="text-white font-medium">(248) 987-6776</span> with your reference number.',
+        "q": "How do I get a shipment update?",
+        "a": "Contact our team with your shipment reference for pickup progress, transit updates, or estimated delivery timing. Available tracking options depend on the carrier and service."
       },
       {
-        q: "How do you make sure my freight arrives on time?",
-        a: "On-time delivery is our top priority across all service types. We achieve it through proactive monitoring, a vetted carrier network, and a 24/7 dispatch team that identifies and resolves potential delays before they impact your supply chain.",
+        "q": "What if my schedule changes?",
+        "a": "Let us know as soon as possible. We will review the change with the carrier and explain any effect on availability, timing, or pricing."
       },
       {
-        q: "What happens if my shipment is damaged?",
-        a: "All shipments moved through SwiftLink are covered by carrier cargo insurance. In the event of damage, document the damage at delivery, note it on the Bill of Lading, and contact your SwiftLink representative immediately. We'll initiate the claims process with the carrier and work to resolve it as quickly as possible. We recommend taking photos of any damage for documentation.",
-      },
-      {
-        q: "Do you offer delivery notifications?",
-        a: "Yes. We provide proactive notifications via email or phone at each stage of your shipment: booking confirmation, pickup confirmation, in-transit checkpoints, and delivery confirmation with proof of delivery (POD). Your logistics coordinator will also reach out proactively if there are any schedule changes or potential delays.",
-      },
-    ],
-  },
+        "q": "Who should I contact about a delivery issue?",
+        "a": "Contact your SwiftLink representative with your shipment reference and a description of the issue. Include any relevant delivery records or photos so we can help coordinate the next steps."
+      }
+    ]
+  }
 ];
+
+// Keep search metadata aligned with the answers visitors can read.
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: sections.flatMap(section => section.items.map(item => ({
+    "@type": "Question",
+    name: item.q,
+    acceptedAnswer: { "@type": "Answer", text: item.a.replace(/<[^>]*>/g, "") },
+  }))),
+};
 ---
 
 <BaseLayout
@@ -194,16 +131,6 @@ const sections: FaqSection[] = [
       </span>
       <h1 class="text-5xl md:text-6xl font-bold tracking-tighter mb-4">Frequently Asked Questions</h1>
       <p class="text-slate-400 text-xl max-w-2xl mx-auto">Everything you need to know about shipping with SwiftLink Logistics. Can't find your answer? Contact our team directly.</p>
-    </div>
-  </section>
-
-  <!-- IMAGE STRIP -->
-  <section class="py-12 bg-slate-950">
-    <div class="max-w-7xl mx-auto px-6">
-      <div class="grid md:grid-cols-2 gap-6 fade-in">
-        <img src="https://images.pexels.com/photos/1427541/pexels-photo-1427541.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Shipping containers at port terminal" loading="lazy" class="rounded-2xl w-full h-60 object-cover border border-slate-800" />
-        <img src="https://images.pexels.com/photos/2199293/pexels-photo-2199293.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Freight trucks ready for dispatch" loading="lazy" class="rounded-2xl w-full h-60 object-cover border border-slate-800" />
-      </div>
     </div>
   </section>
 

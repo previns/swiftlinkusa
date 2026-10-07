@@ -63,8 +63,8 @@ button {
 
 /* Scroll-triggered fade-in (used everywhere; observer lives in BaseLayout) */
 .fade-in {
-  opacity: 0;
-  transform: translateY(30px);
+  opacity: 1;
+  transform: none;
   transition: opacity 0.8s ease-out, transform 0.8s ease-out;
 }
 .fade-in.visible {
@@ -113,14 +113,8 @@ button {
               box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .service-card:hover {
-  transform: translateY(-12px) scale(1.03);
+  transform: translateY(-4px);
   box-shadow: 0 25px 50px -12px rgb(201 162 39 / 0.4);
-}
-
-.stat-number {
-  font-size: 3.5rem;
-  line-height: 1;
-  font-weight: 800;
 }
 
 /* Form-related component styles (tabs, inputs, file drop, modal).
@@ -294,4 +288,21 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
   .service-card:hover {
     transform: none;
   }
+}
+
+/* Keyboard navigation and in-page links stay clear of the sticky header. */
+:where(a, button, input, select, textarea):focus-visible {
+  outline: 2px solid var(--color-orange-400);
+  outline-offset: 4px;
+}
+html { scroll-padding-top: 6rem; }
+body { font-family: var(--font-brand-body); }
+:where(h1, h2, h3) { text-wrap: balance; }
+:where(p, a) { overflow-wrap: anywhere; }
+@media (max-width: 639px) {
+  h1 { font-size: clamp(2.1rem, 8vw, 3rem); }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }

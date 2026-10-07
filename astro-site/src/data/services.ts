@@ -25,7 +25,7 @@ export const services: Service[] = [
     icon: "fa-truck",
     tagline: "Dedicated trailers, direct delivery",
     blurb:
-      "Dedicated 53' trailers exclusively for your freight. Ideal for high-volume shipments that fill an entire trailer — dry van, flatbed, or reefer. Direct point-to-point delivery with no stops, no handling, and the fastest transit times available.",
+      "Dedicated trailer capacity for larger shipments or freight that needs its own space. We coordinate dry van, flatbed, and refrigerated options around your load.",
   },
   {
     slug: "ltl",
@@ -33,7 +33,7 @@ export const services: Service[] = [
     icon: "fa-boxes-stacked",
     tagline: "Cost-effective shared freight",
     blurb:
-      "Share trailer space and only pay for what you ship. Perfect for palletized freight that doesn't require a full trailer — from 1 to 14 pallets. Consolidated with other shipments for maximum cost efficiency without sacrificing reliability.",
+      "Shared trailer space for smaller, palletized shipments. We help you compare service options based on your freight, delivery needs, and budget.",
   },
   {
     slug: "drayage",
@@ -41,15 +41,15 @@ export const services: Service[] = [
     icon: "fa-ship",
     tagline: "Container pickup & port delivery",
     blurb:
-      "Container pickup and delivery from all major U.S. ports to your warehouse or distribution center. We handle chassis management, port fees, and last-mile delivery so your imports move seamlessly from vessel to final destination.",
+      "Container moves between ports, rail ramps, and your warehouse. We coordinate pickup details, appointments, and container returns with carrier partners.",
   },
   {
     slug: "expedited",
     name: "Expedited Freight",
     icon: "fa-bolt",
-    tagline: "Time-critical, guaranteed windows",
+    tagline: "Options for urgent shipments",
     blurb:
-      "Time-critical shipments that can't wait. Dedicated team drivers, straight trucks, or sprinter vans for guaranteed delivery windows. Hot shots, emergency restocks, and production-line-down situations handled around the clock.",
+      "Shipping options for time-sensitive freight. Share your deadline so we can review available vehicles, capacity, and a realistic delivery plan.",
   },
   {
     slug: "heavy-haul",
@@ -57,14 +57,14 @@ export const services: Service[] = [
     icon: "fa-weight-hanging",
     tagline: "Oversize & overweight loads",
     blurb:
-      "Oversize and overweight loads that require specialized equipment. Flatbeds, step decks, lowboys, and RGN trailers for machinery, construction equipment, and industrial cargo. We manage permits, escorts, and route planning.",
+      "Specialized transport for oversized machinery, equipment, and industrial freight, with planning for the trailer, route, and permit requirements.",
   },
   {
     slug: "hazmat",
     name: "Hazmat Shipping",
     icon: "fa-biohazard",
-    tagline: "Certified hazardous materials",
+    tagline: "Hazardous materials coordination",
     blurb:
-      "Certified hazardous materials transportation across all classes. Our hazmat-endorsed carriers are fully compliant with DOT and FMCSA regulations. Proper placarding, documentation, and safety protocols handled end to end.",
+      "Hazardous materials shipping coordination based on your commodity, documentation, and handling requirements. Contact us to review shipment suitability.",
   },
 ];

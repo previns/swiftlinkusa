@@ -1,0 +1,25 @@
+---
+const steps = [
+  { icon: "fa-clipboard-list", title: "Tell us what’s moving", text: "Share your pickup and delivery locations, freight details, and timing requirements." },
+  { icon: "fa-truck", title: "Review your options", text: "We review the shipment and available carrier options, then discuss pricing and the details with you." },
+  { icon: "fa-comments", title: "Stay in the loop", text: "Work with our team to coordinate pickup, follow your shipment, and prepare for delivery." },
+];
+---
+<section class="py-20 bg-slate-950" aria-labelledby="shipping-process">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="max-w-2xl mb-10">
+      <p class="text-orange-500 text-sm font-semibold tracking-widest uppercase">How it works</p>
+      <h2 id="shipping-process" class="text-3xl md:text-4xl font-bold tracking-tight mt-3">A clear plan for your freight.</h2>
+      <p class="text-slate-300 mt-4">From the first conversation to delivery, start with the details that matter.</p>
+    </div>
+    <div class="grid md:grid-cols-3 gap-6">
+      {steps.map((step) => (
+        <div class="fade-in border border-slate-800 rounded-2xl p-7">
+          <i class={`fa-solid ${step.icon} text-orange-500 text-2xl mb-5`} aria-hidden="true" />
+          <h3 class="text-xl font-semibold mb-3">{step.title}</h3>
+          <p class="text-slate-400 leading-relaxed">{step.text}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

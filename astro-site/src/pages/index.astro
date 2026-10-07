@@ -1,9 +1,9 @@
 ---
-// Home page — composes the cycling hero, trust bar, stats, services grid, and "why us" row.
+// Home page — composes the cycling hero, trust bar, shipping process, services grid, and "why us" row.
 import BaseLayout from "../layouts/BaseLayout.astro";
 import HeroCycling from "../components/HeroCycling.astro";
 import TrustBar from "../components/TrustBar.astro";
-import StatsSection from "../components/StatsSection.astro";
+import ShippingProcess from "../components/ShippingProcess.astro";
 import ServicesGrid from "../components/ServicesGrid.astro";
 import WhyUs from "../components/WhyUs.astro";
 import JsonLdLocalBusiness from "../components/JsonLdLocalBusiness.astro";
@@ -17,14 +17,14 @@ const heroVideos = [
 
 <BaseLayout
   title="SwiftLink USA | 3PL Freight Brokerage | Ship with Confidence"
-  description="SwiftLink Logistics is a Michigan-based 3PL freight broker offering FTL, LTL, drayage, expedited, heavy haul, and hazmat shipping across 48 states."
+  description="SwiftLink Logistics is a Michigan-based 3PL freight broker offering FTL, LTL, drayage, expedited, heavy haul, and hazmat shipping across the contiguous United States."
   keywords="3PL, freight broker, logistics company, FTL shipping, LTL shipping, drayage, expedited freight, heavy haul, hazmat transport, Michigan logistics"
   canonicalPath="/"
   ogTitle="SwiftLink Logistics — 3PL Freight Brokerage | Ship with Confidence"
 >
   <HeroCycling videos={heroVideos} />
   <TrustBar />
-  <StatsSection />
+  <ShippingProcess />
   <ServicesGrid />
   <WhyUs />
   <JsonLdLocalBusiness slot="head" />

@@ -4,11 +4,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
 <BaseLayout
   title="Contact Us • SwiftLink Logistics"
-  description="Contact SwiftLink Logistics 24/7. Phone, email, and online form available around the clock for freight quotes, support, and inquiries nationwide."
-  keywords="contact SwiftLink Logistics, freight broker contact, logistics support, 24/7 dispatch, freight quote contact, Michigan logistics, customer service"
+  description="Contact SwiftLink Logistics by phone, email, or online form for freight quotes, shipment support, and business inquiries."
+  keywords="contact SwiftLink Logistics, freight broker contact, logistics support, shipment coordination, freight quote contact, Michigan logistics, customer service"
   canonicalPath="/contact"
-  ogTitle="Contact SwiftLink Logistics | 24/7 Freight Support"
-  ogDescription="Reach our team 24/7 for freight quotes, dispatch, and support. Phone, email, and online form available around the clock."
+  ogTitle="Contact SwiftLink Logistics | Freight Support"
+  ogDescription="Reach our Michigan-based team for freight quotes, shipment questions, and logistics support."
 >
   <!-- HERO -->
   <section class="relative bg-slate-900 py-28 text-center overflow-hidden">
@@ -25,45 +25,35 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     </div>
   </section>
 
-  <!-- IMAGE STRIP -->
-  <section class="py-12 bg-slate-950">
-    <div class="max-w-7xl mx-auto px-6">
-      <div class="grid md:grid-cols-2 gap-6 fade-in">
-        <img src="https://images.pexels.com/photos/4481259/pexels-photo-4481259.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Customer service team helping clients" loading="lazy" class="rounded-2xl w-full h-64 object-cover border border-slate-800" />
-        <img src="https://images.pexels.com/photos/7709020/pexels-photo-7709020.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Logistics coordination center" loading="lazy" class="rounded-2xl w-full h-64 object-cover border border-slate-800" />
-      </div>
-    </div>
-  </section>
-
   <!-- CONTACT FORM + INFO -->
   <section class="py-24 bg-slate-950">
     <div class="max-w-7xl mx-auto px-6">
       <div class="grid lg:grid-cols-5 gap-12">
         <!-- LEFT: FORM (3 cols) -->
         <div class="lg:col-span-3 fade-in">
-          <div class="bg-slate-900 border border-slate-800 rounded-3xl p-10">
+          <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-10">
             <h2 class="text-2xl font-bold mb-2">Send Us a Message</h2>
-            <p class="text-slate-400 mb-8">Fill out the form below and we'll get back to you within one business day.</p>
+            <p class="text-slate-400 mb-8">Tell us what you need and include any shipment details that will help us respond.</p>
 
             <form action="https://formspree.io/f/meepzjzk" method="POST" class="space-y-6">
               <div class="grid md:grid-cols-2 gap-6">
                 <div>
                   <label for="contact-name" class="block text-sm font-medium mb-2">Full Name <span class="text-orange-500">*</span></label>
-                  <input id="contact-name" type="text" name="name" required placeholder="John Smith" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500 transition placeholder:text-slate-600" />
+                  <input id="contact-name" autocomplete="name" type="text" name="name" required placeholder="John Smith" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500 transition placeholder:text-slate-600" />
                 </div>
                 <div>
                   <label for="contact-email" class="block text-sm font-medium mb-2">Email <span class="text-orange-500">*</span></label>
-                  <input id="contact-email" type="email" name="email" required placeholder="john@company.com" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500 transition placeholder:text-slate-600" />
+                  <input id="contact-email" autocomplete="email" type="email" name="email" required placeholder="john@company.com" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500 transition placeholder:text-slate-600" />
                 </div>
               </div>
               <div class="grid md:grid-cols-2 gap-6">
                 <div>
                   <label for="contact-phone" class="block text-sm font-medium mb-2">Phone</label>
-                  <input id="contact-phone" type="tel" name="phone" placeholder="(555) 123-4567" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500 transition placeholder:text-slate-600" />
+                  <input id="contact-phone" autocomplete="tel" type="tel" name="phone" placeholder="(555) 123-4567" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500 transition placeholder:text-slate-600" />
                 </div>
                 <div>
                   <label for="contact-company" class="block text-sm font-medium mb-2">Company Name</label>
-                  <input id="contact-company" type="text" name="company" placeholder="Your Company, Inc." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500 transition placeholder:text-slate-600" />
+                  <input id="contact-company" autocomplete="organization" type="text" name="company" placeholder="Your Company, Inc." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500 transition placeholder:text-slate-600" />
                 </div>
               </div>
               <div>
@@ -85,6 +75,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
               <button type="submit" class="w-full bg-orange-500 hover:bg-orange-600 py-4 rounded-2xl font-semibold text-sm transition flex items-center justify-center gap-2">
                 <i class="fa-solid fa-paper-plane" aria-hidden="true"></i> Send Message
               </button>
+              <p class="text-sm text-slate-400">We use your details to respond to your inquiry. <a href="/privacy" class="text-orange-400 underline">Privacy Policy</a></p>
             </form>
           </div>
         </div>
@@ -99,7 +90,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
               <div>
                 <h3 class="font-bold text-lg mb-1">Phone</h3>
                 <p class="text-xl font-semibold text-orange-500"><a href="tel:+12489876776" class="hover:text-orange-400 transition">(248) 987-6776</a></p>
-                <p class="text-sm text-slate-400 mt-1">Available 24/7, 365 days a year</p>
+                <p class="text-sm text-slate-400 mt-1">Freight quotes and shipment support</p>
               </div>
             </div>
           </div>
@@ -122,7 +113,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
               <div>
                 <h3 class="font-bold text-lg mb-1">Email</h3>
                 <p class="text-orange-500 font-medium"><a href="mailto:info@swiftlinkusa.com" class="hover:text-orange-400 transition">info@swiftlinkusa.com</a></p>
-                <p class="text-sm text-slate-400 mt-1">We respond within one business day</p>
+                <p class="text-sm text-slate-400 mt-1">Include your shipment reference, if available</p>
               </div>
             </div>
           </div>
@@ -134,7 +125,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
               <div>
                 <h3 class="font-bold text-lg mb-1">Headquarters</h3>
                 <p class="text-slate-300 font-medium">Michigan, United States</p>
-                <p class="text-sm text-slate-400 mt-1">Serving all 48 contiguous states</p>
+                <p class="text-sm text-slate-400 mt-1">Serving the contiguous United States</p>
               </div>
             </div>
           </div>
@@ -144,9 +135,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 <i class="fa-solid fa-clock text-orange-500 text-lg" aria-hidden="true"></i>
               </div>
               <div>
-                <h3 class="font-bold text-lg mb-1">Business Hours</h3>
-                <p class="text-xl font-semibold text-orange-500 mt-2">24/7, 365 Days a Year</p>
-                <p class="text-sm text-slate-400 mt-1">We never close. Our team is available around the clock to handle your freight needs.</p>
+                <h3 class="font-bold text-lg mb-1">Planning a Shipment?</h3>
+                <p class="text-xl font-semibold text-orange-500 mt-2">Let’s review the details</p>
+                <p class="text-sm text-slate-400 mt-1">Share your route, freight type, and preferred dates so we can discuss suitable options.</p>
               </div>
             </div>
           </div>
@@ -168,7 +159,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             <i class="fa-solid fa-file-invoice-dollar text-orange-500 text-2xl" aria-hidden="true"></i>
           </div>
           <h3 class="text-xl font-bold mb-2">Get a Quote</h3>
-          <p class="text-slate-400 text-sm">Request a free, no-obligation freight quote in minutes.</p>
+          <p class="text-slate-400 text-sm">Share your shipment details for a no-obligation freight quote.</p>
         </a>
         <a href="/about" class="fade-in group bg-slate-950 border border-slate-800 rounded-2xl p-8 text-center hover:border-orange-500/30 transition-all duration-300">
           <div class="w-16 h-16 bg-orange-500/10 rounded-2xl flex items-center justify-center mx-auto mb-5 group-hover:bg-orange-500/20 transition">
