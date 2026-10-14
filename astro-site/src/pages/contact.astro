@@ -1,4 +1,5 @@
 ---
+import InnerHero from "../components/InnerHero.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 
@@ -11,19 +12,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   ogDescription="Reach our Michigan-based team for freight quotes, shipment questions, and logistics support."
 >
   <!-- HERO -->
-  <section class="relative bg-slate-900 py-28 text-center overflow-hidden">
-    <div class="hero-video-container" aria-hidden="true">
-      <video class="hero-video" autoplay muted loop playsinline preload="metadata">
-        <source src="/videos/contact.mp4" type="video/mp4" />
-      </video>
-    </div>
-    <div class="hero-overlay" aria-hidden="true"></div>
-    <div class="relative z-10 max-w-4xl mx-auto px-6">
-      <p class="text-orange-500 font-semibold text-sm tracking-widest uppercase mb-4 fade-in">Contact Us</p>
-      <h1 class="text-5xl md:text-6xl font-extrabold tracking-tight leading-tight fade-in">Get in Touch</h1>
-      <p class="mt-6 text-xl text-slate-300 max-w-2xl mx-auto fade-in">Have a question or need a quote? Our team is ready to help you move freight with confidence.</p>
-    </div>
-  </section>
+  <InnerHero eyebrow="Start a conversation" title="Your next move." accent="Our next conversation." description="A shipment to plan. A question to work through. Connect with the people behind your freight." icon="fa-comments" video="/videos/contact.mp4" primaryHref="tel:+12489876776" primaryLabel="Call (248) 987-6776" />
 
   <!-- CONTACT FORM + INFO -->
   <section class="py-24 bg-slate-950">

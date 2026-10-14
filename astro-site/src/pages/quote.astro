@@ -1,4 +1,5 @@
 ---
+import InnerHero from "../components/InnerHero.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 
@@ -11,29 +12,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   ogDescription="Get fast, competitive freight pricing for FTL, LTL, drayage, expedited, heavy haul, and hazmat shipments nationwide."
 >
   <!-- HERO BANNER -->
-  <section class="relative bg-slate-900 border-b border-slate-800 py-16 overflow-hidden">
-    <div
-      class="absolute inset-0 opacity-5"
-      aria-hidden="true"
-      style="background-image: radial-gradient(circle at 20% 50%, rgb(201 162 39) 0%, transparent 60%), radial-gradient(circle at 80% 50%, rgb(201 162 39) 0%, transparent 60%);"
-    >
-    </div>
-    <div class="relative max-w-4xl mx-auto px-6 text-center">
-      <span class="inline-flex items-center gap-2 bg-orange-500/10 border border-orange-500/30 text-orange-400 text-sm font-medium px-4 py-1.5 rounded-full mb-6">
-        <i class="fa-solid fa-bolt" aria-hidden="true"></i> Freight pricing built around your shipment
-      </span>
-      <h1 class="text-5xl md:text-6xl font-bold tracking-tighter mb-4">Request a Freight Quote</h1>
-      <p class="text-slate-400 text-xl max-w-2xl mx-auto">
-        Share your shipment details. Our team will review your request and follow up with available options and pricing.
-      </p>
-      <div class="mt-8 flex flex-wrap justify-center gap-8 text-sm text-slate-400">
-        <div class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-orange-500" aria-hidden="true"></i> No obligation</div>
-        <div class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-orange-500" aria-hidden="true"></i> Competitive rates</div>
-        <div class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-orange-500" aria-hidden="true"></i> Nationwide coverage</div>
-        <div class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-orange-500" aria-hidden="true"></i> Personal support</div>
-      </div>
-    </div>
-  </section>
+  <InnerHero eyebrow="Plan your shipment" title="Start with the details." accent="We’ll connect the dots." description="Tell us where your freight needs to go. Our team will review your request and follow up with available options and pricing." icon="fa-route" primaryHref="#quoteForm" primaryLabel="Build your quote request" />
 
   <!-- MAIN CONTENT -->
   <div class="max-w-5xl mx-auto px-6 py-16">

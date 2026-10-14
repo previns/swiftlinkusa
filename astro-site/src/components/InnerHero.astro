@@ -1,0 +1,15 @@
+---
+interface Props { eyebrow:string; title:string; accent:string; description:string; icon?:string; video?:string; primaryHref?:string; primaryLabel?:string; }
+const {eyebrow,title,accent,description,icon='fa-network-wired',video,primaryHref='/quote',primaryLabel='Plan your shipment'}=Astro.props;
+---
+<section class="inner-hero">
+ <div class="inner-grid" aria-hidden="true"></div>
+ <div class="connected-wrap inner-hero-layout">
+  <div class="inner-copy"><a href="/" class="breadcrumb">SWIFTLINK <span>/</span> {eyebrow}</a><p class="tech-label"><span class="signal"></span>{eyebrow}</p><h1>{title}<br /><span>{accent}</span></h1><p class="inner-description">{description}</p><div class="hero-actions"><a class="tech-button" href={primaryHref}>{primaryLabel} ↗</a><a href="#page-content" class="quiet-link">Explore below ↓</a></div></div>
+  <div class="inner-display"><div class="display-top"><span>SWIFTLINK / {eyebrow}</span><span class="display-dot"></span></div>{video && <video class="inner-video" muted playsinline loop preload="metadata" aria-hidden="true"><source src={video} type="video/mp4" /></video>}<div class="display-overlay"></div><div class="display-orbits" aria-hidden="true"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="orbit-core"><i class={`fa-solid ${icon}`}></i></div><span class="orbit-node"></span></div><div class="display-bottom"><span>PEOPLE. PLANNING. CONNECTION.</span><button type="button" data-inner-motion aria-pressed="false">Pause motion</button></div></div>
+ </div>
+</section>
+<div id="page-content" class="page-content-anchor"></div>
+<script>
+ document.querySelectorAll<HTMLElement>('.inner-display').forEach(display=>{const button=display.querySelector<HTMLButtonElement>('[data-inner-motion]')!;const video=display.querySelector<HTMLVideoElement>('video');const preference=matchMedia('(prefers-reduced-motion: reduce)');let paused=preference.matches;let visible=true;const update=()=>{display.classList.toggle('inner-paused',paused);button.textContent=paused?'Play motion':'Pause motion';button.setAttribute('aria-pressed',String(paused));if(video){if(paused||!visible)video.pause();else video.play().catch(()=>{});}};button.addEventListener('click',()=>{paused=!paused;update();});preference.addEventListener('change',()=>{paused=preference.matches;update();});new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;update();}).observe(display);update();});
+</script>

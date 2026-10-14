@@ -1,4 +1,5 @@
 ---
+import InnerHero from "../components/InnerHero.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
 interface FaqItem { q: string; a: string; }
@@ -118,21 +119,7 @@ const faqJsonLd = {
   <script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} slot="head" />
 
   <!-- HERO -->
-  <section class="relative bg-slate-900 border-b border-slate-800 py-20 overflow-hidden">
-    <div class="hero-video-container" aria-hidden="true">
-      <video class="hero-video" autoplay muted loop playsinline preload="metadata">
-        <source src="/videos/faq.mp4" type="video/mp4" />
-      </video>
-    </div>
-    <div class="hero-overlay" aria-hidden="true"></div>
-    <div class="relative z-10 max-w-4xl mx-auto px-6 text-center">
-      <span class="inline-flex items-center gap-2 bg-orange-500/10 border border-orange-500/30 text-orange-400 text-sm font-medium px-4 py-1.5 rounded-full mb-6">
-        <i class="fa-solid fa-circle-question" aria-hidden="true"></i> Support
-      </span>
-      <h1 class="text-5xl md:text-6xl font-bold tracking-tighter mb-4">Frequently Asked Questions</h1>
-      <p class="text-slate-400 text-xl max-w-2xl mx-auto">Everything you need to know about shipping with SwiftLink Logistics. Can't find your answer? Contact our team directly.</p>
-    </div>
-  </section>
+  <InnerHero eyebrow="The freight knowledge center" title="Less guesswork." accent="Clearer answers." description="Get to know how shipping with SwiftLink works, from the first quote to the final delivery." icon="fa-compass" primaryHref="/contact" primaryLabel="Ask our team" />
 
   <!-- FAQ CONTENT -->
   <section class="py-24 bg-slate-950">

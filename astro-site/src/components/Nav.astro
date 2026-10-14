@@ -1,6 +1,7 @@
 ---
 import { services } from "../data/services";
 import BrandMark from "./BrandMark.astro";
+const portalUrl = import.meta.env.PUBLIC_PORTAL_URL;
 ---
 
 <nav
@@ -61,6 +62,7 @@ import BrandMark from "./BrandMark.astro";
         </div>
       </div>
 
+      {portalUrl && <a href={portalUrl} class="hover:text-orange-500 transition">Team Login</a>}
       <a href="/about" class="hover:text-orange-500 transition">About</a>
       <a href="/contact" class="hover:text-orange-500 transition">Contact</a>
       <a href="/careers" class="hover:text-orange-500 transition">Careers</a>
@@ -104,6 +106,7 @@ import BrandMark from "./BrandMark.astro";
         }
       </ul>
       <div class="border-t border-slate-800 pt-4 space-y-3">
+        {portalUrl && <a href={portalUrl} class="block hover:text-orange-500 transition">Team Login</a>}
         <a href="/about" class="block hover:text-orange-500 transition">About</a>
         <a href="/contact" class="block hover:text-orange-500 transition">Contact</a>
         <a href="/careers" class="block hover:text-orange-500 transition">Careers</a>

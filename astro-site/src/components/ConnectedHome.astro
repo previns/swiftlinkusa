@@ -1,0 +1,35 @@
+---
+import { services } from '../data/services';
+import RouteNetwork from './RouteNetwork.astro';
+---
+<section class="connected-hero">
+ <div class="hero-grid" aria-hidden="true"></div>
+ <div class="connected-wrap hero-layout">
+  <div class="hero-copy"><p class="tech-label"><span class="signal"></span> Michigan roots. Nationwide reach.</p><h1>Freight,<br /><span>connected.</span></h1><p class="hero-description">Complex moves. Clear direction.<br />Freight solutions built around your business,<br />with people who keep it moving.</p><div class="hero-actions"><a href="/quote" class="tech-button">Plan your shipment ↗</a><a href="#solutions" class="quiet-link">Explore solutions ↓</a></div><p class="hero-footnote">A clear plan. A connected team. Your next move.</p></div>
+  <div class="network-panel"><RouteNetwork /><div class="network-caption"><span>THE CONNECTION BEHIND YOUR NEXT MOVE</span><button type="button" data-motion aria-pressed="false">Pause animation</button></div></div>
+ </div>
+ <div class="connected-wrap capability-strip"><span>Truckload &amp; LTL</span><span>Port &amp; drayage</span><span>Time-sensitive freight</span><span>Specialized transport</span></div>
+</section>
+<section id="solutions" class="connected-wrap solutions-section">
+ <div class="section-heading"><div><p class="tech-label">CONNECTED SOLUTIONS</p><h2>Different freight.<br />Same attention to detail.</h2></div><p>Select a service. Find the right starting point for your next shipment.</p></div>
+ <div class="solution-buttons" role="group" aria-label="Freight services">{services.map((s,i)=><button type="button" data-service={s.slug} data-name={s.name} data-blurb={s.blurb} aria-pressed={i===0?'true':'false'} aria-controls="service-detail"><i class={`fa-solid ${s.icon}`} aria-hidden="true"></i><span>{s.name}</span><span class="service-arrow">↗</span></button>)}</div>
+ <div id="service-detail" class="solution-detail" aria-live="polite"><div><p class="tech-label">BUILT AROUND YOUR SHIPMENT</p><h3 data-service-name>{services[0].name}</h3><p data-service-description>{services[0].blurb}</p><a href="/ftl" data-service-link class="quiet-link">Explore this service ↗</a></div><div class="service-visual" aria-hidden="true" data-mode="ftl"><span class="freight-point">PICKUP</span><div class="freight-line"><i class="fa-solid fa-truck" data-freight-icon></i></div><span class="freight-point">DELIVERY</span></div></div>
+</section>
+<section class="journey-section"><div class="connected-wrap"><div class="section-heading"><div><p class="tech-label">FROM FIRST CALL TO FINAL MILE</p><h2>A clear path forward.</h2></div><p>Freight has enough moving parts.<br />Working with your broker shouldn't.</p></div><div class="journey-grid">{[{title:'Tell us what’s moving.',text:'Share your route, freight details, and timing. We start by understanding the shipment.'},{title:'Build the right plan.',text:'Review equipment, available capacity, and pricing with our team.'},{title:'Keep it connected.',text:'Coordinate pickup, follow the move, and prepare for delivery with people you can reach.'}].map((step,i)=><article class="journey-step"><span class="journey-node">0{i+1}</span><h3>{step.title}</h3><p>{step.text}</p></article>)}</div></div></section>
+<section class="connected-wrap human-section"><div class="human-film"><video muted loop playsinline preload="none" aria-label="Freight transportation" data-film><source src="/videos/home-2.mp4" type="video/mp4" /></video><div class="film-shade"></div><span>REAL FREIGHT. REAL PEOPLE.</span></div><div><p class="tech-label">THE PEOPLE BEHIND THE PLAN</p><h2>Logistics is complex.<br />The relationship<br />shouldn't be.</h2><p>We're a Michigan-based freight brokerage connecting your business with transportation options across the contiguous United States. Tell us what matters to your shipment. We'll help work through the details.</p><a href="/about" class="quiet-link">Meet SwiftLink ↗</a></div></section>
+<section class="connected-wrap closing-section"><p class="tech-label">YOUR NEXT MOVE STARTS HERE</p><h2>Let's move<br /><span>forward.</span></h2><a href="/quote" class="tech-button">Plan your shipment ↗</a><a class="quiet-link" href="/contact">Talk to our team ↗</a></section>
+<script>
+ const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+ let paused = reduced.matches;
+ const motion = document.querySelector<HTMLButtonElement>('[data-motion]');
+ const film = document.querySelector<HTMLVideoElement>('[data-film]');
+ let filmVisible=false;
+ function updateMotion(){document.documentElement.classList.toggle('motion-paused',paused);if(motion){motion.textContent=paused?'Play animation':'Pause animation';motion.setAttribute('aria-pressed',String(paused));}if(film){if(paused||!filmVisible)film.pause();else film.play().catch(()=>{});}}
+ motion?.addEventListener('click',()=>{paused=!paused;updateMotion();});
+ reduced.addEventListener('change',()=>{paused=reduced.matches;updateMotion();});
+ if(film)new IntersectionObserver(entries=>{filmVisible=entries[0].isIntersecting;updateMotion();},{threshold:.1}).observe(film);
+ updateMotion();
+ const icons:Record<string,string>={ftl:'fa-truck',ltl:'fa-boxes-stacked',drayage:'fa-ship',expedited:'fa-bolt','heavy-haul':'fa-weight-hanging',hazmat:'fa-biohazard'};
+ document.querySelectorAll<HTMLButtonElement>('[data-service]').forEach(button=>button.addEventListener('click',()=>{document.querySelectorAll('[data-service]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));document.querySelector('[data-service-name]')!.textContent=button.dataset.name!;document.querySelector('[data-service-description]')!.textContent=button.dataset.blurb!;document.querySelector<HTMLAnchorElement>('[data-service-link]')!.href='/'+button.dataset.service;document.querySelector('[data-freight-icon]')!.className='fa-solid '+icons[button.dataset.service!];document.querySelector<HTMLElement>('.service-visual')!.dataset.mode=button.dataset.service;}));
+ const journeyObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('arrived');journeyObserver.unobserve(entry.target);}}),{threshold:.4});document.querySelectorAll('.journey-step').forEach(step=>journeyObserver.observe(step));
+</script>

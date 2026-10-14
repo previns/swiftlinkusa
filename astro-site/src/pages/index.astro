@@ -1,18 +1,9 @@
 ---
-// Home page — composes the cycling hero, trust bar, shipping process, services grid, and "why us" row.
+// Animated public homepage.
 import BaseLayout from "../layouts/BaseLayout.astro";
-import HeroCycling from "../components/HeroCycling.astro";
-import TrustBar from "../components/TrustBar.astro";
-import ShippingProcess from "../components/ShippingProcess.astro";
-import ServicesGrid from "../components/ServicesGrid.astro";
-import WhyUs from "../components/WhyUs.astro";
+import ConnectedHome from "../components/ConnectedHome.astro";
 import JsonLdLocalBusiness from "../components/JsonLdLocalBusiness.astro";
 
-const heroVideos = [
-  { src: "/videos/home-1.mp4", label: "Drayage operations" },
-  { src: "/videos/home-2.mp4", label: "Full truckload on the highway" },
-  { src: "/videos/home-3.mp4", label: "Less-than-truckload warehouse" },
-];
 ---
 
 <BaseLayout
@@ -22,10 +13,6 @@ const heroVideos = [
   canonicalPath="/"
   ogTitle="SwiftLink Logistics — 3PL Freight Brokerage | Ship with Confidence"
 >
-  <HeroCycling videos={heroVideos} />
-  <TrustBar />
-  <ShippingProcess />
-  <ServicesGrid />
-  <WhyUs />
+  <ConnectedHome />
   <JsonLdLocalBusiness slot="head" />
 </BaseLayout>

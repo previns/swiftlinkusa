@@ -1,4 +1,5 @@
 ---
+import InnerHero from "../components/InnerHero.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 
@@ -11,19 +12,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   ogDescription="Trusted Michigan-based 3PL freight broker with a vetted carrier network delivering nationwide across the contiguous United States."
 >
   <!-- HERO -->
-  <section class="relative bg-slate-900 py-28 text-center overflow-hidden">
-    <div class="hero-video-container" aria-hidden="true">
-      <video class="hero-video" autoplay muted loop playsinline preload="metadata">
-        <source src="/videos/about.mp4" type="video/mp4" />
-      </video>
-    </div>
-    <div class="hero-overlay" aria-hidden="true"></div>
-    <div class="relative z-10 max-w-4xl mx-auto px-6">
-      <p class="text-orange-500 font-semibold text-sm tracking-widest uppercase mb-4 fade-in">About Us</p>
-      <h1 class="text-5xl md:text-6xl font-extrabold tracking-tight leading-tight fade-in">About SwiftLink Logistics</h1>
-      <p class="mt-6 text-xl text-slate-300 max-w-2xl mx-auto fade-in">Your trusted partner for freight transportation across the continental United States.</p>
-    </div>
-  </section>
+  <InnerHero eyebrow="Our company" title="Connected by freight." accent="Driven by people." description="Michigan roots. Nationwide relationships. A freight brokerage built around the details that matter to your business." icon="fa-handshake" video="/videos/about.mp4" primaryHref="/contact" primaryLabel="Meet your logistics team" />
 
   <!-- OUR STORY -->
   <section class="py-24 bg-slate-950">
