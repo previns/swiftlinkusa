@@ -1,6 +1,7 @@
 ---
 import { services } from "../data/services";
 import BrandMark from "./BrandMark.astro";
+const portalUrl = import.meta.env.PUBLIC_PORTAL_URL || "https://app.swiftlinkusa.com/";
 
 const year = new Date().getFullYear();
 ---
@@ -27,6 +28,7 @@ const year = new Date().getFullYear();
             <li><a href="/about" class="hover:text-white">About Us</a></li>
             <li><a href="/careers" class="hover:text-white">Careers</a></li>
             <li><a href="/contact" class="hover:text-white">Contact</a></li>
+            <li><a href={portalUrl} class="hover:text-white">Employee Portal</a></li>
           </ul>
         </div>
         <div>
