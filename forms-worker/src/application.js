@@ -21,7 +21,6 @@ export const REQUIRED_TEXT = [
   "phys_address", "phys_city", "phys_state", "phys_zip",
   "ops_contact", "ops_phone", "ops_email",
   "ap_contact", "ap_phone", "ap_email",
-  ...[1, 2, 3, 4].flatMap((n) => [`ref${n}_company`, `ref${n}_contact`, `ref${n}_phone`]),
   "bank_name", "bank_phone",
   "sig_signature", "sig_print", "sig_title", "sig_email", "sig_phone",
 ];

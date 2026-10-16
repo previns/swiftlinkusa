@@ -96,7 +96,7 @@ const req = '<span class="text-orange-500" aria-hidden="true"> *</span>';
   ogTitle="Customer Application | SwiftLink Logistics"
   ogDescription="Open a shipping account with SwiftLink Logistics by completing our online customer application."
 >
-  <InnerHero eyebrow="Customer application" title="Open your account." accent="We’ll handle the rest." description="Complete our customer and credit application online. It takes about 10 minutes — have your EIN, four credit references, and a bank reference ready." icon="fa-file-signature" primaryHref="#applicationForm" primaryLabel="Start the application" />
+  <InnerHero eyebrow="Customer application" title="Open your account." accent="We’ll handle the rest." description="Complete our customer and credit application online. It takes about 10 minutes — have your EIN and a bank reference ready." icon="fa-file-signature" primaryHref="#applicationForm" primaryLabel="Start the application" />
 
   <div class="max-w-4xl mx-auto px-6 py-16">
     <div id="successCard" class="hidden success-card bg-slate-900 border border-orange-500/40 rounded-3xl p-12 text-center" role="status" aria-live="polite" tabindex="-1">
@@ -188,14 +188,14 @@ const req = '<span class="text-orange-500" aria-hidden="true"> *</span>';
       ))}
 
       <section class={sectionClass}>
-        <h2 class={headingClass}><i class="fa-solid fa-address-book text-orange-500" aria-hidden="true"></i>Credit references<span class="text-orange-500 normal-case tracking-normal font-normal">* four required</span></h2>
+        <h2 class={headingClass}><i class="fa-solid fa-address-book text-orange-500" aria-hidden="true"></i>Credit references<span class="text-slate-500 normal-case tracking-normal font-normal">optional</span></h2>
         <div class="space-y-6">
           {[1, 2, 3, 4].map((n) => (
             <fieldset class="grid grid-cols-1 sm:grid-cols-4 gap-3">
               <legend class="text-xs font-semibold text-orange-500 uppercase tracking-widest mb-2">Reference {n}</legend>
-              <div><label for={`ref${n}_company`} class="block text-xs text-slate-400 mb-1">Company name<Fragment set:html={req} /></label><input id={`ref${n}_company`} name={`ref${n}_company`} maxlength="100" required class="input-field" /></div>
-              <div><label for={`ref${n}_contact`} class="block text-xs text-slate-400 mb-1">Contact name<Fragment set:html={req} /></label><input id={`ref${n}_contact`} name={`ref${n}_contact`} maxlength="100" required class="input-field" /></div>
-              <div><label for={`ref${n}_phone`} class="block text-xs text-slate-400 mb-1">Phone<Fragment set:html={req} /></label><input id={`ref${n}_phone`} name={`ref${n}_phone`} type="tel" maxlength="25" required class="input-field" /></div>
+              <div><label for={`ref${n}_company`} class="block text-xs text-slate-400 mb-1">Company name</label><input id={`ref${n}_company`} name={`ref${n}_company`} maxlength="100" class="input-field" /></div>
+              <div><label for={`ref${n}_contact`} class="block text-xs text-slate-400 mb-1">Contact name</label><input id={`ref${n}_contact`} name={`ref${n}_contact`} maxlength="100" class="input-field" /></div>
+              <div><label for={`ref${n}_phone`} class="block text-xs text-slate-400 mb-1">Phone</label><input id={`ref${n}_phone`} name={`ref${n}_phone`} type="tel" maxlength="25" class="input-field" /></div>
               <div><label for={`ref${n}_email`} class="block text-xs text-slate-400 mb-1">Email</label><input id={`ref${n}_email`} name={`ref${n}_email`} type="email" maxlength="60" class="input-field" /></div>
             </fieldset>
           ))}

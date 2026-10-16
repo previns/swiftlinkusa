@@ -51,3 +51,10 @@ test("builds the Graph message with the PDF attached and replies going to the si
   assert.equal(Buffer.from(message.attachments[0].contentBytes, "base64").subarray(0, 5).toString(), "%PDF-");
   assert.match(message.body.content, /Federal Tax ID \/ EIN: Test federal_tax_id/);
 });
+
+test("credit references are optional", () => {
+  const blanks = Object.fromEntries([1, 2, 3, 4].flatMap((n) => ["company", "contact", "phone", "email"].map((k) => [`ref${n}_${k}`, ""])));
+  const { errors, data } = parseApplication(sample(blanks));
+  assert.equal(errors, undefined);
+  assert.equal(data.text.ref1_company, "");
+});
