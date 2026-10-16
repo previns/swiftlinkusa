@@ -1,0 +1,317 @@
+---
+import InnerHero from "../components/InnerHero.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+// Input names match the fillable fields in the PDF the forms worker completes
+// (forms-worker/src/customer-application.pdf); max lengths match the PDF too.
+type Field = { name: string; label: string; max: number; req?: boolean; type?: string; span: string; auto?: string; pattern?: string; mode?: string; title?: string };
+
+const span = { full: "sm:col-span-6", half: "sm:col-span-3", third: "sm:col-span-2", sixth: "sm:col-span-1" };
+const state = { max: 2, pattern: "[A-Za-z]{2}", title: "Two-letter state code, e.g. MI" };
+const zip = { max: 10, pattern: "\\d{5}(-\\d{4})?", mode: "numeric", title: "ZIP code, e.g. 48334" };
+
+const company: Field[] = [
+  { name: "company_name", label: "Company legal name", max: 100, req: true, span: span.half, auto: "organization" },
+  { name: "company_dba", label: "DBA (if any)", max: 100, span: span.half },
+  { name: "entity_type", label: "Entity type (LLC / Corp / Sole Prop)", max: 100, req: true, span: span.third },
+  { name: "federal_tax_id", label: "Federal Tax ID / EIN", max: 20, req: true, span: span.third },
+  { name: "company_phone", label: "Phone number", max: 25, req: true, type: "tel", span: span.third, auto: "tel" },
+  { name: "phys_address", label: "Physical address", max: 100, req: true, span: span.full, auto: "address-line1" },
+  { name: "phys_city", label: "City", max: 100, req: true, span: span.third, auto: "address-level2" },
+  { name: "phys_state", label: "State", req: true, span: span.sixth, auto: "address-level1", ...state },
+  { name: "phys_zip", label: "ZIP code", req: true, span: span.third, auto: "postal-code", ...zip },
+];
+const billing: Field[] = [
+  { name: "bill_address", label: "Billing address", max: 100, span: span.full },
+  { name: "bill_city", label: "City", max: 100, span: span.third },
+  { name: "bill_state", label: "State", span: span.sixth, ...state },
+  { name: "bill_zip", label: "ZIP code", span: span.third, ...zip },
+];
+const classification: Field[] = [
+  { name: "year_started", label: "Year business started", max: 4, span: span.third, pattern: "\\d{4}", mode: "numeric", title: "Four-digit year, e.g. 2015" },
+  { name: "duns", label: "D&B / DUNS number", max: 100, span: span.third },
+  { name: "payment_terms", label: "Requested payment terms", max: 100, span: span.third },
+  { name: "weekly_volume", label: "Avg. weekly shipment volume", max: 100, span: span.full },
+];
+const operations: Field[] = [
+  { name: "ops_contact", label: "Operations contact", max: 100, req: true, span: span.half },
+  { name: "ops_email", label: "Operations email", max: 60, req: true, type: "email", span: span.half },
+  { name: "ops_phone", label: "Operations phone", max: 25, req: true, type: "tel", span: span.half },
+  { name: "ops_afterhours", label: "After-hours / emergency phone", max: 25, type: "tel", span: span.half },
+];
+const payable: Field[] = [
+  { name: "ap_contact", label: "Accounts payable contact", max: 100, req: true, span: span.half },
+  { name: "ap_email", label: "Accounts payable email", max: 60, req: true, type: "email", span: span.half },
+  { name: "ap_phone", label: "Accounts payable phone", max: 25, req: true, type: "tel", span: span.half },
+  { name: "billing_portal", label: "Billing portal (name / URL / vendor ID)", max: 100, span: span.half },
+];
+const bank: Field[] = [
+  { name: "bank_name", label: "Bank name", max: 100, req: true, span: span.third },
+  { name: "bank_contact", label: "Bank contact / officer", max: 100, span: span.third },
+  { name: "bank_phone", label: "Bank phone", max: 25, req: true, type: "tel", span: span.third },
+];
+const signer: Field[] = [
+  { name: "sig_print", label: "Printed name", max: 100, req: true, span: span.half, auto: "name" },
+  { name: "sig_title", label: "Title", max: 100, req: true, span: span.half, auto: "organization-title" },
+  { name: "sig_email", label: "Email", max: 60, req: true, type: "email", span: span.half, auto: "email" },
+  { name: "sig_phone", label: "Phone", max: 25, req: true, type: "tel", span: span.half, auto: "tel" },
+  { name: "sig_signature", label: "Signature (type your full legal name to sign)", max: 100, req: true, span: span.full },
+];
+
+const services = [["svc_ftl", "Full Truckload"], ["svc_ltl", "LTL"], ["svc_drayage", "Drayage"], ["svc_heavyhaul", "Heavy Haul"], ["svc_expedited", "Expedited"], ["svc_hazmat", "Hazmat"]];
+const loadValues = [["val_50", "$0 – $50k"], ["val_100", "$51k – $100k"], ["val_250", "$101k – $250k"], ["val_500", "$251k – $500k"], ["val_501", "$501k+"]];
+const questions = [
+  ["q_edi", "Do you require EDI transmission?", [["q_edi_yes", "Yes"], ["q_edi_no", "No"]]],
+  ["q_invoice", "How do you prefer your invoice communications?", [["q_invoice_email", "Email"], ["q_invoice_fax", "Fax"]]],
+  ["q_po", "Do you require your PO # on your invoices?", [["q_po_yes", "Yes"], ["q_po_no", "No"]]],
+  ["q_ratecon", "Do you require a copy of your Rate Con with the Freight Bill?", [["q_ratecon_yes", "Yes"], ["q_ratecon_no", "No"]]],
+  ["q_pallet", "Are your loads pallet exchanges?", [["q_pallet_yes", "Yes"], ["q_pallet_no", "No"]]],
+  ["q_lumpers", "Does your company pay for lumpers?", [["q_lumpers_yes", "Yes"], ["q_lumpers_no", "No"]]],
+] as const;
+const terms = [
+  "Applicant hereby certifies that he/she is authorized to represent the above-named company.",
+  "Applicant hereby certifies that the information furnished in this application is true and correct.",
+  "Invoice / billing date terms are NET 30 unless other terms are approved in writing by SwiftLink Logistics, LLC.",
+  "Applicant affirms that there are no open judgments, suits, or liens against their company.",
+  "Applicant affirms that the financial condition of the business is satisfactory and all financial obligations can be met.",
+  "Applicant understands that a finance charge of 1.5% per month (18% per annum) will be added to all accounts thirty (30) days or more past due.",
+  "If SwiftLink Logistics LLC deems it necessary to use the services of a collection agency or attorney to collect any amounts due, Applicant agrees to pay all collection costs, attorney fees, and court costs.",
+  "Applicant understands that SwiftLink Logistics LLC may report payment experiences to credit reporting agencies.",
+  "By signing this credit application, authorization is hereby given to SwiftLink Logistics LLC to contact any or all credit and bank references provided.",
+  "Applicant understands that motor carriers under contract with SwiftLink Logistics LLC are required to maintain cargo loss and damage liability insurance in the amount of $100,000 per shipment. By signing below, Applicant acknowledges that loads valued at more than $100,000 will not be tendered without sufficient prior written notification to SwiftLink Logistics LLC to allow SwiftLink Logistics LLC and its carriers the opportunity to arrange for increased insurance limits. Failure to provide timely written notice will result in loads not being insured to the extent the value exceeds $100,000.",
+  "SwiftLink Logistics LLC reserves the right to establish and modify the Applicant’s credit limit at any time based on credit review and payment history.",
+];
+
+const sectionClass = "fade-in bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8";
+const headingClass = "flex items-center gap-2 text-sm font-semibold text-slate-300 uppercase tracking-widest mb-5";
+const optionClass = "flex items-center gap-3 border border-slate-700 hover:border-orange-500 rounded-2xl px-4 py-3 text-sm cursor-pointer transition has-[:checked]:border-orange-500 has-[:checked]:bg-orange-500/10";
+const req = '<span class="text-orange-500" aria-hidden="true"> *</span>';
+---
+
+<BaseLayout
+  title="Customer Application • SwiftLink Logistics"
+  description="Apply for a SwiftLink Logistics customer account online. Complete the credit application and our team will review it and follow up."
+  keywords="SwiftLink customer application, freight credit application, shipper account setup"
+  canonicalPath="/customer-application"
+  ogTitle="Customer Application | SwiftLink Logistics"
+  ogDescription="Open a shipping account with SwiftLink Logistics by completing our online customer application."
+>
+  <InnerHero eyebrow="Customer application" title="Open your account." accent="We’ll handle the rest." description="Complete our customer and credit application online. It takes about 10 minutes — have your EIN, four credit references, and a bank reference ready." icon="fa-file-signature" primaryHref="#applicationForm" primaryLabel="Start the application" />
+
+  <div class="max-w-4xl mx-auto px-6 py-16">
+    <div id="successCard" class="hidden success-card bg-slate-900 border border-orange-500/40 rounded-3xl p-12 text-center" role="status" aria-live="polite" tabindex="-1">
+      <div class="w-20 h-20 bg-orange-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
+        <i class="fa-solid fa-circle-check text-4xl text-orange-500" aria-hidden="true"></i>
+      </div>
+      <h2 class="text-3xl font-bold mb-3">Application received</h2>
+      <p class="text-slate-400 text-lg mb-10">Thank you. Our team will review your application and contact you about next steps.</p>
+      <a href="/" class="bg-orange-500 hover:bg-orange-600 px-8 py-3.5 rounded-2xl font-semibold transition">Back to Home</a>
+    </div>
+
+    <form id="applicationForm" class="space-y-8" data-no-jumps>
+      <p class="text-slate-400 text-sm">
+        Fields marked <span class="text-orange-500">*</span> are required. Prefer paper?
+        <a href="/customer-application.pdf" class="text-orange-500 hover:text-orange-400 underline">Download the PDF application</a> and email it to
+        <a href="mailto:info@swiftlinkusa.com" class="text-orange-500 hover:text-orange-400 underline">info@swiftlinkusa.com</a>.
+      </p>
+
+      <!-- Bots fill this in; people never see it. -->
+      <div class="absolute -left-[9999px]" aria-hidden="true">
+        <label for="website">Website</label><input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
+      </div>
+
+      {[
+        ["Company information", "fa-building", company],
+        ["Billing address — leave blank if same as physical", "fa-file-invoice", billing],
+        ["Company classification", "fa-chart-simple", classification],
+      ].map(([title, icon, fields]) => (
+        <section class={sectionClass}>
+          <h2 class={headingClass}><i class={`fa-solid ${icon} text-orange-500`} aria-hidden="true"></i>{title}</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-6 gap-4">
+            {(fields as Field[]).map((f) => (
+              <div class={f.span}>
+                <label for={f.name} class="block text-sm font-medium mb-2">{f.label}<Fragment set:html={f.req ? req : ""} /></label>
+                <input id={f.name} name={f.name} type={f.type ?? "text"} maxlength={f.max} required={f.req} autocomplete={f.auto ?? "off"} pattern={f.pattern} inputmode={f.mode} title={f.title} class="input-field" />
+              </div>
+            ))}
+          </div>
+        </section>
+      ))}
+
+      <section class={sectionClass}>
+        <h2 class={headingClass}><i class="fa-solid fa-truck text-orange-500" aria-hidden="true"></i>Services required<span class="text-orange-500 normal-case tracking-normal font-normal">* check all that apply</span></h2>
+        <fieldset id="servicesGroup" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          <legend class="sr-only">Services required</legend>
+          {services.map(([name, label]) => (
+            <label class={optionClass}><input type="checkbox" name={name} class="accent-orange-500 w-4 h-4" />{label}</label>
+          ))}
+        </fieldset>
+        <p id="servicesError" class="field-error" role="alert">Select at least one service.</p>
+
+        <h2 class={`${headingClass} mt-8`}><i class="fa-solid fa-sack-dollar text-orange-500" aria-hidden="true"></i>Estimated maximum load value<span class="text-orange-500" aria-hidden="true">*</span></h2>
+        <fieldset class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+          <legend class="sr-only">Estimated maximum load value</legend>
+          {loadValues.map(([value, label]) => (
+            <label class={optionClass}><input type="radio" name="load_value" value={value} required class="accent-orange-500 w-4 h-4" />{label}</label>
+          ))}
+        </fieldset>
+      </section>
+
+      {[
+        ["Shipping / operations contact", "fa-headset", operations],
+        ["Accounts payable", "fa-money-check-dollar", payable],
+      ].map(([title, icon, fields]) => (
+        <section class={sectionClass}>
+          <h2 class={headingClass}><i class={`fa-solid ${icon} text-orange-500`} aria-hidden="true"></i>{title}</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-6 gap-4">
+            {(fields as Field[]).map((f) => (
+              <div class={f.span}>
+                <label for={f.name} class="block text-sm font-medium mb-2">{f.label}<Fragment set:html={f.req ? req : ""} /></label>
+                <input id={f.name} name={f.name} type={f.type ?? "text"} maxlength={f.max} required={f.req} autocomplete="off" class="input-field" />
+              </div>
+            ))}
+          </div>
+          {title === "Accounts payable" && (
+            <>
+              <h3 class="text-sm font-medium mt-6 mb-3">Desired payment method</h3>
+              <div class="grid grid-cols-1 sm:grid-cols-6 gap-3 items-center">
+                <label class={`${optionClass} sm:col-span-1`}><input type="checkbox" name="pay_check" class="accent-orange-500 w-4 h-4" />Check</label>
+                <label class={`${optionClass} sm:col-span-2`}><input type="checkbox" name="pay_ach" class="accent-orange-500 w-4 h-4" />ACH / Wire</label>
+                <label class={`${optionClass} sm:col-span-1`}><input type="checkbox" name="pay_other" class="accent-orange-500 w-4 h-4" />Other</label>
+                <label for="pay_other_detail" class="sr-only">Other payment method</label>
+                <input id="pay_other_detail" name="pay_other_detail" maxlength="100" placeholder="Other method" class="input-field sm:col-span-2" />
+              </div>
+              <p class="text-slate-500 text-xs mt-3 italic">Please note: all ACH/Wire payments must include Customer’s name and invoice number.</p>
+            </>
+          )}
+        </section>
+      ))}
+
+      <section class={sectionClass}>
+        <h2 class={headingClass}><i class="fa-solid fa-address-book text-orange-500" aria-hidden="true"></i>Credit references<span class="text-orange-500 normal-case tracking-normal font-normal">* four required</span></h2>
+        <div class="space-y-6">
+          {[1, 2, 3, 4].map((n) => (
+            <fieldset class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+              <legend class="text-xs font-semibold text-orange-500 uppercase tracking-widest mb-2">Reference {n}</legend>
+              <div><label for={`ref${n}_company`} class="block text-xs text-slate-400 mb-1">Company name<Fragment set:html={req} /></label><input id={`ref${n}_company`} name={`ref${n}_company`} maxlength="100" required class="input-field" /></div>
+              <div><label for={`ref${n}_contact`} class="block text-xs text-slate-400 mb-1">Contact name<Fragment set:html={req} /></label><input id={`ref${n}_contact`} name={`ref${n}_contact`} maxlength="100" required class="input-field" /></div>
+              <div><label for={`ref${n}_phone`} class="block text-xs text-slate-400 mb-1">Phone<Fragment set:html={req} /></label><input id={`ref${n}_phone`} name={`ref${n}_phone`} type="tel" maxlength="25" required class="input-field" /></div>
+              <div><label for={`ref${n}_email`} class="block text-xs text-slate-400 mb-1">Email</label><input id={`ref${n}_email`} name={`ref${n}_email`} type="email" maxlength="60" class="input-field" /></div>
+            </fieldset>
+          ))}
+        </div>
+
+        <h2 class={`${headingClass} mt-10`}><i class="fa-solid fa-building-columns text-orange-500" aria-hidden="true"></i>Bank reference<span class="text-orange-500" aria-hidden="true">*</span></h2>
+        <div class="grid grid-cols-1 sm:grid-cols-6 gap-4">
+          {bank.map((f) => (
+            <div class={f.span}>
+              <label for={f.name} class="block text-sm font-medium mb-2">{f.label}<Fragment set:html={f.req ? req : ""} /></label>
+              <input id={f.name} name={f.name} type={f.type ?? "text"} maxlength={f.max} required={f.req} autocomplete="off" class="input-field" />
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section class={sectionClass}>
+        <h2 class={headingClass}><i class="fa-solid fa-clipboard-question text-orange-500" aria-hidden="true"></i>Questionnaire</h2>
+        <div class="divide-y divide-slate-800">
+          {questions.map(([group, question, options]) => (
+            <fieldset class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 py-4">
+              <legend class="sr-only">{question}</legend>
+              <span class="text-sm" aria-hidden="true">{question}</span>
+              <div class="flex gap-3">
+                {options.map(([value, label]) => (
+                  <label class={`${optionClass} py-2`}><input type="radio" name={group} value={value} class="accent-orange-500 w-4 h-4" />{label}</label>
+                ))}
+              </div>
+            </fieldset>
+          ))}
+        </div>
+      </section>
+
+      <section class={sectionClass}>
+        <h2 class={headingClass}><i class="fa-solid fa-scale-balanced text-orange-500" aria-hidden="true"></i>Terms and conditions</h2>
+        <ol class="list-decimal pl-5 space-y-2 text-sm text-slate-300 leading-relaxed max-h-80 overflow-y-auto pr-3 border border-slate-800 rounded-2xl py-4 bg-slate-950/40">
+          {terms.map((t) => <li>{t}</li>)}
+        </ol>
+        <label class="flex items-start gap-3 mt-5 text-sm font-semibold cursor-pointer">
+          <input type="checkbox" name="terms_agree" required class="accent-orange-500 w-5 h-5 mt-0.5" />
+          <span>I have read and agree to the Terms and Conditions.<span class="text-orange-500" aria-hidden="true"> *</span></span>
+        </label>
+
+        <h2 class={`${headingClass} mt-10`}><i class="fa-solid fa-signature text-orange-500" aria-hidden="true"></i>Authorized company representative</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-6 gap-4">
+          {signer.map((f) => (
+            <div class={f.span}>
+              <label for={f.name} class="block text-sm font-medium mb-2">{f.label}<Fragment set:html={f.req ? req : ""} /></label>
+              <input id={f.name} name={f.name} type={f.type ?? "text"} maxlength={f.max} required={f.req} autocomplete={f.auto ?? "off"} class="input-field" />
+            </div>
+          ))}
+        </div>
+        <p class="text-slate-500 text-xs mt-3">Today’s date is added automatically when you submit.</p>
+      </section>
+
+      <div id="errorBanner" class="hidden bg-red-500/10 border border-red-500/40 text-red-300 rounded-2xl px-5 py-4 text-sm" role="alert"></div>
+
+      <button id="submitBtn" type="submit" class="w-full flex items-center justify-center gap-3 bg-orange-500 hover:bg-orange-600 px-8 py-4 rounded-2xl font-semibold text-lg transition">
+        <i id="submitIcon" class="fa-solid fa-paper-plane" aria-hidden="true"></i>
+        <span id="submitText">Submit Application</span>
+      </button>
+    </form>
+  </div>
+</BaseLayout>
+
+<script>
+  const ENDPOINT = "https://forms.swiftlinkusa.com/customer-application";
+  const FALLBACK = "We couldn’t send your application. Please try again, or email info@swiftlinkusa.com.";
+
+  const form = document.getElementById("applicationForm") as HTMLFormElement;
+  const success = document.getElementById("successCard") as HTMLElement;
+  const banner = document.getElementById("errorBanner") as HTMLElement;
+  const button = document.getElementById("submitBtn") as HTMLButtonElement;
+  const icon = document.getElementById("submitIcon") as HTMLElement;
+  const text = document.getElementById("submitText") as HTMLElement;
+  const services = [...document.querySelectorAll<HTMLInputElement>("#servicesGroup input")];
+  const servicesError = document.getElementById("servicesError") as HTMLElement;
+
+  // "Check all that apply" needs at least one box; native validation can't express that.
+  const checkServices = () => {
+    const ok = services.some((s) => s.checked);
+    services[0].setCustomValidity(ok ? "" : "Select at least one service.");
+    servicesError.classList.toggle("show", !ok);
+    return ok;
+  };
+  services.forEach((s) => s.addEventListener("change", checkServices));
+  form.querySelectorAll<HTMLInputElement>("[name$='_state']").forEach((el) => el.addEventListener("input", () => (el.value = el.value.toUpperCase())));
+
+  function setSending(sending: boolean) {
+    button.disabled = sending;
+    button.classList.toggle("btn-loading", sending);
+    icon.className = sending ? "fa-solid fa-spinner fa-spin" : "fa-solid fa-paper-plane";
+    text.textContent = sending ? "Sending..." : "Submit Application";
+  }
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    banner.classList.add("hidden");
+    checkServices();
+    if (!form.reportValidity()) return;
+
+    setSending(true);
+    try {
+      const res = await fetch(ENDPOINT, { method: "POST", body: new FormData(form) });
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(body.error || FALLBACK);
+      form.classList.add("hidden");
+      success.classList.remove("hidden");
+      success.focus();
+      window.scrollTo({ top: success.offsetTop - 120, behavior: "smooth" });
+    } catch (error) {
+      // A TypeError means the request never reached the server (offline, blocked).
+      banner.textContent = error instanceof Error && !(error instanceof TypeError) ? error.message : FALLBACK;
+      banner.classList.remove("hidden");
+      banner.scrollIntoView({ behavior: "smooth", block: "center" });
+      setSending(false);
+    }
+  });
+</script>

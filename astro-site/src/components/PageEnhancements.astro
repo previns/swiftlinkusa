@@ -3,7 +3,7 @@
  const main=document.querySelector('main')!;
  if(location.pathname!=='/'){
   const nav=document.querySelector<HTMLElement>('.page-jumps')!;const links=nav.querySelector('[data-page-jumps]')!;
-  Array.from(main.querySelectorAll<HTMLElement>('h2')).filter(h=>!h.closest('#successCard,[role="dialog"],.fixed')).slice(0,7).forEach((heading,i)=>{if(!heading.id)heading.id='page-section-'+i;const a=document.createElement('a');a.href='#'+heading.id;a.textContent=heading.textContent;links.append(a);});
+  Array.from(main.querySelectorAll<HTMLElement>('h2')).filter(h=>!h.closest('#successCard,[role="dialog"],.fixed,[data-no-jumps]')).slice(0,7).forEach((heading,i)=>{if(!heading.id)heading.id='page-section-'+i;const a=document.createElement('a');a.href='#'+heading.id;a.textContent=heading.textContent;links.append(a);});
   if(links.children.length){nav.hidden=false;const anchor=main.querySelector('#page-content');if(anchor)anchor.after(nav);else main.prepend(nav);}
   main.querySelectorAll('section').forEach(section=>{if(section.querySelector('h2')&&!section.classList.contains('inner-hero'))section.classList.add('editorial-section');});
  }

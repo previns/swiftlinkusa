@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "swiftlink-forms",
+  "main": "src/index.js",
+  "compatibility_date": "2026-09-01",
+  "routes": [{ "pattern": "forms.swiftlinkusa.com", "custom_domain": true }],
+  "rules": [{ "type": "Data", "globs": ["**/*.pdf"], "fallthrough": false }],
+  // MS_TENANT_ID, MS_CLIENT_ID and MS_CLIENT_SECRET are Worker secrets (wrangler secret put).
+  "vars": {
+    "SENDER_ADDRESS": "info@swiftlinkusa.com",
+    "TO_ADDRESS": "info@swiftlinkusa.com"
+  },
+  "observability": { "enabled": true }
+}
