@@ -62,7 +62,6 @@ const portalUrl = import.meta.env.PUBLIC_PORTAL_URL || "https://app.swiftlinkusa
         </div>
       </div>
 
-      {portalUrl && <a href={portalUrl} class="hover:text-orange-500 transition">Team Login</a>}
       <a href="/about" class="hover:text-orange-500 transition">About</a>
       <a href="/contact" class="hover:text-orange-500 transition">Contact</a>
       <a href="/careers" class="hover:text-orange-500 transition">Careers</a>
@@ -81,12 +80,22 @@ const portalUrl = import.meta.env.PUBLIC_PORTAL_URL || "https://app.swiftlinkusa
       <i class="fa-solid fa-bars" aria-hidden="true"></i>
     </button>
 
-    <a
-      href="/quote"
-      class="hidden lg:inline-flex bg-orange-500 hover:bg-orange-600 px-5 py-2.5 rounded-2xl font-semibold text-sm transition"
-    >
-      Request a Quote
-    </a>
+    <div class="hidden lg:flex items-center gap-3">
+      {portalUrl && (
+        <a
+          href={portalUrl}
+          class="inline-flex border border-slate-600 hover:border-orange-500 hover:text-orange-500 px-5 py-2.5 rounded-2xl font-semibold text-sm transition"
+        >
+          Sign in
+        </a>
+      )}
+      <a
+        href="/quote"
+        class="inline-flex bg-orange-500 hover:bg-orange-600 px-5 py-2.5 rounded-2xl font-semibold text-sm transition"
+      >
+        Request a Quote
+      </a>
+    </div>
   </div>
 
   <!-- Mobile menu drawer -->
@@ -106,18 +115,27 @@ const portalUrl = import.meta.env.PUBLIC_PORTAL_URL || "https://app.swiftlinkusa
         }
       </ul>
       <div class="border-t border-slate-800 pt-4 space-y-3">
-        {portalUrl && <a href={portalUrl} class="block hover:text-orange-500 transition">Team Login</a>}
         <a href="/about" class="block hover:text-orange-500 transition">About</a>
         <a href="/contact" class="block hover:text-orange-500 transition">Contact</a>
         <a href="/careers" class="block hover:text-orange-500 transition">Careers</a>
         <a href="/faq" class="block hover:text-orange-500 transition">FAQ</a>
       </div>
-      <a
-        href="/quote"
-        class="block text-center bg-orange-500 hover:bg-orange-600 px-6 py-3 rounded-2xl font-semibold transition"
-      >
-        Request a Quote
-      </a>
+      <div class="flex gap-3">
+        {portalUrl && (
+          <a
+            href={portalUrl}
+            class="flex-1 text-center border border-slate-600 hover:border-orange-500 hover:text-orange-500 px-6 py-3 rounded-2xl font-semibold transition"
+          >
+            Sign in
+          </a>
+        )}
+        <a
+          href="/quote"
+          class="flex-1 text-center bg-orange-500 hover:bg-orange-600 px-6 py-3 rounded-2xl font-semibold transition"
+        >
+          Request a Quote
+        </a>
+      </div>
     </div>
   </div>
 </nav>
