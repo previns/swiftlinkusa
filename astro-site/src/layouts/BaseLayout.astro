@@ -1,7 +1,9 @@
 ---
 import "../styles/global.css";
 import "../styles/interior.css";
+import "../styles/effects.css";
 import PageEnhancements from "../components/PageEnhancements.astro";
+import Effects from "../components/Effects.astro";
 import SeoHead from "../components/SeoHead.astro";
 import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
@@ -49,6 +51,7 @@ const { title, description, canonicalPath, keywords, ogTitle, ogDescription, ogI
     </main>
 
     <Footer />
+    <Effects />
 
     <script>
       // Give decorative video a pause control and respect reduced-motion settings.

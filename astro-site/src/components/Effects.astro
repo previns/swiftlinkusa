@@ -1,0 +1,91 @@
+---
+/**
+ * Site-wide visual effects: scroll progress bar, staggered scroll reveals and the cursor
+ * spotlight on cards. Styles live in styles/effects.css. Targets are picked by selector so
+ * pages need no markup changes. Content that is already on screen when this runs is never
+ * hidden (no flicker), and nothing is hidden at all for reduced-motion visitors or browsers
+ * without IntersectionObserver.
+ */
+---
+
+<script>
+  const root = document.documentElement;
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // Scroll progress.
+  const bar = document.createElement("div");
+  bar.className = "fx-progress";
+  bar.setAttribute("aria-hidden", "true");
+  document.body.append(bar);
+  let ticking = false;
+  const progress = () => {
+    ticking = false;
+    const max = root.scrollHeight - innerHeight;
+    bar.style.transform = `scaleX(${max > 0 ? Math.min(1, scrollY / max) : 0})`;
+  };
+  addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(progress); } }, { passive: true });
+  progress();
+
+  // Cards that get the spotlight (and reveal).
+  const CARDS = [
+    ".editorial-section .grid > div.border", ".solution-buttons > button", ".solution-detail", ".journey-step",
+    ".human-film", ".faq-item", "main .rounded-3xl.border:not(input,select,textarea)", "main .rounded-2xl.border:not(input,select,textarea)",
+  ].join(",");
+  // Other blocks that reveal on scroll.
+  const BLOCKS = [
+    "main h2", ".section-heading", ".editorial-section .text-center:has(h2)", ".editorial-section .grid > *",
+    ".human-section > *", ".closing-section > *", "footer .grid > *", "footer .flex > div",
+  ].join(",");
+  const SKIP = ".connected-hero, .inner-hero, form, [data-no-fx], .page-jumps, .fixed";
+
+  if (!reduce && "IntersectionObserver" in window) {
+    const seen = new Set<HTMLElement>();
+    const targets = Array.from(document.querySelectorAll<HTMLElement>(`${CARDS},${BLOCKS}`)).filter((el) => {
+      if (el.closest(SKIP) || seen.has(el)) return false;
+      // Skip children of something that is itself revealed, so blocks don't animate twice.
+      for (let p = el.parentElement; p; p = p.parentElement) if (seen.has(p)) return false;
+      seen.add(el);
+      return true;
+    });
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const el = entry.target as HTMLElement;
+        el.classList.add("fx-in");
+        observer.unobserve(el);
+        // Once settled, drop the reveal classes so the element's own hover transforms work again.
+        el.addEventListener("transitionend", function done(e) {
+          if (e.target !== el || e.propertyName !== "opacity") return;
+          el.removeEventListener("transitionend", done);
+          el.classList.remove("fx-reveal", "fx-in");
+        });
+      });
+    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
+    const order = new Map<Element, number>();
+    targets.forEach((el) => {
+      if (el.getBoundingClientRect().top < innerHeight) return; // already visible: leave it alone
+      const i = order.get(el.parentElement!) ?? 0;
+      order.set(el.parentElement!, i + 1);
+      el.style.setProperty("--fx-i", String(Math.min(i, 6)));
+      el.classList.add("fx-reveal");
+      observer.observe(el);
+    });
+    root.classList.add("fx");
+  }
+
+  // Spotlight follows the cursor on hover-capable devices.
+  if (matchMedia("(hover: hover)").matches) {
+    document.querySelectorAll<HTMLElement>(CARDS).forEach((el) => {
+      if (el.closest(".connected-hero, .inner-hero")) return;
+      if (getComputedStyle(el).position === "static") el.style.position = "relative";
+      el.classList.add("fx-spot");
+    });
+    document.addEventListener("pointermove", (event) => {
+      const card = (event.target as Element).closest<HTMLElement>(".fx-spot");
+      if (!card) return;
+      const r = card.getBoundingClientRect();
+      card.style.setProperty("--mx", `${event.clientX - r.left}px`);
+      card.style.setProperty("--my", `${event.clientY - r.top}px`);
+    }, { passive: true });
+  }
+</script>

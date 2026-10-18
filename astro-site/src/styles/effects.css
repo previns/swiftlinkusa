@@ -1,0 +1,81 @@
+/* ───────────────────────────────────────────────────────────────
+   Site-wide visual effects (see components/Effects.astro).
+   Everything here is decoration: content is only ever hidden after
+   the effects script has started (html.fx), and reduced-motion
+   visitors get none of the movement (global.css also neutralises
+   animations for them).
+   ─────────────────────────────────────────────────────────────── */
+
+/* Scroll progress — thin gold line above the sticky nav. */
+.fx-progress {
+  position: fixed; inset: 0 0 auto 0; height: 2px; z-index: 60;
+  background: linear-gradient(90deg, #8a6d14, #c9a227 55%, #f3dc85);
+  box-shadow: 0 0 10px #c9a22780;
+  transform: scaleX(0); transform-origin: left; pointer-events: none;
+}
+
+/* Scroll reveal — staggered by --fx-i (set per sibling group). */
+html.fx .fx-reveal {
+  opacity: 0; transform: translateY(26px) scale(.985);
+  transition: opacity .75s cubic-bezier(.2,.7,.2,1), transform .75s cubic-bezier(.2,.7,.2,1);
+  transition-delay: calc(var(--fx-i, 0) * 85ms);
+}
+html.fx .fx-reveal.fx-in { opacity: 1; transform: none; }
+/* Icons inside revealed blocks pop in just after their card. */
+html.fx .fx-reveal .fa-solid {
+  transition: transform .6s cubic-bezier(.34,1.56,.64,1);
+  transition-delay: calc(var(--fx-i, 0) * 85ms + 220ms);
+}
+html.fx .fx-reveal:not(.fx-in) .fa-solid { transform: scale(.35) rotate(-14deg); }
+
+/* Cursor spotlight on cards. */
+.fx-spot { isolation: isolate; } /* position set by the script only when static */
+.fx-spot::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: 1;
+  background: radial-gradient(380px circle at var(--mx, 50%) var(--my, 50%), #c9a22722, transparent 48%);
+  opacity: 0; transition: opacity .35s;
+}
+.fx-spot:hover::after { opacity: 1; }
+.fx-spot:hover { border-color: #c9a22766 !important; }
+
+/* Slow light sweep across the gold words in big headlines. */
+.connected-hero h1 span, .inner-hero h1 span, .closing-section h2 span {
+  background: linear-gradient(110deg, #c9a227 0%, #c9a227 42%, #f7e8a6 50%, #c9a227 58%, #c9a227 100%);
+  background-size: 260% 100%; background-position: 100% 0;
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  animation: fx-sheen 7s ease-in-out 1.2s infinite;
+}
+@keyframes fx-sheen { 0%, 55% { background-position: 100% 0; } 100% { background-position: 0 0; } }
+
+/* Shine sweep on gold buttons. */
+.tech-button, a.bg-orange-500, button.bg-orange-500 { position: relative; overflow: hidden; isolation: isolate; }
+.tech-button::before, a.bg-orange-500::before, button.bg-orange-500::before {
+  content: ""; position: absolute; inset: -2px auto -2px -60%; width: 45%; z-index: -1; pointer-events: none;
+  background: linear-gradient(100deg, transparent, #ffffff55, transparent);
+  transform: skewX(-18deg); transition: left .7s ease;
+}
+.tech-button:hover::before, a.bg-orange-500:hover::before, button.bg-orange-500:hover::before { left: 120%; }
+
+/* "Freight pulse" travelling down the gold rule beside interior section headings. */
+.editorial-section .text-center:has(h2) { position: relative; }
+.editorial-section .text-center:has(h2)::before {
+  content: ""; position: absolute; left: -4.5px; top: 0; width: 7px; height: 7px; border-radius: 50%;
+  background: #f3dc85; box-shadow: 0 0 0 3px #c9a22733, 0 0 14px #c9a227;
+  animation: fx-pulse-down 3.6s cubic-bezier(.45,0,.25,1) infinite;
+}
+@keyframes fx-pulse-down {
+  0% { top: 0; opacity: 0; } 12% { opacity: 1; } 80% { opacity: 1; } 100% { top: calc(100% - 7px); opacity: 0; }
+}
+
+/* Footer links: gold underline draws in on hover. */
+footer a:not(:has(svg)) {
+  background: linear-gradient(#c9a227, #c9a227) 0 100% / 0 1px no-repeat;
+  transition: background-size .3s ease, color .2s;
+}
+footer a:not(:has(svg)):hover { background-size: 100% 1px; }
+
+@media (prefers-reduced-motion: reduce) {
+  html.fx .fx-reveal, html.fx .fx-reveal .fa-solid { opacity: 1 !important; transform: none !important; }
+  .editorial-section .text-center:has(h2)::before { display: none; }
+  .fx-progress { display: none; }
+}
