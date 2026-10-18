@@ -24,7 +24,7 @@
      loaded in SeoHead: Big Shoulders Display for the condensed display face,
      Inter for the humanist body face. Anyone who has the real fonts locally
      (e.g. the brand owner on Windows) gets them first. */
-  --font-brand: "Agency FB", "Big Shoulders Display", "Oswald", "Arial Narrow", sans-serif;
+  --font-brand: "Agency FB", "Oswald", "Arial Narrow", sans-serif;
   --font-brand-body: "Aptos", "Inter", "Segoe UI", system-ui, sans-serif;
 
   /* Navy surface + text ramp (was slate) */
