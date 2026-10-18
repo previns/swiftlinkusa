@@ -32,11 +32,30 @@ html.fx .fx-reveal:not(.fx-in) .fa-solid { transform: scale(.35) rotate(-14deg);
 .fx-spot { isolation: isolate; } /* position set by the script only when static */
 .fx-spot::after {
   content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: 1;
-  background: radial-gradient(380px circle at var(--mx, 50%) var(--my, 50%), #c9a22722, transparent 48%);
+  background: radial-gradient(300px circle at var(--mx, 50%) var(--my, 50%), #c9a2270d, transparent 50%);
   opacity: 0; transition: opacity .35s;
 }
 .fx-spot:hover::after { opacity: 1; }
-.fx-spot:hover { border-color: #c9a22766 !important; }
+.fx-spot:hover { border-color: #c9a22738 !important; }
+
+/* Ambience: a few huge, very faint light pools drifting over the whole site so the navy never
+   looks flat. Fixed, non-interactive, GPU-only (transform), above section backgrounds. */
+body::after {
+  content: ""; position: fixed; inset: -25%; z-index: 2; pointer-events: none;
+  background:
+    radial-gradient(38% 32% at 22% 28%, #3c82aa12, transparent 70%),
+    radial-gradient(32% 28% at 78% 72%, #c9a2270b, transparent 70%),
+    radial-gradient(28% 26% at 62% 18%, #5a96c40d, transparent 70%),
+    radial-gradient(30% 30% at 30% 82%, #2e6e9a0f, transparent 70%);
+  animation: fx-ambient 70s ease-in-out infinite alternate;
+  will-change: transform;
+}
+@keyframes fx-ambient {
+  0%   { transform: translate3d(0, 0, 0) rotate(0deg); }
+  33%  { transform: translate3d(6%, -4%, 0) rotate(4deg); }
+  66%  { transform: translate3d(-5%, 5%, 0) rotate(-3deg); }
+  100% { transform: translate3d(3%, 6%, 0) rotate(2deg); }
+}
 
 /* Slow light sweep across the gold words in big headlines. */
 .connected-hero h1 span, .inner-hero h1 span, .closing-section h2 span {
