@@ -2,6 +2,10 @@
 import InnerHero from "../components/InnerHero.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
+// Cloudflare Turnstile site key (public, safe to commit). Empty turns the bot check off; the forms
+// worker only enforces it once its TURNSTILE_SECRET secret is set.
+const TURNSTILE_SITE_KEY = "";
+
 // Input names match the fillable fields in the PDF the forms worker completes
 // (forms-worker/src/customer-application.pdf); max lengths match the PDF too.
 type Field = { name: string; label: string; max: number; req?: boolean; type?: string; span: string; auto?: string; pattern?: string; mode?: string; title?: string };
@@ -272,6 +276,13 @@ const req = '<span class="text-orange-500" aria-hidden="true"> *</span>';
         <p class="text-slate-500 text-xs mt-3">Today’s date is added automatically when you submit.</p>
       </section>
 
+      {TURNSTILE_SITE_KEY && (
+        <>
+          <div class="cf-turnstile" data-sitekey={TURNSTILE_SITE_KEY} data-theme="dark" data-appearance="interaction-only" data-size="flexible"></div>
+          <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+        </>
+      )}
+
       <div id="errorBanner" class="hidden bg-red-500/10 border border-red-500/40 text-red-300 rounded-2xl px-5 py-4 text-sm" role="alert"></div>
 
       <button id="submitBtn" type="submit" class="w-full flex items-center justify-center gap-3 bg-orange-500 hover:bg-orange-600 px-8 py-4 rounded-2xl font-semibold text-lg transition">
@@ -332,6 +343,8 @@ const req = '<span class="text-orange-500" aria-hidden="true"> *</span>';
       banner.textContent = error instanceof Error && !(error instanceof TypeError) ? error.message : FALLBACK;
       banner.classList.remove("hidden");
       banner.scrollIntoView({ behavior: "smooth", block: "center" });
+      // Turnstile tokens are single-use; get a fresh one for the retry.
+      (window as any).turnstile?.reset();
       setSending(false);
     }
   });

@@ -11,8 +11,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   ogTitle="Careers at SwiftLink Logistics | Join Our Team"
   ogDescription="Build your career in freight and logistics. Explore open positions at SwiftLink Logistics, a growing Michigan-based 3PL brokerage."
 >
-  <script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" slot="head"></script>
-
   <!-- HERO -->
   <InnerHero eyebrow="Careers at SwiftLink" title="Bring your ambition." accent="Build what’s next." description="Relationships, problem-solving, and work that keeps business moving. Explore your next chapter in logistics." icon="fa-people-group" video="/videos/careers.mp4" primaryHref="#page-content" primaryLabel="Explore opportunities" />
 
@@ -315,15 +313,19 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       else document.getElementById("fileParsingStatus")!.textContent = "File attached (auto-fill not available for .doc)";
     }
 
+    const PDFJS = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/";
+
     function parsePDF(file: File) {
       const statusEl = document.getElementById("fileParsingStatus")!;
       statusEl.textContent = "Extracting info from resume...";
       const reader = new FileReader();
       reader.onload = async (e) => {
         try {
-          const pdfjsLib = (window as any).pdfjsLib;
-          pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
-          const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(e.target!.result as ArrayBuffer) }).promise;
+          // PDF.js 4.10.38 (patched for CVE-2024-4367), loaded only when a PDF resume is attached.
+          // isEvalSupported:false also disables the font-compilation path that CVE abused.
+          const pdfjsLib: any = await import(/* @vite-ignore */ PDFJS + "pdf.min.mjs");
+          pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS + "pdf.worker.min.mjs";
+          const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(e.target!.result as ArrayBuffer), isEvalSupported: false }).promise;
           let fullText = "";
           for (let i = 1; i <= Math.min(pdf.numPages, 3); i++) {
             const page = await pdf.getPage(i);
