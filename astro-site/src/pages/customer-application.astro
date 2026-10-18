@@ -109,10 +109,31 @@ const req = '<span class="text-orange-500" aria-hidden="true"> *</span>';
     </div>
 
     <form id="applicationForm" class="space-y-8" data-no-jumps>
+      <!-- PDF alternative: a fillable copy of this same application. -->
+      <div class="flex flex-col sm:flex-row sm:items-center gap-5 bg-slate-900 border border-orange-500/50 rounded-2xl p-5 sm:p-6 shadow-lg shadow-orange-500/5">
+        <div class="w-14 h-14 shrink-0 rounded-2xl bg-orange-500/10 border border-orange-500/30 flex items-center justify-center">
+          <i class="fa-solid fa-file-pdf text-2xl text-orange-500" aria-hidden="true"></i>
+        </div>
+        <div class="flex-1">
+          <p class="text-lg font-semibold text-white">Prefer a PDF?</p>
+          <p class="text-slate-400 text-sm mt-1">
+            Download the fillable application, complete it, and email it to
+            <a href="mailto:info@swiftlinkusa.com" class="text-orange-500 hover:text-orange-400 underline">info@swiftlinkusa.com</a>.
+          </p>
+        </div>
+        <a
+          href="/customer-application.pdf"
+          target="_blank"
+          rel="noopener"
+          class="inline-flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-600 px-6 py-3 rounded-2xl font-semibold transition whitespace-nowrap"
+        >
+          <i class="fa-solid fa-download" aria-hidden="true"></i>
+          Download PDF<span class="sr-only"> (opens in a new tab)</span>
+        </a>
+      </div>
+
       <p class="text-slate-400 text-sm">
-        Fields marked <span class="text-orange-500">*</span> are required. Prefer paper?
-        <a href="/customer-application.pdf" class="text-orange-500 hover:text-orange-400 underline">Download the PDF application</a> and email it to
-        <a href="mailto:info@swiftlinkusa.com" class="text-orange-500 hover:text-orange-400 underline">info@swiftlinkusa.com</a>.
+        Or apply online below. Fields marked <span class="text-orange-500">*</span> are required.
       </p>
 
       <!-- Bots fill this in; people never see it. -->
