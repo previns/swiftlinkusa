@@ -1,0 +1,196 @@
+---
+import InnerHero from "../components/InnerHero.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+// Carrier-facing facts. Leave a value empty to hide the line that uses it.
+const MC_NUMBER = "1813814";
+const DOT_NUMBER = "4562842";
+
+const pay = [
+  { icon: "fa-bolt", title: "Quick Pay in 2 days", body: "Need cash fast? Choose 2-day quick pay for a 3% fee. Paid in about 2 business days once your signed POD and invoice are received and approved in Epay Manager." },
+  { icon: "fa-calendar-check", title: "Standard pay: Net 30", body: "No fee. Paid within 30 days once your signed POD and invoice are received in Epay Manager, and often sooner." },
+  { icon: "fa-building-shield", title: "Credit-approved shippers", body: "Every SwiftLink customer is credit-approved through OTR Solutions before we book a load, so the freight you haul is backed." },
+];
+
+const steps = [
+  { n: "01", title: "Tell us about your trucks", body: "Send your MC number, equipment, and the lanes you want using the form below." },
+  { n: "02", title: "Complete your MCP packet", body: "We'll email you a MyCarrierPortal invite. Already on MCP? Setup takes a few clicks." },
+  { n: "03", title: "Haul and get paid", body: "Send your signed POD and invoice through Epay Manager. Get paid in 2 days with quick pay or Net 30 with no fee." },
+];
+
+// Mirrors the Broker-Carrier Agreement (Carriers/SwiftLink_Broker-Carrier_Agreement_eAgreement.docx).
+const requirements = [
+  "Active MC authority and USDOT number, with no Unsatisfactory or Conditional safety rating",
+  "Auto liability of at least $1,000,000 ($5,000,000 for hazmat)",
+  "Cargo coverage of at least $100,000 per truckload",
+  "General liability of at least $1,000,000 per occurrence / $2,000,000 aggregate",
+  "Workers' comp as required by state law",
+  "Signed broker–carrier agreement, W-9, and COI through MyCarrierPortal",
+  "Epay Manager account, or your factor's Notice of Assignment",
+  "No double brokering. The carrier on the rate confirmation hauls the load.",
+];
+
+const equipment = ["Dry Van", "Reefer", "Flatbed", "Step Deck", "Power Only", "Hotshot", "Box Truck", "Other"];
+
+const inputClass = "w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500 transition placeholder:text-slate-600";
+---
+
+<BaseLayout
+  title="Haul for SwiftLink • Carriers • SwiftLink Logistics"
+  description="Haul for SwiftLink Logistics. 2-day quick pay, Net 30 standard pay, credit-approved shippers, and quick setup through MyCarrierPortal."
+  keywords="carrier setup, haul for broker, freight broker quick pay, owner operator loads, carrier packet, MyCarrierPortal, Epay Manager, trucking loads Michigan"
+  canonicalPath="/carriers"
+  ogTitle="Haul for SwiftLink | Fast Pay for Carriers"
+  ogDescription="2-day quick pay or Net 30, credit-approved shippers, and setup in minutes through MyCarrierPortal."
+>
+  <InnerHero eyebrow="Carriers" title="Haul for SwiftLink." accent="Get paid fast." description="2-day quick pay or Net 30 standard. Credit-approved shippers. Real people who pick up the phone." icon="fa-truck" video="/videos/ftl.mp4" primaryHref="#carrier-interest" primaryLabel="Set up as a carrier" />
+
+  <!-- PAY -->
+  <section class="py-24 bg-slate-950">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16 fade-in">
+        <p class="text-orange-500 font-semibold text-sm tracking-widest uppercase mb-3">How you get paid</p>
+        <h2 class="text-4xl font-bold">Pay terms you can count on</h2>
+      </div>
+      <div class="grid md:grid-cols-3 gap-8">
+        {pay.map((p) => (
+          <div class="fade-in bg-slate-900 border border-slate-800 rounded-2xl p-8 hover:border-orange-500/30 transition-all duration-300">
+            <div class="w-14 h-14 bg-orange-500/10 rounded-2xl flex items-center justify-center mb-5">
+              <i class={`fa-solid ${p.icon} text-orange-500 text-xl`} aria-hidden="true"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-3">{p.title}</h3>
+            <p class="text-slate-400 leading-relaxed">{p.body}</p>
+          </div>
+        ))}
+      </div>
+      <p class="fade-in text-center text-sm text-slate-500 mt-8">Factoring company? No problem. Email your Notice of Assignment to info@swiftlinkusa.com and we'll pair your factor in Epay Manager.</p>
+    </div>
+  </section>
+
+  <!-- STEPS -->
+  <section class="py-24 bg-slate-900">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16 fade-in">
+        <p class="text-orange-500 font-semibold text-sm tracking-widest uppercase mb-3">Getting started</p>
+        <h2 class="text-4xl font-bold">Three steps to your first load</h2>
+      </div>
+      <div class="grid md:grid-cols-3 gap-8">
+        {steps.map((s) => (
+          <div class="fade-in bg-slate-950 border border-slate-800 rounded-2xl p-8">
+            <p class="text-orange-500 font-bold text-3xl mb-4">{s.n}</p>
+            <h3 class="text-xl font-bold mb-3">{s.title}</h3>
+            <p class="text-slate-400 leading-relaxed">{s.body}</p>
+          </div>
+        ))}
+      </div>
+      <div class="text-center mt-12 fade-in">
+        <a href="#carrier-interest" class="inline-flex items-center gap-3 bg-orange-500 hover:bg-orange-600 px-10 py-4 rounded-2xl font-semibold text-lg transition">
+          <i class="fa-solid fa-file-signature" aria-hidden="true"></i> Get set up
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- REQUIREMENTS + FORM -->
+  <section id="carrier-interest" class="py-24 bg-slate-950 scroll-mt-24">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid lg:grid-cols-5 gap-12">
+        <div class="lg:col-span-2 space-y-6 fade-in">
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-8">
+            <h2 class="text-2xl font-bold mb-5">Carrier requirements</h2>
+            <ul class="space-y-3">
+              {requirements.map((r) => (
+                <li class="flex items-start gap-3 text-slate-300">
+                  <i class="fa-solid fa-check-circle text-orange-500 mt-1" aria-hidden="true"></i>
+                  <span>{r}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-8">
+            <h2 class="text-2xl font-bold mb-4">Verify us</h2>
+            <ul class="space-y-2 text-slate-300">
+              <li><span class="text-slate-500">Company:</span> SwiftLink Logistics, LLC</li>
+              {MC_NUMBER && <li><span class="text-slate-500">MC:</span> {MC_NUMBER}</li>}
+              {DOT_NUMBER && <li><span class="text-slate-500">USDOT:</span> {DOT_NUMBER} · <a href={`https://safer.fmcsa.dot.gov/query.asp?searchtype=ANY&query_type=queryCarrierSnapshot&query_param=USDOT&query_string=${DOT_NUMBER}`} target="_blank" rel="noopener" class="text-orange-400 hover:text-orange-300 text-sm">View on FMCSA SAFER</a></li>}
+              <li><span class="text-slate-500">Phone:</span> <a href="tel:+12489876776" class="text-orange-400 hover:text-orange-300">(248) 987-6776</a></li>
+              <li><span class="text-slate-500">Email:</span> <a href="mailto:info@swiftlinkusa.com" class="text-orange-400 hover:text-orange-300">info@swiftlinkusa.com</a></li>
+            </ul>
+            <p class="text-sm text-slate-400 mt-4">Certificate of insurance provided in our carrier packet or on request.</p>
+            <p class="text-sm text-slate-500 mt-2">We'll only email you from a swiftlinkusa.com address.</p>
+          </div>
+        </div>
+
+        <div class="lg:col-span-3 fade-in">
+          <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-10">
+            <h2 class="text-2xl font-bold mb-2">Tell us about your trucks</h2>
+            <p class="text-slate-400 mb-8">Send your info and we'll email you a MyCarrierPortal invite to complete setup, then call when we have freight on your lanes.</p>
+
+            <form action="https://formspree.io/f/meepzjzk" method="POST" class="space-y-6">
+              <input type="hidden" name="_subject" value="New carrier interest (Haul for SwiftLink)" />
+              <input type="hidden" name="subject" value="Carrier Interest" />
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <label for="carrier-company" class="block text-sm font-medium mb-2">Company name <span class="text-orange-500">*</span></label>
+                  <input id="carrier-company" name="company" required autocomplete="organization" class={inputClass} />
+                </div>
+                <div>
+                  <label for="carrier-contact" class="block text-sm font-medium mb-2">Your name <span class="text-orange-500">*</span></label>
+                  <input id="carrier-contact" name="name" required autocomplete="name" class={inputClass} />
+                </div>
+              </div>
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <label for="carrier-mc" class="block text-sm font-medium mb-2">MC number <span class="text-orange-500">*</span></label>
+                  <input id="carrier-mc" name="mc_number" required inputmode="numeric" pattern="(MC)?[\s#-]*\d{1,8}" title="Digits only, e.g. 123456" class={inputClass} />
+                </div>
+                <div>
+                  <label for="carrier-dot" class="block text-sm font-medium mb-2">USDOT number</label>
+                  <input id="carrier-dot" name="dot_number" inputmode="numeric" pattern="\d{1,9}" title="Digits only" class={inputClass} />
+                </div>
+              </div>
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <label for="carrier-email" class="block text-sm font-medium mb-2">Email <span class="text-orange-500">*</span></label>
+                  <input id="carrier-email" type="email" name="email" required autocomplete="email" class={inputClass} />
+                </div>
+                <div>
+                  <label for="carrier-phone" class="block text-sm font-medium mb-2">Phone <span class="text-orange-500">*</span></label>
+                  <input id="carrier-phone" type="tel" name="phone" required autocomplete="tel" class={inputClass} />
+                </div>
+              </div>
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <label for="carrier-base" class="block text-sm font-medium mb-2">Home base (city, state) <span class="text-orange-500">*</span></label>
+                  <input id="carrier-base" name="home_base" required placeholder="Detroit, MI" class={inputClass} />
+                </div>
+                <div>
+                  <label for="carrier-trucks" class="block text-sm font-medium mb-2">Number of trucks</label>
+                  <input id="carrier-trucks" type="number" min="1" name="truck_count" class={inputClass} />
+                </div>
+              </div>
+              <fieldset>
+                <legend class="block text-sm font-medium mb-3">Equipment</legend>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  {equipment.map((e) => (
+                    <label class="flex items-center gap-2 text-sm text-slate-300 bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 cursor-pointer hover:border-orange-500/50 transition">
+                      <input type="checkbox" name="equipment" value={e} class="accent-orange-500" /> {e}
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
+              <div>
+                <label for="carrier-lanes" class="block text-sm font-medium mb-2">Preferred lanes</label>
+                <textarea id="carrier-lanes" name="lanes" rows="3" placeholder="e.g. MI → TX, Midwest regional, home every weekend" class={`${inputClass} resize-none`}></textarea>
+              </div>
+              <button type="submit" class="w-full bg-orange-500 hover:bg-orange-600 py-4 rounded-2xl font-semibold text-sm transition flex items-center justify-center gap-2">
+                <i class="fa-solid fa-paper-plane" aria-hidden="true"></i> Send my info
+              </button>
+              <p class="text-sm text-slate-400">We use your details to contact you about freight. <a href="/privacy" class="text-orange-400 underline">Privacy Policy</a></p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
