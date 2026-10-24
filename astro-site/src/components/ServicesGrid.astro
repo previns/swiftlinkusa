@@ -16,7 +16,7 @@ import ServiceCard from "./ServiceCard.astro";
       {
         services.map((s) => (
           <ServiceCard
-            href={`/${s.slug}`}
+            href={`/${s.slug}/`}
             icon={s.icon}
             title={s.name}
             description={s.blurb}

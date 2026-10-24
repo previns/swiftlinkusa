@@ -2,11 +2,15 @@
 import "../styles/global.css";
 import "../styles/interior.css";
 import "../styles/effects.css";
+import "../styles/seo-content.css";
 import PageEnhancements from "../components/PageEnhancements.astro";
 import Effects from "../components/Effects.astro";
 import SeoHead from "../components/SeoHead.astro";
 import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
+import StructuredData from "../components/StructuredData.astro";
+import ShippingResources from "../components/ShippingResources.astro";
+import { services } from "../data/services";
 
 interface Props {
   title: string;
@@ -33,6 +37,7 @@ const { title, description, canonicalPath, keywords, ogTitle, ogDescription, ogI
       ogDescription={ogDescription}
       ogImage={ogImage}
     />
+    <StructuredData title={title} description={description} canonicalPath={canonicalPath} />
     <slot name="head" />
   </head>
   <body data-page={canonicalPath} class="bg-slate-950 text-white font-sans overflow-x-hidden">
@@ -47,6 +52,7 @@ const { title, description, canonicalPath, keywords, ogTitle, ogDescription, ogI
 
     <main id="main">
       <slot />
+      {services.some(service => canonicalPath === `/${service.slug}`) && <ShippingResources />}
       {canonicalPath !== "/" && <PageEnhancements />}
     </main>
 
@@ -54,13 +60,15 @@ const { title, description, canonicalPath, keywords, ogTitle, ogDescription, ogI
     <Effects />
 
     <script>
+      import { pauseMotionByDefault, playDecorativeVideo } from "../scripts/decorative-video";
       // Give decorative video a pause control and respect reduced-motion settings.
       const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
       document.querySelectorAll<HTMLElement>(".hero-video-container").forEach((container) => {
         const hero = container.parentElement;
         const videos = Array.from(container.querySelectorAll<HTMLVideoElement>("video"));
         if (!hero || videos.length === 0) return;
-        let paused = motionPreference.matches;
+        let paused = pauseMotionByDefault();
+        let visible = false;
         const button = document.createElement("button");
         button.type = "button";
         button.className = "absolute bottom-4 right-6 z-20 rounded-full border border-white/30 bg-slate-950/80 px-4 py-2 text-xs text-white hover:border-orange-500";
@@ -68,12 +76,13 @@ const { title, description, canonicalPath, keywords, ogTitle, ogDescription, ogI
           hero.dataset.motionPaused = String(paused);
           button.textContent = paused ? "Play background video" : "Pause background video";
           videos.forEach((video) => {
-            if (paused) video.pause();
-            else if (videos.length === 1 || video.classList.contains("active")) video.play().catch(() => {});
+            if (paused || !visible) video.pause();
+            else if (videos.length === 1 || video.classList.contains("active")) playDecorativeVideo(video);
           });
         };
         button.addEventListener("click", () => { paused = !paused; update(); });
-        motionPreference.addEventListener("change", () => { paused = motionPreference.matches; update(); });
+        motionPreference.addEventListener("change", () => { paused = pauseMotionByDefault(); update(); });
+        new IntersectionObserver(entries => { visible = entries[0].isIntersecting; update(); }).observe(container);
         hero.append(button);
         update();
       });

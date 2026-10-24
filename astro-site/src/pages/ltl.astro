@@ -2,21 +2,6 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import HeroService from "../components/HeroService.astro";
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Service",
-  serviceType: "Less-Than-Truckload (LTL) Shipping",
-  provider: {
-    "@type": "LocalBusiness",
-    name: "SwiftLink Logistics, LLC",
-    url: "https://www.swiftlinkusa.com",
-    telephone: "+1-248-987-6776",
-  },
-  areaServed: { "@type": "Country", name: "United States" },
-  description:
-    "Cost-effective shared freight for 1-14 pallets, 150-15,000 lbs. Consolidated shipping with nationwide carrier network for maximum efficiency.",
-  url: "https://www.swiftlinkusa.com/ltl/",
-};
 ---
 
 <BaseLayout
@@ -27,7 +12,6 @@ const jsonLd = {
   ogTitle="Less-Than-Truckload (LTL) Shipping | SwiftLink Logistics"
   ogDescription="Shared freight options for smaller shipments, with service and pricing based on your shipping needs."
 >
-  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} slot="head" />
 
   <HeroService
     videoSrc="/videos/ltl.mp4"
@@ -244,7 +228,7 @@ const jsonLd = {
           <div class="p-5 text-center border-l border-slate-800 text-orange-400">Large, time-sensitive loads</div>
         </div>
       </div>
-      <p class="text-center text-slate-500 text-sm mt-6 fade-in">The crossover point is typically 8–12 pallets or 8,000–12,000 lbs. Not sure which is right? <a href="/quote" class="text-orange-500 hover:text-orange-400 underline">Get quotes for both</a> — we'll recommend the best option.</p>
+      <p class="text-center text-slate-500 text-sm mt-6 fade-in">The crossover point is typically 8–12 pallets or 8,000–12,000 lbs. Not sure which is right? <a href="/quote/" class="text-orange-500 hover:text-orange-400 underline">Get quotes for both</a> — we'll recommend the best option.</p>
     </div>
   </section>
 
@@ -311,7 +295,7 @@ const jsonLd = {
         <p class="text-slate-300 text-lg mb-8 max-w-xl mx-auto">Enter your shipment details and we'll compare rates across our LTL carrier network to find the best price, transit time, and service level for your freight.</p>
         <div class="flex flex-wrap justify-center gap-4">
           <a href="/quote/?service=LTL" class="bg-orange-500 hover:bg-orange-600 px-10 py-4 rounded-2xl font-semibold text-lg transition">Get Your LTL Quote</a>
-          <a href="/contact" class="border border-slate-600 hover:border-orange-500 px-10 py-4 rounded-2xl font-semibold text-lg transition">Talk to a Specialist</a>
+          <a href="/contact/" class="border border-slate-600 hover:border-orange-500 px-10 py-4 rounded-2xl font-semibold text-lg transition">Talk to a Specialist</a>
         </div>
         <p class="text-sm text-slate-500 mt-6">Shipment-specific pricing &bull; No obligation &bull; Service options explained</p>
       </div>

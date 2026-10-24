@@ -1,4 +1,5 @@
 ---
+import { canonicalUrl } from '../data/seo';
 interface Props {
   /** Browser tab title — also used for og:title / twitter:title if `ogTitle` not given */
   title: string;
@@ -22,7 +23,6 @@ interface Props {
 const {
   title,
   description,
-  keywords,
   canonicalPath,
   ogTitle,
   ogDescription,
@@ -31,14 +31,12 @@ const {
 
 const site = Astro.site ?? new URL("https://www.swiftlinkusa.com");
 
-// Always emit canonicals with a single trailing slash for consistency.
-const cleanPath = canonicalPath.startsWith("/") ? canonicalPath : `/${canonicalPath}`;
-const withTrailing = cleanPath === "/" ? "/" : cleanPath.replace(/\/?$/, "/");
-const canonical = new URL(withTrailing, site).toString();
+const canonical = canonicalUrl(canonicalPath, site);
 
 const resolvedOgTitle = ogTitle ?? title;
 const resolvedOgDescription = ogDescription ?? description;
 const resolvedOgImage = ogImage ? new URL(ogImage, site).toString() : undefined;
+const verification = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION;
 ---
 
 <meta charset="UTF-8" />
@@ -47,20 +45,21 @@ const resolvedOgImage = ogImage ? new URL(ogImage, site).toString() : undefined;
 
 <title>{title}</title>
 <meta name="description" content={description} />
-{keywords && <meta name="keywords" content={keywords} />}
-<meta name="robots" content="index, follow" />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+{verification && <meta name="google-site-verification" content={verification} />}
 <link rel="canonical" href={canonical} />
 
 <!-- Open Graph -->
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="SwiftLink Logistics" />
+<meta property="og:locale" content="en_US" />
 <meta property="og:title" content={resolvedOgTitle} />
 <meta property="og:description" content={resolvedOgDescription} />
 <meta property="og:url" content={canonical} />
 {resolvedOgImage && <meta property="og:image" content={resolvedOgImage} />}
 
 <!-- Twitter -->
-<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:card" content={resolvedOgImage ? "summary_large_image" : "summary"} />
 <meta name="twitter:title" content={resolvedOgTitle} />
 <meta name="twitter:description" content={resolvedOgDescription} />
 {resolvedOgImage && <meta name="twitter:image" content={resolvedOgImage} />}

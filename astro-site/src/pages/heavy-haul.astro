@@ -1,22 +1,7 @@
 ---
+import Breadcrumbs from "../components/Breadcrumbs.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Service",
-  serviceType: "Heavy Haul & Oversize Freight",
-  name: "Heavy Haul and Oversize Freight Shipping",
-  description:
-    "Permitted overweight and oversized load transport with route planning, escort coordination, and specialized trailers for heavy equipment and machinery nationwide.",
-  provider: {
-    "@type": "LocalBusiness",
-    name: "SwiftLink Logistics, LLC",
-    url: "https://www.swiftlinkusa.com",
-    telephone: "+1-248-987-6776",
-  },
-  areaServed: { "@type": "Country", name: "US" },
-  url: "https://www.swiftlinkusa.com/heavy-haul/",
-};
 ---
 
 <BaseLayout
@@ -27,17 +12,17 @@ const jsonLd = {
   ogTitle="Heavy Haul & Oversize Freight | SwiftLink Logistics"
   ogDescription="Oversize and overweight freight transport with permitted loads, route planning, escort coordination, and specialized trailers."
 >
-  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} slot="head" />
 
   <!-- HERO -->
   <section class="relative py-32 bg-slate-900 overflow-hidden">
     <div class="hero-video-container" aria-hidden="true">
-      <video class="hero-video" autoplay muted loop playsinline preload="metadata">
-        <source src="/videos/heavy-haul.mp4" type="video/mp4" />
+      <video class="hero-video" muted loop playsinline preload="none" poster="/images/posters/heavy-haul.webp">
+        <source data-src="/videos/heavy-haul.mp4" type="video/mp4" />
       </video>
     </div>
     <div class="hero-overlay" aria-hidden="true"></div>
     <div class="max-w-7xl mx-auto px-6 text-center relative z-10">
+      <Breadcrumbs />
       <div class="fade-in">
         <div class="inline-flex items-center gap-2 bg-orange-500/10 border border-orange-500/20 rounded-full px-5 py-2 mb-8">
           <i class="fa-solid fa-weight-hanging text-orange-500" aria-hidden="true"></i>

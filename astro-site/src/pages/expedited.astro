@@ -1,22 +1,7 @@
 ---
+import Breadcrumbs from "../components/Breadcrumbs.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Service",
-  serviceType: "Expedited Freight Shipping",
-  name: "Expedited Freight Shipping",
-  description:
-    "Time-critical expedited freight shipping with dedicated vehicles, team drivers, shipment coordination, and shipment updates for urgent deliveries across the US.",
-  provider: {
-    "@type": "LocalBusiness",
-    name: "SwiftLink Logistics, LLC",
-    url: "https://www.swiftlinkusa.com",
-    telephone: "+1-248-987-6776",
-  },
-  areaServed: { "@type": "Country", name: "US" },
-  url: "https://www.swiftlinkusa.com/expedited/",
-};
 ---
 
 <BaseLayout
@@ -27,17 +12,17 @@ const jsonLd = {
   ogTitle="Expedited Freight Shipping | SwiftLink Logistics"
   ogDescription="Time-critical freight delivered fast. Dedicated vehicles, team drivers, shipment coordination, and shipment updates nationwide."
 >
-  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} slot="head" />
 
   <!-- HERO -->
   <section class="relative bg-slate-900 py-28 overflow-hidden">
     <div class="hero-video-container" aria-hidden="true">
-      <video class="hero-video" autoplay muted loop playsinline preload="metadata">
-        <source src="/videos/expedited.mp4" type="video/mp4" />
+      <video class="hero-video" muted loop playsinline preload="none" poster="/images/posters/expedited.webp">
+        <source data-src="/videos/expedited.mp4" type="video/mp4" />
       </video>
     </div>
     <div class="hero-overlay" aria-hidden="true"></div>
     <div class="max-w-7xl mx-auto px-6 text-center relative z-10">
+      <Breadcrumbs />
       <div class="fade-in">
         <div class="inline-flex items-center gap-2 bg-orange-500/10 border border-orange-500/20 rounded-full px-5 py-2 mb-8">
           <i class="fa-solid fa-bolt text-orange-500" aria-hidden="true"></i>

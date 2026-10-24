@@ -2,22 +2,6 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import HeroService from "../components/HeroService.astro";
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Service",
-  serviceType: "Drayage & Port Services",
-  name: "Drayage and Port Services",
-  description:
-    "Container pickup, port drayage, rail drayage, transloading, and chassis management services at major US ports with reliable scheduling and tracking.",
-  provider: {
-    "@type": "LocalBusiness",
-    name: "SwiftLink Logistics, LLC",
-    url: "https://www.swiftlinkusa.com",
-    telephone: "+1-248-987-6776",
-  },
-  areaServed: { "@type": "Country", name: "US" },
-  url: "https://www.swiftlinkusa.com/drayage/",
-};
 ---
 
 <BaseLayout
@@ -28,7 +12,6 @@ const jsonLd = {
   ogTitle="Drayage & Port Services | SwiftLink Logistics"
   ogDescription="Container pickup and delivery from all major US ports. Transloading, chassis management, and demurrage avoidance from a logistics expert."
 >
-  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} slot="head" />
 
   <HeroService
     videoSrc="/videos/drayage.mp4"
@@ -316,7 +299,7 @@ const jsonLd = {
         <p class="text-slate-300 text-lg mb-8 max-w-xl mx-auto">Tell us your port, container number, and destination. We'll provide a competitive drayage rate and have a driver dispatched before your last free day.</p>
         <div class="flex flex-wrap justify-center gap-4">
           <a href="/quote/?service=Drayage" class="bg-orange-500 hover:bg-orange-600 px-10 py-4 rounded-2xl font-semibold text-lg transition">Get a Drayage Quote</a>
-          <a href="/contact" class="border border-slate-600 hover:border-orange-500 px-10 py-4 rounded-2xl font-semibold text-lg transition">Talk to a Specialist</a>
+          <a href="/contact/" class="border border-slate-600 hover:border-orange-500 px-10 py-4 rounded-2xl font-semibold text-lg transition">Talk to a Specialist</a>
         </div>
         <p class="text-sm text-slate-500 mt-6">Port and rail moves &bull; Appointment coordination &bull; Container return planning</p>
       </div>

@@ -1,0 +1,35 @@
+---
+import { canonicalUrl, organization, organizationId, pageNames, siteUrl } from '../data/seo';
+import { services } from '../data/services';
+interface Props { title: string; description: string; canonicalPath: string; }
+const { title, description, canonicalPath } = Astro.props;
+const path = canonicalPath.replace(/\/$/, '') || '/';
+const url = canonicalUrl(path);
+const name = pageNames[path] ?? title;
+const service = services.find(item => path === `/${item.slug}`);
+const crumbs = [
+  { name: 'Home', item: `${siteUrl}/` },
+  ...(path.startsWith('/resources/') ? [{ name: 'Shipping Resources', item: canonicalUrl('/resources') }] : []),
+  { name, item: url },
+];
+const graph = [
+  organization,
+  { '@type': 'WebSite', '@id': `${siteUrl}/#website`, url: `${siteUrl}/`, name: 'SwiftLink Logistics', publisher: { '@id': organizationId }, inLanguage: 'en-US' },
+  {
+    '@type': 'WebPage', '@id': `${url}#webpage`, url, name: title, description,
+    isPartOf: { '@id': `${siteUrl}/#website` }, about: { '@id': organizationId }, inLanguage: 'en-US',
+    ...(path !== '/' ? { breadcrumb: { '@id': `${url}#breadcrumb` } } : {}),
+    ...(service ? { mainEntity: { '@id': `${url}#service` } } : {}),
+  },
+  ...(path !== '/' ? [{
+    '@type': 'BreadcrumbList', '@id': `${url}#breadcrumb`,
+    itemListElement: crumbs.map((crumb, index) => ({ '@type': 'ListItem', position: index + 1, ...crumb })),
+  }] : []),
+  ...(service ? [{
+    '@type': 'Service', '@id': `${url}#service`, name: service.name, serviceType: service.name,
+    description: service.blurb, url, provider: { '@id': organizationId },
+    areaServed: { '@type': 'Place', name: 'Contiguous United States' },
+  }] : []),
+];
+---
+<script type="application/ld+json" set:html={JSON.stringify({ '@context': 'https://schema.org', '@graph': graph }).replace(/</g, '\\u003c')} />

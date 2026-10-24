@@ -25,11 +25,11 @@ const year = new Date().getFullYear();
         <div>
           <h2 class="font-semibold mb-4">Company</h2>
           <ul class="space-y-3 text-sm text-slate-400">
-            <li><a href="/about" class="hover:text-white">About Us</a></li>
-            <li><a href="/careers" class="hover:text-white">Careers</a></li>
-            <li><a href="/contact" class="hover:text-white">Contact</a></li>
-            <li><a href="/customer-application" class="hover:text-white">Customer Application</a></li>
-            <li><a href="/carriers" class="hover:text-white">Haul for SwiftLink</a></li>
+            <li><a href="/about/" class="hover:text-white">About Us</a></li>
+            <li><a href="/careers/" class="hover:text-white">Careers</a></li>
+            <li><a href="/contact/" class="hover:text-white">Contact</a></li>
+            <li><a href="/customer-application/" class="hover:text-white">Customer Application</a></li>
+            <li><a href="/carriers/" class="hover:text-white">Haul for SwiftLink</a></li>
             <li><a href={portalUrl} class="hover:text-white">Employee Portal</a></li>
           </ul>
         </div>
@@ -39,7 +39,7 @@ const year = new Date().getFullYear();
             {
               services.map((s) => (
                 <li>
-                  <a href={`/${s.slug}`} class="hover:text-white">
+                  <a href={`/${s.slug}/`} class="hover:text-white">
                     {s.name}
                   </a>
                 </li>
@@ -50,10 +50,11 @@ const year = new Date().getFullYear();
         <div>
           <h2 class="font-semibold mb-4">Support</h2>
           <ul class="space-y-3 text-sm text-slate-400">
-            <li><a href="/quote" class="hover:text-white">Get Quote</a></li>
-            <li><a href="/faq" class="hover:text-white">FAQ</a></li>
-            <li><a href="/terms" class="hover:text-white">Terms & Conditions</a></li>
-            <li><a href="/privacy" class="hover:text-white">Privacy Policy</a></li>
+            <li><a href="/quote/" class="hover:text-white">Get Quote</a></li>
+            <li><a href="/faq/" class="hover:text-white">FAQ</a></li>
+            <li><a href="/resources/" class="hover:text-white">Shipping Resources</a></li>
+            <li><a href="/terms/" class="hover:text-white">Terms & Conditions</a></li>
+            <li><a href="/privacy/" class="hover:text-white">Privacy Policy</a></li>
           </ul>
         </div>
         <div>

@@ -1,0 +1,11 @@
+---
+import { pageNames } from '../data/seo';
+interface Props { path?: string; }
+const path = (Astro.props.path ?? Astro.url.pathname).replace(/\/$/, '') || '/';
+const name = pageNames[path];
+---
+{path !== '/' && name && <nav class="breadcrumb" aria-label="Breadcrumb"><ol>
+  <li><a href="/">Home</a><span aria-hidden="true">/</span></li>
+  {path.startsWith('/resources/') && <li><a href="/resources/">Shipping Resources</a><span aria-hidden="true">/</span></li>}
+  <li><span aria-current="page">{name}</span></li>
+</ol></nav>}

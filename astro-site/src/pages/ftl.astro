@@ -2,21 +2,6 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import HeroService from "../components/HeroService.astro";
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Service",
-  serviceType: "Full Truckload (FTL) Shipping",
-  provider: {
-    "@type": "LocalBusiness",
-    name: "SwiftLink Logistics, LLC",
-    url: "https://www.swiftlinkusa.com",
-    telephone: "+1-248-987-6776",
-  },
-  areaServed: { "@type": "Country", name: "United States" },
-  description:
-    "Dedicated 53-foot trailers for high-volume freight. Dry van, flatbed, reefer, and specialty equipment with direct point-to-point delivery nationwide.",
-  url: "https://www.swiftlinkusa.com/ftl/",
-};
 ---
 
 <BaseLayout
@@ -27,7 +12,6 @@ const jsonLd = {
   ogTitle="Full Truckload (FTL) Shipping | SwiftLink Logistics"
   ogDescription="Dedicated FTL shipping with dry van, flatbed, reefer, and specialty trailers. Direct delivery across the contiguous United States."
 >
-  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} slot="head" />
 
   <HeroService
     videoSrc="/videos/ftl.mp4"
@@ -300,7 +284,7 @@ const jsonLd = {
         <p class="text-slate-300 text-lg mb-8 max-w-xl mx-auto">Tell us your origin, destination, and freight details. Our team will review your request and follow up with available options.</p>
         <div class="flex flex-wrap justify-center gap-4">
           <a href="/quote/?service=FTL" class="bg-orange-500 hover:bg-orange-600 px-10 py-4 rounded-2xl font-semibold text-lg transition">Get Your FTL Quote</a>
-          <a href="/contact" class="border border-slate-600 hover:border-orange-500 px-10 py-4 rounded-2xl font-semibold text-lg transition">Talk to a Specialist</a>
+          <a href="/contact/" class="border border-slate-600 hover:border-orange-500 px-10 py-4 rounded-2xl font-semibold text-lg transition">Talk to a Specialist</a>
         </div>
         <p class="text-sm text-slate-500 mt-6">Share your route, equipment needs, and preferred pickup date.</p>
       </div>

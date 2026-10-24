@@ -42,6 +42,8 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          PUBLIC_GOOGLE_SITE_VERIFICATION: ${{ vars.PUBLIC_GOOGLE_SITE_VERIFICATION }}
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

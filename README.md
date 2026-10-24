@@ -89,6 +89,17 @@ Target ≤5–8 MB per hero video; `home-1.mp4` in particular was ~54 MB pre-com
 
 ## Future maintenance notes
 
-- Adding a service page: append to [astro-site/src/data/services.ts](astro-site/src/data/services.ts); [[...slug].astro](astro-site/src/pages/%5B...slug%5D.astro) generates the page and [Footer](astro-site/src/components/Footer.astro) picks it up automatically.
+### SEO maintenance
+
+- `/sitemap.xml` is generated from static `.astro` pages at build time; `/robots.txt` advertises it. New static pages are included automatically. If dynamic routes are introduced, add their concrete URLs to the sitemap generator.
+- Canonicals and sitemap entries use `https://www.swiftlinkusa.com/` with trailing slashes. Keep internal links consistent with that format.
+- `src/data/seo.ts` contains shared organization facts and breadcrumb labels. Add labels there when adding pages. `StructuredData.astro` emits the organization, website, page, breadcrumbs, and service data; avoid duplicate page-specific service markup.
+- Submit `https://www.swiftlinkusa.com/sitemap.xml` in Google Search Console after deployment and ownership verification. A Search Console Domain property can be verified with Google's DNS TXT record; it does not require a site code change. No Search Console account is connected by this project.
+- For URL-prefix HTML-tag verification instead, set `PUBLIC_GOOGLE_SITE_VERIFICATION` to the token Google provides at build time. The tag is omitted when unset. The GitHub workflow reads the optional repository Actions variable with that name.
+- Resource pages live under `src/pages/resources/`. Keep them linked from relevant services and the resource index. Do not add invented shipment stories, testimonials, addresses, ratings, or location pages.
+- Decorative videos load only when visible and enabled. Small-screen, reduced-motion, and data-saving visitors start with WebP posters and can choose playback. When adding a video, also add its matching poster to `public/images/posters/`.
+- Track search impressions, clicks, indexed pages, and resulting quote inquiries after launch. Sitemap submission and structured data do not guarantee rankings or rich results.
+
+- Adding a service page: create its static `.astro` page in `astro-site/src/pages/` and append the service to [astro-site/src/data/services.ts](astro-site/src/data/services.ts). Navigation, footer, homepage service links, service structured data, and the sitemap then pick it up automatically.
 - Restoring the old static HTML site: it's preserved on the `backup-old-html` branch.
 - Formspree endpoint is hardcoded in the form components — rotate it in one place per form if migrating.

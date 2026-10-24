@@ -1,0 +1,11 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import InnerHero from '../../components/InnerHero.astro';
+---
+<BaseLayout title="Freight Shipping Resources | SwiftLink Logistics" description="Prepare your next freight shipment with SwiftLink's quote checklist, service information, and answers to common shipping questions." canonicalPath="/resources">
+  <InnerHero eyebrow="Shipping resources" title="Plan your freight." accent="Start with the details." description="Practical information to help shippers prepare a quote request and discuss transportation options." icon="fa-list-check" primaryHref="/resources/freight-quote-checklist/" primaryLabel="Read the freight quote checklist" />
+  <div class="shipping-guide">
+    <section><h2>Freight quote checklist</h2><p>Know what to gather before requesting pricing: pickup and delivery locations, packed dimensions, weight, facility access, and timing. A complete request helps your broker compare suitable options and identify potential extra services.</p><a href="/resources/freight-quote-checklist/">Read the freight quote preparation guide →</a></section>
+    <section><h2>Choose a starting point</h2><ul><li><a href="/ftl/">Full truckload shipping</a> for freight that needs dedicated trailer capacity.</li><li><a href="/ltl/">Less-than-truckload shipping</a> for smaller shipments sharing trailer space.</li><li><a href="/expedited/">Expedited freight</a> when pickup and delivery timing drive the plan.</li><li><a href="/faq/">Shipping FAQ</a> for questions about working with SwiftLink.</li></ul></section>
+  </div>
+</BaseLayout>
