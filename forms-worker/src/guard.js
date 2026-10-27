@@ -12,18 +12,20 @@ export function json(body, status, origin) {
   return new Response(JSON.stringify(body), { status, headers });
 }
 
-/** Checks that need no body. Returns { response } to stop, or { allowed } (the CORS origin) to continue. */
-export async function preflight(request, env) {
+/** Checks that need no body. Returns { response } to stop, or { allowed } (the CORS origin) to continue.
+ *  path: the exact path this endpoint serves (null when the caller already matched it). Size and rate limits apply to POSTs. */
+export async function preflight(request, env, { path = "/customer-application", methods = ["POST"] } = {}) {
   const url = new URL(request.url);
   const origin = request.headers.get("Origin");
   const allowed = ALLOWED_ORIGINS.includes(origin) ? origin : null;
-  if (url.pathname !== "/customer-application") return { response: json({ error: "Not found" }, 404, allowed) };
+  if (path && url.pathname !== path) return { response: json({ error: "Not found" }, 404, allowed) };
   if (url.protocol !== "https:" && !LOCAL_HOSTS.includes(url.hostname)) return { response: json({ error: "HTTPS required" }, 403, null) };
   if (request.method === "OPTIONS") {
-    return { response: new Response(null, { status: 204, headers: allowed ? { "Access-Control-Allow-Origin": allowed, "Access-Control-Allow-Methods": "POST", "Access-Control-Max-Age": "86400", Vary: "Origin" } : {} }) };
+    return { response: new Response(null, { status: 204, headers: allowed ? { "Access-Control-Allow-Origin": allowed, "Access-Control-Allow-Methods": methods.join(", "), "Access-Control-Max-Age": "86400", Vary: "Origin" } : {} }) };
   }
-  if (request.method !== "POST") return { response: json({ error: "Method not allowed" }, 405, allowed) };
+  if (!methods.includes(request.method)) return { response: json({ error: "Method not allowed" }, 405, allowed) };
   if (!allowed) return { response: json({ error: "Forbidden" }, 403, null) };
+  if (request.method !== "POST") return { allowed };
   if (Number(request.headers.get("Content-Length") || MAX_BODY + 1) > MAX_BODY) return { response: json({ error: "Submission too large" }, 413, allowed) };
   // Origin can be faked by scripts, so also cap submissions per IP (Workers rate limiting binding).
   if (env.SUBMIT_LIMIT) {

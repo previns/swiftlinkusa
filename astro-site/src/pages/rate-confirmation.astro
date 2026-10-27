@@ -1,0 +1,209 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+// Customer rate confirmation. SwiftLink staff send a link like /rate-confirmation/#<token> from the employee
+// portal; the token stays in the URL fragment, which browsers never send to servers or other sites.
+// Data, the confirm action and the signed PDF come from the forms worker (forms-worker/src/ratecon.js).
+const FORMS_URL = import.meta.env.PUBLIC_FORMS_URL || "https://forms.swiftlinkusa.com";
+// Cloudflare Turnstile site key (public). The forms worker enforces it once TURNSTILE_SECRET is set.
+const TURNSTILE_SITE_KEY = "0x4AAAAAAFZ39TA3UUiTztF6";
+const field = "w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-base focus:outline-none focus:border-orange-500 transition placeholder:text-slate-600";
+---
+
+<BaseLayout
+  title="Rate Confirmation • SwiftLink Logistics"
+  description="Review and confirm the rate for your SwiftLink Logistics shipment."
+  canonicalPath="/rate-confirmation"
+  noindex
+>
+  <section class="py-14 sm:py-20 bg-slate-950 min-h-[70vh]">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6" id="rc" data-endpoint={FORMS_URL}>
+      <div id="rc-loading" class="text-center text-slate-400 py-24" role="status">Loading your rate confirmation…</div>
+
+      <div id="rc-error" class="hidden bg-slate-900 border border-slate-800 rounded-3xl p-8 sm:p-10 text-center" role="alert">
+        <div class="w-14 h-14 rounded-2xl bg-orange-500/10 flex items-center justify-center mx-auto mb-5"><i class="fa-solid fa-link-slash text-orange-500 text-xl" aria-hidden="true"></i></div>
+        <h1 class="text-2xl font-bold mb-3" id="rc-error-title">This link can't be used</h1>
+        <p class="text-slate-400" id="rc-error-text"></p>
+        <p class="text-slate-400 mt-6">Questions? Call <a class="text-orange-400 underline" href="tel:+12489876776">(248) 987-6776</a> or email <a class="text-orange-400 underline" href="mailto:info@swiftlinkusa.com">info@swiftlinkusa.com</a>.</p>
+      </div>
+
+      <article id="rc-card" class="hidden bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden">
+        <header class="px-6 sm:px-10 pt-8 sm:pt-10 pb-6 border-b border-slate-800">
+          <p class="text-orange-500 font-semibold text-xs tracking-widest uppercase mb-2">Rate confirmation</p>
+          <h1 class="text-3xl sm:text-4xl font-bold">Load <span id="rc-load"></span></h1>
+          <p class="text-slate-400 mt-2">Prepared for <span id="rc-customer" class="text-slate-200 font-medium"></span><span id="rc-po"></span></p>
+        </header>
+
+        <div class="px-6 sm:px-10 py-7 grid sm:grid-cols-2 gap-5">
+          <div class="bg-slate-950/60 border border-slate-800 rounded-2xl p-5">
+            <p class="text-xs uppercase tracking-widest text-slate-500 mb-1"><i class="fa-solid fa-arrow-up-from-bracket mr-1 text-orange-500" aria-hidden="true"></i> Pickup</p>
+            <p class="font-semibold text-lg" id="rc-pickup"></p><p class="text-slate-400" id="rc-pickup-date"></p>
+          </div>
+          <div class="bg-slate-950/60 border border-slate-800 rounded-2xl p-5">
+            <p class="text-xs uppercase tracking-widest text-slate-500 mb-1"><i class="fa-solid fa-flag-checkered mr-1 text-orange-500" aria-hidden="true"></i> Delivery</p>
+            <p class="font-semibold text-lg" id="rc-delivery"></p><p class="text-slate-400" id="rc-delivery-date"></p>
+          </div>
+          <dl class="sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-sm" id="rc-extra"></dl>
+          <div class="sm:col-span-2 rounded-2xl border border-orange-500/40 bg-orange-500/10 p-6 flex flex-wrap items-end justify-between gap-3">
+            <div><p class="text-xs uppercase tracking-widest text-orange-400 font-semibold">Agreed rate (USD)</p><p class="text-4xl font-bold mt-1" id="rc-rate"></p></div>
+            <p class="text-slate-400 text-sm">All-in rate for this shipment</p>
+          </div>
+        </div>
+
+        <details class="mx-6 sm:mx-10 mb-6 group" id="rc-terms-box">
+          <summary class="cursor-pointer select-none text-sm font-semibold text-slate-300 hover:text-white flex items-center gap-2"><i class="fa-solid fa-chevron-right text-xs text-orange-500 transition group-open:rotate-90" aria-hidden="true"></i> Rate agreement terms</summary>
+          <ol class="mt-4 space-y-2 text-sm text-slate-400 list-decimal pl-5" id="rc-terms"></ol>
+          <p class="mt-3 text-sm text-slate-500">Full <a class="text-orange-400 underline" href="/terms" target="_blank" rel="noopener">Terms &amp; Conditions</a>.</p>
+        </details>
+
+        <form id="rc-form" class="px-6 sm:px-10 pb-8 sm:pb-10 space-y-5 hidden" novalidate>
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div><label for="rc-name" class="block text-sm font-medium mb-2">Your full name <span class="text-orange-500">*</span></label><input id="rc-name" name="name" required autocomplete="name" maxlength="80" class={field} /></div>
+            <div><label for="rc-title" class="block text-sm font-medium mb-2">Title</label><input id="rc-title" name="title" autocomplete="organization-title" maxlength="80" placeholder="Optional" class={field} /></div>
+          </div>
+          <label class="flex items-start gap-3 text-sm text-slate-300 cursor-pointer">
+            <input type="checkbox" name="agree" id="rc-agree" class="mt-1 w-5 h-5 accent-orange-500 shrink-0" required />
+            <span>I'm authorized to approve this rate for <span id="rc-customer-2" class="font-semibold text-white"></span>, and I agree to the rate and the terms above.</span>
+          </label>
+          {TURNSTILE_SITE_KEY && (
+            <>
+              <div class="cf-turnstile" data-sitekey={TURNSTILE_SITE_KEY} data-theme="dark" data-appearance="interaction-only" data-size="flexible"></div>
+              <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+            </>
+          )}
+          <p id="rc-form-error" class="text-red-400 text-sm hidden" role="alert"></p>
+          <button type="submit" id="rc-submit" class="w-full bg-orange-500 hover:bg-orange-600 disabled:opacity-60 py-4 rounded-2xl font-semibold text-lg transition flex items-center justify-center gap-2">
+            <i class="fa-solid fa-circle-check" aria-hidden="true"></i> <span id="rc-submit-label">Confirm rate</span>
+          </button>
+          <p class="text-xs text-slate-500 text-center">Typing your name and confirming is your electronic signature. We record the time and your IP address.</p>
+        </form>
+
+        <div id="rc-done" class="hidden px-6 sm:px-10 pb-10" role="status">
+          <div class="rounded-2xl border border-emerald-500/40 bg-emerald-500/10 p-6 flex gap-4 items-start">
+            <i class="fa-solid fa-circle-check text-emerald-400 text-2xl mt-0.5" aria-hidden="true"></i>
+            <div>
+              <h2 class="text-xl font-bold">Rate confirmed</h2>
+              <p class="text-slate-300 mt-1" id="rc-done-text"></p>
+              <button type="button" id="rc-download" class="mt-4 inline-flex items-center gap-2 border border-slate-600 hover:border-orange-500 hover:text-orange-400 px-5 py-2.5 rounded-xl font-semibold text-sm transition"><i class="fa-solid fa-file-arrow-down" aria-hidden="true"></i> Download your copy (PDF)</button>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <script>
+    const root = document.getElementById("rc")!;
+    const endpoint = root.dataset.endpoint!;
+    const $ = (id: string) => document.getElementById(id)!;
+    const token = location.hash.replace(/^#(t=)?/, "");
+    let data: any = null;
+
+    const dateText = (ymd: string) => new Date(ymd + "T12:00:00Z").toLocaleDateString("en-US", { timeZone: "UTC", weekday: "short", month: "short", day: "numeric", year: "numeric" });
+    const stamp = (iso: string) => new Date(iso).toLocaleString("en-US", { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" });
+
+    function fail(title: string, text: string) {
+      $("rc-loading").classList.add("hidden");
+      $("rc-card").classList.add("hidden");
+      $("rc-error-title").textContent = title;
+      $("rc-error-text").textContent = text;
+      $("rc-error").classList.remove("hidden");
+    }
+
+    function show(d: any) {
+      data = d;
+      $("rc-loading").classList.add("hidden");
+      $("rc-load").textContent = d.load_no;
+      $("rc-customer").textContent = d.customer;
+      $("rc-customer-2").textContent = d.customer;
+      $("rc-po").textContent = d.po ? ` · PO ${d.po}` : "";
+      $("rc-pickup").textContent = d.pickup.place;
+      $("rc-pickup-date").textContent = dateText(d.pickup.date);
+      $("rc-delivery").textContent = d.delivery.place;
+      $("rc-delivery-date").textContent = dateText(d.delivery.date);
+      $("rc-rate").textContent = d.rate;
+      $("rc-submit-label").textContent = `Confirm rate of ${d.rate}`;
+      const extra = $("rc-extra");
+      extra.replaceChildren();
+      for (const [label, value] of [["Equipment", d.equipment], ["Notes", d.notes]]) {
+        if (!value) continue;
+        const wrap = document.createElement("div");
+        const dt = document.createElement("dt"); dt.className = "text-slate-500"; dt.textContent = label;
+        const dd = document.createElement("dd"); dd.className = "text-slate-200"; dd.textContent = value;
+        wrap.append(dt, dd); extra.append(wrap);
+      }
+      $("rc-terms").replaceChildren(...d.terms.map((t: string) => { const li = document.createElement("li"); li.textContent = t; return li; }));
+      $("rc-card").classList.remove("hidden");
+      if (d.status === "confirmed") return done(d);
+      if (d.status === "expired") return fail("This link has expired", `The confirmation link for load ${d.load_no} is more than 30 days old. Ask your SwiftLink contact to send a new one.`);
+      if (d.status === "void") return fail("This link was replaced", `SwiftLink cancelled or replaced this link for load ${d.load_no}. Check your email for a newer link, or contact us.`);
+      $("rc-form").classList.remove("hidden");
+      ($("rc-terms-box") as HTMLDetailsElement).open = window.innerWidth >= 640;
+    }
+
+    function done(d: any) {
+      $("rc-form").classList.add("hidden");
+      $("rc-done-text").textContent = `${d.confirmed.name}${d.confirmed.title ? `, ${d.confirmed.title}` : ""} confirmed ${d.rate} for load ${d.load_no} on ${stamp(d.confirmed.at)}. A copy has been emailed to the address SwiftLink has on file.`;
+      $("rc-done").classList.remove("hidden");
+    }
+
+    async function load() {
+      if (!/^[A-Za-z0-9_-]{32}$/.test(token)) return fail("This link is incomplete", "Open the link exactly as it appears in your email. If it still doesn't work, ask SwiftLink to send it again.");
+      try {
+        const res = await fetch(`${endpoint}/rate-confirmations/${token}`, { headers: { Accept: "application/json" } });
+        const body = await res.json().catch(() => null);
+        if (!res.ok) return fail("This link can't be used", body?.error || "Ask SwiftLink to send a new link.");
+        show(body);
+      } catch {
+        fail("We couldn't load this page", "Check your connection and refresh. If it keeps happening, contact us below.");
+      }
+    }
+
+    const form = $("rc-form") as HTMLFormElement;
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const error = $("rc-form-error");
+      const name = ($("rc-name") as HTMLInputElement).value.trim();
+      const agree = ($("rc-agree") as HTMLInputElement).checked;
+      const message = name.length < 2 ? "Type your full name to sign." : !agree ? "Check the box to agree to the rate and terms." : "";
+      if (message) { error.textContent = message; error.classList.remove("hidden"); return; }
+      error.classList.add("hidden");
+      const button = $("rc-submit") as HTMLButtonElement;
+      button.disabled = true;
+      $("rc-submit-label").textContent = "Confirming…";
+      try {
+        const res = await fetch(`${endpoint}/rate-confirmations/${token}/confirm`, { method: "POST", body: new FormData(form) });
+        const body = await res.json().catch(() => null);
+        if (!res.ok) throw new Error(body?.error || "We couldn't confirm the rate. Please try again.");
+        done(body);
+      } catch (e) {
+        error.textContent = (e as Error).message;
+        error.classList.remove("hidden");
+        button.disabled = false;
+        $("rc-submit-label").textContent = `Confirm rate of ${data.rate}`;
+        // Turnstile tokens are single-use; get a fresh one for the retry.
+        (window as any).turnstile?.reset();
+      }
+    });
+
+    $("rc-download").addEventListener("click", async () => {
+      const button = $("rc-download") as HTMLButtonElement;
+      button.disabled = true;
+      try {
+        const res = await fetch(`${endpoint}/rate-confirmations/${token}/pdf`);
+        if (!res.ok) throw new Error();
+        const url = URL.createObjectURL(await res.blob());
+        const a = document.createElement("a");
+        a.href = url; a.download = `${data.load_no} - Customer Rate Agreement.pdf`;
+        document.body.append(a); a.click(); a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 10000);
+      } catch {
+        alert("The PDF couldn't be downloaded. Your confirmation is saved; contact SwiftLink for a copy.");
+      } finally {
+        button.disabled = false;
+      }
+    });
+
+    load();
+  </script>
+</BaseLayout>

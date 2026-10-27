@@ -18,6 +18,8 @@ interface Props {
   ogDescription?: string;
   /** Path or absolute URL to the social share image */
   ogImage?: string;
+  /** Private pages (e.g. customer links): keep out of search results */
+  noindex?: boolean;
 }
 
 const {
@@ -27,6 +29,7 @@ const {
   ogTitle,
   ogDescription,
   ogImage,
+  noindex = false,
 } = Astro.props;
 
 const site = Astro.site ?? new URL("https://www.swiftlinkusa.com");
@@ -45,7 +48,7 @@ const verification = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION;
 
 <title>{title}</title>
 <meta name="description" content={description} />
-<meta name="robots" content="index, follow, max-image-preview:large" />
+<meta name="robots" content={noindex ? "noindex, nofollow" : "index, follow, max-image-preview:large"} />
 {verification && <meta name="google-site-verification" content={verification} />}
 <link rel="canonical" href={canonical} />
 

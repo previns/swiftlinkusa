@@ -20,9 +20,10 @@ interface Props {
   ogTitle?: string;
   ogDescription?: string;
   ogImage?: string;
+  noindex?: boolean;
 }
 
-const { title, description, canonicalPath, keywords, ogTitle, ogDescription, ogImage } = Astro.props;
+const { title, description, canonicalPath, keywords, ogTitle, ogDescription, ogImage, noindex } = Astro.props;
 ---
 
 <!doctype html>
@@ -36,6 +37,7 @@ const { title, description, canonicalPath, keywords, ogTitle, ogDescription, ogI
       ogTitle={ogTitle}
       ogDescription={ogDescription}
       ogImage={ogImage}
+      noindex={noindex}
     />
     <StructuredData title={title} description={description} canonicalPath={canonicalPath} />
     <slot name="head" />
@@ -53,7 +55,7 @@ const { title, description, canonicalPath, keywords, ogTitle, ogDescription, ogI
     <main id="main">
       <slot />
       {services.some(service => canonicalPath === `/${service.slug}`) && <ShippingResources />}
-      {canonicalPath !== "/" && <PageEnhancements />}
+      {canonicalPath !== "/" && !noindex && <PageEnhancements />}
     </main>
 
     <Footer />

@@ -4,7 +4,7 @@
   "main": "src/index.js",
   "compatibility_date": "2026-09-01",
   "routes": [{ "pattern": "forms.swiftlinkusa.com", "custom_domain": true }],
-  "rules": [{ "type": "Data", "globs": ["**/*.pdf"], "fallthrough": false }],
+  "rules": [{ "type": "Data", "globs": ["**/*.pdf", "**/*.png"], "fallthrough": false }],
   // MS_TENANT_ID, MS_CLIENT_ID and MS_CLIENT_SECRET are Worker secrets (wrangler secret put).
   "vars": {
     "SENDER_ADDRESS": "info@swiftlinkusa.com",
@@ -13,5 +13,8 @@
   // Per-IP cap on submissions (keyed by CF-Connecting-IP in src/guard.js).
   "ratelimits": [{ "name": "SUBMIT_LIMIT", "namespace_id": "1001", "simple": { "limit": 5, "period": 60 } }],
   // TURNSTILE_SECRET (optional Worker secret) turns on the Cloudflare Turnstile check.
+  // RATECON_KEY (Worker secret, same value as the portal's) authorizes the portal's /internal/ratecons calls.
+  // Rate confirmations live in their own database, separate from the portal's employee data.
+  "d1_databases": [{ "binding": "RATECONS", "database_name": "swiftlink-ratecons", "database_id": "PENDING" }],
   "observability": { "enabled": true }
 }

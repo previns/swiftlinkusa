@@ -7,7 +7,8 @@ export const prerender = true;
 // Dynamic routes must supply their concrete URLs explicitly if introduced later.
 const pages = Object.keys(import.meta.glob('./**/*.astro'));
 const paths = pages
-  .filter(page => !page.includes('[') && page !== './404.astro')
+  // Private customer pages (reached only by link) stay out of the sitemap.
+  .filter(page => !page.includes('[') && page !== './404.astro' && page !== './rate-confirmation.astro')
   .map(page => page.replace(/^\.\//, '/').replace(/\.astro$/, '').replace(/\/index$/, '/') );
 const escapeXml = (value: string) => value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
 
