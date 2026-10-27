@@ -186,3 +186,20 @@ test("deletes old confirmations and edits saved customers", async () => {
   assert.deepEqual([c.contact_name, c.email], ["Pat Smith", "pat@acmefoods.com"]);
   assert.equal((await internalRoute(staff("POST", "/customers/update", { name: "Acme Foods, Inc.", email: "nope" }), env, deps)).status, 422);
 });
+
+test("removing a customer forgets their signer; deleted links never come back as customers", async () => {
+  const { env, deps } = setup();
+  const a = (await (await internalRoute(staff("POST", "", sample), env, deps)).json()).item;
+  await publicRoute(confirm(a.link.split("#")[1], { name: "Previn", email: "previn@swiftlinkusa.com", agree: "on" }), env, deps, SITE);
+  await internalRoute(staff("POST", "/customers/remove", { name: "Acme Foods, Inc." }), env, deps);
+  const b = (await (await internalRoute(staff("POST", "", { ...sample, load_no: "SLL9" }), env, deps)).json()).item;
+  assert.equal((await (await publicRoute(view(b.link.split("#")[1]), env, deps, SITE)).json()).returning, null);
+  const { env: env2, deps: deps2 } = setup();
+  const c = (await (await internalRoute(staff("POST", "", { ...sample, customer: "Test Co" }), env2, deps2)).json()).item;
+  await internalRoute(staff("POST", `/${c.id}/delete`, {}), env2, deps2);
+  env2.RATECONS.raw.exec("DELETE FROM ratecon_customers");
+  const { ensureSchema } = await import("../src/ratecon.js");
+  const fresh = { ...env2.RATECONS };
+  await ensureSchema(fresh);
+  assert.equal(env2.RATECONS.raw.prepare("SELECT COUNT(*) AS n FROM ratecon_customers").get().n, 0);
+});

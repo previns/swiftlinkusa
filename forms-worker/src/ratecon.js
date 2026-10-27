@@ -45,7 +45,7 @@ export async function ensureSchema(db) {
   try { await db.prepare("ALTER TABLE ratecons ADD COLUMN confirm_method TEXT").run(); } catch {}
   // Customers from links made before saved customers existed (INSERT OR IGNORE never revives a removed one).
   await db.batch([
-    db.prepare("INSERT OR IGNORE INTO ratecon_customers(name, contact_name, email, loads, last_used) SELECT customer, contact_name, email, COUNT(*), MAX(created) FROM ratecons GROUP BY customer COLLATE NOCASE"),
+    db.prepare("INSERT OR IGNORE INTO ratecon_customers(name, contact_name, email, loads, last_used) SELECT customer, contact_name, email, COUNT(*), MAX(created) FROM ratecons WHERE status!='deleted' GROUP BY customer COLLATE NOCASE"),
     db.prepare("UPDATE ratecon_customers SET signer_name=(SELECT confirmed_name FROM ratecons r WHERE r.customer=ratecon_customers.name COLLATE NOCASE AND r.status='confirmed' ORDER BY r.confirmed_at DESC LIMIT 1), signer_email=(SELECT COALESCE(confirmed_email, email) FROM ratecons r WHERE r.customer=ratecon_customers.name COLLATE NOCASE AND r.status='confirmed' ORDER BY r.confirmed_at DESC LIMIT 1) WHERE signer_name IS NULL"),
   ]);
   ready.add(db);
@@ -310,7 +310,8 @@ export async function internalRoute(request, env, deps) {
     try { input = JSON.parse(await request.text()); } catch { return json({ error: "Invalid request" }, 400); }
     const name = clean(input?.name, 120);
     if (!name) return json({ error: "Invalid request" }, 400);
-    await db.prepare("UPDATE ratecon_customers SET removed=1 WHERE name=?").bind(name).run();
+    // Removing also forgets who signed for them, so a later link never opens with a "Welcome back" for that person.
+    await db.prepare("UPDATE ratecon_customers SET removed=1, signer_name=NULL, signer_email=NULL WHERE name=?").bind(name).run();
     return json({ ok: true }, 200);
   }
   const m = path.match(/^\/([0-9a-f]{16})(\/void|\/pdf|\/delete)?$/);
