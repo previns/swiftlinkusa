@@ -70,22 +70,25 @@ test("create, view, confirm once, email the signed PDF", async () => {
 
   assert.equal((await publicRoute(confirm(token, { name: "Dana Lee" }), env, deps, SITE)).status, 422);
   assert.equal((await publicRoute(confirm(token, { agree: "on" }), env, deps, SITE)).status, 422);
-  const ok = await publicRoute(confirm(token, { name: "Dana Lee", title: "Logistics Manager", agree: "on" }), env, deps, SITE);
+  assert.equal((await publicRoute(confirm(token, { name: "Dana Lee", agree: "on" }), env, deps, SITE)).status, 422);
+  const ok = await publicRoute(confirm(token, { name: "Dana Lee", email: "Dana.Lee@AcmeFoods.com", agree: "on" }), env, deps, SITE);
   assert.equal(ok.status, 200);
   assert.equal((await ok.json()).status, "confirmed");
-  assert.equal((await publicRoute(confirm(token, { name: "Someone Else", agree: "on" }), env, deps, SITE)).status, 409);
+  assert.equal((await publicRoute(confirm(token, { name: "Someone Else", email: "x@acmefoods.com", agree: "on" }), env, deps, SITE)).status, 409);
 
   const row = env.RATECONS.raw.prepare("SELECT * FROM ratecons").get();
   assert.equal(row.confirmed_name, "Dana Lee");
   assert.equal(row.confirmed_ip, "203.0.113.9");
+  assert.equal(row.confirmed_email, "dana.lee@acmefoods.com");
   assert.equal(row.terms_version, TERMS_VERSION);
 
   assert.equal(sent.length, 2);
   const [internal, customer] = sent;
   assert.equal(internal.message.attachments[0].name, "SLL1005 - Customer Rate Agreement.pdf");
   assert.deepEqual(internal.message.toRecipients.map((r) => r.emailAddress.address), ["info@swiftlinkusa.com", "previn@swiftlinkusa.com"]);
-  assert.match(internal.message.body.content, /Dana Lee, Logistics Manager/);
-  assert.deepEqual(customer.message.toRecipients.map((r) => r.emailAddress.address), ["dana@acmefoods.com"]);
+  assert.ok(internal.message.body.content.includes("Accepted by: Dana Lee (dana.lee@acmefoods.com)   Link sent to: dana@acmefoods.com"));
+  assert.deepEqual(customer.message.toRecipients.map((r) => r.emailAddress.address), ["dana.lee@acmefoods.com"]);
+  assert.deepEqual(customer.message.ccRecipients.map((r) => r.emailAddress.address), ["dana@acmefoods.com"]);
 
   const pdf = Buffer.from(internal.message.attachments[0].contentBytes, "base64");
   const doc = await PDFDocument.load(pdf);
@@ -106,20 +109,20 @@ test("expired, cancelled and replaced links cannot be confirmed; email failure i
   const second = (await (await internalRoute(staff("POST", "", sample), env, deps)).json()).item;
   const t1 = first.link.split("#")[1], t2 = second.link.split("#")[1];
   assert.equal((await (await publicRoute(view(t1), env, deps, SITE)).json()).status, "void");
-  assert.equal((await publicRoute(confirm(t1, { name: "Dana Lee", agree: "on" }), env, deps, SITE)).status, 409);
+  assert.equal((await publicRoute(confirm(t1, { name: "Dana Lee", email: "dana@acmefoods.com", agree: "on" }), env, deps, SITE)).status, 409);
 
   assert.equal((await internalRoute(staff("POST", `/${second.id}/void`, {}), env, deps)).status, 200);
-  assert.equal((await publicRoute(confirm(t2, { name: "Dana Lee", agree: "on" }), env, deps, SITE)).status, 409);
+  assert.equal((await publicRoute(confirm(t2, { name: "Dana Lee", email: "dana@acmefoods.com", agree: "on" }), env, deps, SITE)).status, 409);
 
   const third = (await (await internalRoute(staff("POST", "", { ...sample, load_no: "SLL1006" }), env, deps)).json()).item;
   advance(31 * 86_400_000);
   const t3 = third.link.split("#")[1];
   assert.equal((await (await publicRoute(view(t3), env, deps, SITE)).json()).status, "expired");
-  assert.equal((await publicRoute(confirm(t3, { name: "Dana Lee", agree: "on" }), env, deps, SITE)).status, 409);
+  assert.equal((await publicRoute(confirm(t3, { name: "Dana Lee", email: "dana@acmefoods.com", agree: "on" }), env, deps, SITE)).status, 409);
 
   const fourth = (await (await internalRoute(staff("POST", "", { ...sample, load_no: "SLL1007" }), env, deps)).json()).item;
   const failing = { ...deps, sendMail: async () => { throw new Error("Graph down"); } };
-  assert.equal((await publicRoute(confirm(fourth.link.split("#")[1], { name: "Dana Lee", agree: "on" }), env, failing, SITE)).status, 200);
+  assert.equal((await publicRoute(confirm(fourth.link.split("#")[1], { name: "Dana Lee", email: "dana@acmefoods.com", agree: "on" }), env, failing, SITE)).status, 200);
   assert.match(env.RATECONS.raw.prepare("SELECT email_error FROM ratecons WHERE load_no='SLL1007'").get().email_error, /Graph down/);
 
   assert.equal((await publicRoute(view("not-a-token"), env, deps, SITE)).status, 404);

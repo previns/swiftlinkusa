@@ -28,7 +28,7 @@ const SCHEMA = [
     delivery_zip TEXT NOT NULL, delivery_city TEXT, delivery_state TEXT, delivery_date TEXT NOT NULL, rate_cents INTEGER NOT NULL,
     equipment TEXT, notes TEXT, status TEXT NOT NULL DEFAULT 'open', created_by TEXT NOT NULL, created TEXT NOT NULL,
     expires TEXT NOT NULL, viewed_at TEXT, confirmed_at TEXT, confirmed_name TEXT, confirmed_title TEXT, confirmed_ip TEXT,
-    confirmed_ua TEXT, terms_version TEXT, email_error TEXT, voided_by TEXT)`,
+    confirmed_ua TEXT, terms_version TEXT, email_error TEXT, voided_by TEXT, confirmed_email TEXT)`,
   "CREATE INDEX IF NOT EXISTS ratecons_created ON ratecons(created)",
   "CREATE INDEX IF NOT EXISTS ratecons_load ON ratecons(load_no)",
 ];
@@ -36,6 +36,8 @@ const ready = new WeakSet();
 export async function ensureSchema(db) {
   if (ready.has(db)) return;
   await db.batch(SCHEMA.map((sql) => db.prepare(sql)));
+  // Tables created before confirmed_email existed get the column added once; "duplicate column" means it is already there.
+  try { await db.prepare("ALTER TABLE ratecons ADD COLUMN confirmed_email TEXT").run(); } catch {}
   ready.add(db);
 }
 
@@ -92,7 +94,7 @@ export function publicView(r, now = Date.now()) {
     load_no: r.load_no, po: r.po || "", customer: r.customer, contact_name: r.contact_name || "",
     pickup: { place: place(r, "pickup"), date: r.pickup_date }, delivery: { place: place(r, "delivery"), date: r.delivery_date },
     rate: money(r.rate_cents), equipment: r.equipment || "", notes: r.notes || "", status: statusOf(r, now),
-    confirmed: r.status === "confirmed" ? { name: r.confirmed_name, title: r.confirmed_title || "", at: r.confirmed_at } : null,
+    confirmed: r.status === "confirmed" ? { name: r.confirmed_name, at: r.confirmed_at } : null,
     terms: r.status === "confirmed" ? termsFor(r.terms_version) : TERMS, terms_version: r.terms_version || TERMS_VERSION,
   };
 }
@@ -180,7 +182,8 @@ export async function buildPdf(r, logoPng) {
   heading("Acceptance");
   if (r.status === "confirmed") {
     row("Accepted by", `${[r.confirmed_name, r.confirmed_title].filter(Boolean).join(", ")}, for ${r.customer}`);
-    row("Customer email", r.email);
+    row("Accepted by email", r.confirmed_email || r.email);
+    if (r.confirmed_email && r.confirmed_email !== r.email) row("Link sent to", r.email);
     row("Date and time", `${stampText(r.confirmed_at)}   |   IP address ${r.confirmed_ip || "not recorded"}`);
     row("Method", "Typed name, terms checkbox and Confirm button at www.swiftlinkusa.com");
     row("Agreement ID", `${r.id}   |   Terms version ${r.terms_version}`);
@@ -212,13 +215,13 @@ export function confirmationMessages(env, r, pdf) {
     `Pickup: ${dateText(r.pickup_date)}   Delivery: ${dateText(r.delivery_date)}`,
     `Rate: ${money(r.rate_cents)}`,
     "",
-    `Accepted by: ${[r.confirmed_name, r.confirmed_title].filter(Boolean).join(", ")} (${r.email})`,
+    `Accepted by: ${[r.confirmed_name, r.confirmed_title].filter(Boolean).join(", ")} (${r.confirmed_email || r.email})${r.confirmed_email && r.confirmed_email !== r.email ? `   Link sent to: ${r.email}` : ""}`,
     `When: ${stampText(r.confirmed_at)}   IP: ${r.confirmed_ip || "not recorded"}`,
     `Agreement ID: ${r.id}   Terms version: ${r.terms_version}`,
   ].join("\r\n");
   const to = [env.TO_ADDRESS, r.created_by].filter((v, i, a) => v && a.indexOf(v) === i).map((address) => ({ emailAddress: { address } }));
   const customer = [
-    `Hello${r.contact_name ? " " + r.contact_name : ""},`,
+    `Hello ${r.confirmed_name || r.contact_name || ""},`.replace(/ ,$/, ","),
     "",
     `Thank you for confirming the rate for load ${r.load_no} (${lane}, ${money(r.rate_cents)}). Your copy of the Customer Rate Agreement is attached.`,
     "",
@@ -229,7 +232,7 @@ export function confirmationMessages(env, r, pdf) {
   ].join("\r\n");
   return [
     { message: { subject: `${r.load_no} - Customer Rate Agreement - confirmed by ${r.customer}`, body: { contentType: "Text", content: internal }, toRecipients: to, replyTo: [{ emailAddress: { address: r.email } }], attachments: [attachment] }, saveToSentItems: false },
-    { message: { subject: `Load ${r.load_no} - your rate confirmation`, body: { contentType: "Text", content: customer }, toRecipients: [{ emailAddress: { address: r.email } }], replyTo: [{ emailAddress: { address: env.TO_ADDRESS } }], attachments: [attachment] }, saveToSentItems: true },
+    { message: { subject: `Load ${r.load_no} - your rate confirmation`, body: { contentType: "Text", content: customer }, toRecipients: [{ emailAddress: { address: r.confirmed_email || r.email } }], ccRecipients: r.confirmed_email && r.confirmed_email !== r.email ? [{ emailAddress: { address: r.email } }] : [], replyTo: [{ emailAddress: { address: env.TO_ADDRESS } }], attachments: [attachment] }, saveToSentItems: true },
   ];
 }
 
@@ -312,17 +315,18 @@ export async function publicRoute(request, env, deps, allowed) {
   try { form = await request.formData(); } catch { return json({ error: "Invalid submission" }, 400, allowed); }
   const notHuman = await deps.verifyHuman(form, request, env, allowed);
   if (notHuman) return notHuman;
-  const name = clean(form.get("name"), 80), title = clean(form.get("title"), 80);
+  const name = clean(form.get("name"), 80), email = clean(form.get("email"), 200).toLowerCase();
   if (name.length < 2) return json({ error: "Type your full name to sign." }, 422, allowed);
+  if (!isEmail(email)) return json({ error: "Enter your email so we can send your copy." }, 422, allowed);
   if (form.get("agree") !== "on") return json({ error: "Check the box to agree to the rate and terms." }, 422, allowed);
   const state = statusOf(r, now);
   if (state !== "open") return json({ error: state === "confirmed" ? "This rate was already confirmed." : state === "expired" ? "This link has expired. Ask SwiftLink to send a new one." : "This link was cancelled. Ask SwiftLink to send a new one." }, 409, allowed);
   const at = new Date(now).toISOString(), ip = clean(request.headers.get("CF-Connecting-IP"), 64), ua = clean(request.headers.get("User-Agent"), 300);
   // Only one confirmation can win, even if the button is pressed twice.
-  const result = await db.prepare("UPDATE ratecons SET status='confirmed', confirmed_at=?, confirmed_name=?, confirmed_title=?, confirmed_ip=?, confirmed_ua=?, terms_version=? WHERE id=? AND status='open'")
-    .bind(at, name, title || null, ip || null, ua || null, TERMS_VERSION, r.id).run();
+  const result = await db.prepare("UPDATE ratecons SET status='confirmed', confirmed_at=?, confirmed_name=?, confirmed_email=?, confirmed_ip=?, confirmed_ua=?, terms_version=? WHERE id=? AND status='open'")
+    .bind(at, name, email, ip || null, ua || null, TERMS_VERSION, r.id).run();
   if (!result.meta.changes) return json({ error: "This rate was already confirmed." }, 409, allowed);
-  const done = { ...r, status: "confirmed", confirmed_at: at, confirmed_name: name, confirmed_title: title || null, confirmed_ip: ip || null, terms_version: TERMS_VERSION };
+  const done = { ...r, status: "confirmed", confirmed_at: at, confirmed_name: name, confirmed_email: email, confirmed_ip: ip || null, terms_version: TERMS_VERSION };
   try {
     const pdf = await buildPdf(done, deps.logo);
     for (const message of confirmationMessages(env, done, pdf)) await deps.sendMail(env, message);

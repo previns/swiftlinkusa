@@ -17,7 +17,13 @@ export default {
     if (path.startsWith("/internal/ratecons")) return internalRoute(request, env, deps);
     if (path.startsWith("/rate-confirmations/")) {
       const { response, allowed } = await preflight(request, env, { path: null, methods: ["GET", "POST"] });
-      return response || publicRoute(request, env, deps, allowed);
+      if (response) return response;
+      // Any unexpected failure still answers with CORS headers, so the page can show a real message.
+      try { return await publicRoute(request, env, deps, allowed); }
+      catch (error) {
+        console.error("Rate confirmation request failed", request.method, path.replace(/\/rate-confirmations\/[^/]+/, "/rate-confirmations/<token>"), error?.stack || error);
+        return json({ error: "Something went wrong on our side. Please try again in a minute, or call (248) 987-6776." }, 500, allowed);
+      }
     }
 
     const { response, allowed } = await preflight(request, env);

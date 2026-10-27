@@ -65,7 +65,7 @@ const field = "w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 
         <form id="rc-form" class="px-6 sm:px-10 pb-8 sm:pb-10 space-y-5 hidden" novalidate>
           <div class="grid sm:grid-cols-2 gap-4">
             <div><label for="rc-name" class="block text-sm font-medium mb-2">Your full name <span class="text-orange-500">*</span></label><input id="rc-name" name="name" required autocomplete="name" maxlength="80" class={field} /></div>
-            <div><label for="rc-title" class="block text-sm font-medium mb-2">Title</label><input id="rc-title" name="title" autocomplete="organization-title" maxlength="80" placeholder="Optional" class={field} /></div>
+            <div><label for="rc-email" class="block text-sm font-medium mb-2">Your email <span class="text-orange-500">*</span></label><input id="rc-email" name="email" type="email" required autocomplete="email" maxlength="200" placeholder="We'll email your copy" class={field} /></div>
           </div>
           <label class="flex items-start gap-3 text-sm text-slate-300 cursor-pointer">
             <input type="checkbox" name="agree" id="rc-agree" class="mt-1 w-5 h-5 accent-orange-500 shrink-0" required />
@@ -153,7 +153,8 @@ const field = "w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 
 
     function done(d: any) {
       $("rc-form").classList.add("hidden");
-      $("rc-done-text").textContent = `${d.confirmed.name}${d.confirmed.title ? `, ${d.confirmed.title}` : ""} confirmed ${d.rate} for load ${d.load_no} on ${stamp(d.confirmed.at)}. A copy has been emailed to the address SwiftLink has on file.`;
+      const sentTo = ($("rc-email") as HTMLInputElement).value.trim();
+      $("rc-done-text").textContent = `${d.confirmed.name} confirmed ${d.rate} for load ${d.load_no} on ${stamp(d.confirmed.at)}. ${sentTo ? `A copy has been emailed to ${sentTo}.` : "A copy was emailed when the rate was confirmed."}`;
       $("rc-done").classList.remove("hidden");
     }
 
@@ -175,14 +176,17 @@ const field = "w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 
       const error = $("rc-form-error");
       const name = ($("rc-name") as HTMLInputElement).value.trim();
       const agree = ($("rc-agree") as HTMLInputElement).checked;
-      const message = name.length < 2 ? "Type your full name to sign." : !agree ? "Check the box to agree to the rate and terms." : "";
+      const email = ($("rc-email") as HTMLInputElement).value.trim();
+      const message = name.length < 2 ? "Type your full name to sign." : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? "Enter your email so we can send your copy." : !agree ? "Check the box to agree to the Terms and Conditions." : "";
       if (message) { error.textContent = message; error.classList.remove("hidden"); return; }
       error.classList.add("hidden");
       const button = $("rc-submit") as HTMLButtonElement;
       button.disabled = true;
       $("rc-submit-label").textContent = "Confirming…";
       try {
-        const res = await fetch(`${endpoint}/rate-confirmations/${token}/confirm`, { method: "POST", body: new FormData(form) });
+        let res: Response;
+        try { res = await fetch(`${endpoint}/rate-confirmations/${token}/confirm`, { method: "POST", body: new FormData(form) }); }
+        catch { throw new Error("We couldn't reach SwiftLink. Check your internet connection and try again. If it keeps happening, call (248) 987-6776."); }
         const body = await res.json().catch(() => null);
         if (!res.ok) throw new Error(body?.error || "We couldn't confirm the rate. Please try again.");
         done(body);
