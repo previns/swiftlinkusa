@@ -273,7 +273,7 @@ export async function internalRoute(request, env, deps) {
   const path = new URL(request.url).pathname.replace(/^\/internal\/ratecons/, "") || "/";
   const now = deps.now();
   if (path === "/" && request.method === "GET") {
-    const rows = (await db.prepare(`SELECT * FROM ratecons ORDER BY created DESC LIMIT ${LIST_LIMIT}`).all()).results;
+    const rows = (await db.prepare(`SELECT * FROM ratecons WHERE status!='deleted' ORDER BY created DESC LIMIT ${LIST_LIMIT}`).all()).results;
     return json({ items: rows.map((r) => staffView(r, now)) }, 200);
   }
   if (path === "/" && request.method === "POST") {
@@ -297,6 +297,14 @@ export async function internalRoute(request, env, deps) {
     const rows = (await db.prepare("SELECT name, contact_name, email, signer_name, signer_email, loads, last_used FROM ratecon_customers WHERE removed=0 ORDER BY last_used DESC LIMIT 500").all()).results;
     return json({ customers: rows }, 200);
   }
+  if (path === "/customers/update" && request.method === "POST") {
+    let input;
+    try { input = JSON.parse(await request.text()); } catch { return json({ error: "Invalid request" }, 400); }
+    const name = clean(input?.name, 120), email = clean(input?.email, 200).toLowerCase(), contact = properName(clean(input?.contact_name, 80));
+    if (!name || !isEmail(email)) return json({ error: "Enter a valid email for this customer." }, 422);
+    const res = await db.prepare("UPDATE ratecon_customers SET contact_name=?, email=? WHERE name=?").bind(contact || null, email, name).run();
+    return res.meta.changes ? json({ ok: true, contact_name: contact, email }, 200) : json({ error: "Customer not found" }, 404);
+  }
   if (path === "/customers/remove" && request.method === "POST") {
     let input;
     try { input = JSON.parse(await request.text()); } catch { return json({ error: "Invalid request" }, 400); }
@@ -305,7 +313,7 @@ export async function internalRoute(request, env, deps) {
     await db.prepare("UPDATE ratecon_customers SET removed=1 WHERE name=?").bind(name).run();
     return json({ ok: true }, 200);
   }
-  const m = path.match(/^\/([0-9a-f]{16})(\/void|\/pdf)?$/);
+  const m = path.match(/^\/([0-9a-f]{16})(\/void|\/pdf|\/delete)?$/);
   if (!m) return json({ error: "Not found" }, 404);
   const r = await db.prepare("SELECT * FROM ratecons WHERE id=?").bind(m[1]).first();
   if (!r) return json({ error: "Not found" }, 404);
@@ -315,6 +323,11 @@ export async function internalRoute(request, env, deps) {
     return json({ ok: true }, 200);
   }
   if (m[2] === "/pdf" && request.method === "GET") return pdfResponse(await buildPdf(r, deps.logo), r);
+  // Deleting hides the record from staff and turns its link off; the row stays in the database as a record.
+  if (m[2] === "/delete" && request.method === "POST") {
+    await db.prepare("UPDATE ratecons SET status='deleted', voided_by=? WHERE id=?").bind(staff, r.id).run();
+    return json({ ok: true }, 200);
+  }
   return json({ error: "Not found" }, 404);
 }
 
@@ -325,7 +338,7 @@ export async function publicRoute(request, env, deps, allowed) {
   const db = env.RATECONS;
   await ensureSchema(db);
   const r = await db.prepare("SELECT * FROM ratecons WHERE token=?").bind(m[1]).first();
-  if (!r) return json({ error: "This link is not valid. Ask SwiftLink to send a new one." }, 404, allowed);
+  if (!r || r.status === "deleted") return json({ error: "This link is not valid. Ask SwiftLink to send a new one." }, 404, allowed);
   const now = deps.now();
   if (!m[2] && request.method === "GET") {
     if (!r.viewed_at && r.status === "open") await db.prepare("UPDATE ratecons SET viewed_at=? WHERE id=? AND viewed_at IS NULL").bind(new Date(now).toISOString(), r.id).run();

@@ -172,3 +172,17 @@ test("capitalizes typed names and keeps the customer copy short", async () => {
   assert.match(sent[1].message.body.content, /^Hello Mary O'Neil,/);
   assert.ok(!sent[1].message.body.content.includes("looks wrong"));
 });
+
+test("deletes old confirmations and edits saved customers", async () => {
+  const { env, deps } = setup();
+  const item = (await (await internalRoute(staff("POST", "", sample), env, deps)).json()).item;
+  const token = item.link.split("#")[1];
+  assert.equal((await internalRoute(staff("POST", `/${item.id}/delete`, {}), env, deps)).status, 200);
+  assert.equal((await (await internalRoute(staff("GET", "", null), env, deps)).json()).items.length, 0);
+  assert.equal((await publicRoute(view(token), env, deps, SITE)).status, 404);
+  assert.equal(env.RATECONS.raw.prepare("SELECT status FROM ratecons").get().status, "deleted");
+  assert.equal((await internalRoute(staff("POST", "/customers/update", { name: "acme foods, inc.", contact_name: "pat smith", email: "Pat@AcmeFoods.com" }), env, deps)).status, 200);
+  const c = (await (await internalRoute(staff("GET", "/customers", null), env, deps)).json()).customers[0];
+  assert.deepEqual([c.contact_name, c.email], ["Pat Smith", "pat@acmefoods.com"]);
+  assert.equal((await internalRoute(staff("POST", "/customers/update", { name: "Acme Foods, Inc.", email: "nope" }), env, deps)).status, 422);
+});
