@@ -31,6 +31,10 @@ const SCHEMA = [
     confirmed_ua TEXT, terms_version TEXT, email_error TEXT, voided_by TEXT, confirmed_email TEXT)`,
   "CREATE INDEX IF NOT EXISTS ratecons_created ON ratecons(created)",
   "CREATE INDEX IF NOT EXISTS ratecons_load ON ratecons(load_no)",
+  // Saved customers: filled in when staff create a link, signer details added when someone confirms.
+  `CREATE TABLE IF NOT EXISTS ratecon_customers (
+    name TEXT PRIMARY KEY COLLATE NOCASE, contact_name TEXT, email TEXT NOT NULL, signer_name TEXT, signer_email TEXT,
+    loads INTEGER NOT NULL DEFAULT 0, last_used TEXT, removed INTEGER NOT NULL DEFAULT 0)`,
 ];
 const ready = new WeakSet();
 export async function ensureSchema(db) {
@@ -38,6 +42,12 @@ export async function ensureSchema(db) {
   await db.batch(SCHEMA.map((sql) => db.prepare(sql)));
   // Tables created before confirmed_email existed get the column added once; "duplicate column" means it is already there.
   try { await db.prepare("ALTER TABLE ratecons ADD COLUMN confirmed_email TEXT").run(); } catch {}
+  try { await db.prepare("ALTER TABLE ratecons ADD COLUMN confirm_method TEXT").run(); } catch {}
+  // Customers from links made before saved customers existed (INSERT OR IGNORE never revives a removed one).
+  await db.batch([
+    db.prepare("INSERT OR IGNORE INTO ratecon_customers(name, contact_name, email, loads, last_used) SELECT customer, contact_name, email, COUNT(*), MAX(created) FROM ratecons GROUP BY customer COLLATE NOCASE"),
+    db.prepare("UPDATE ratecon_customers SET signer_name=(SELECT confirmed_name FROM ratecons r WHERE r.customer=ratecon_customers.name COLLATE NOCASE AND r.status='confirmed' ORDER BY r.confirmed_at DESC LIMIT 1), signer_email=(SELECT COALESCE(confirmed_email, email) FROM ratecons r WHERE r.customer=ratecon_customers.name COLLATE NOCASE AND r.status='confirmed' ORDER BY r.confirmed_at DESC LIMIT 1) WHERE signer_name IS NULL"),
+  ]);
   ready.add(db);
 }
 
@@ -88,14 +98,16 @@ export function statusOf(r, now = Date.now()) {
   return r.status;
 }
 
-/** What the customer page may see: no internal IDs, creator, IP or other confirmations. */
-export function publicView(r, now = Date.now()) {
+/** What the customer page may see: no internal IDs, creator, IP or other confirmations.
+ *  returning: the last person at this customer who confirmed a rate, so their details can be prefilled. */
+export function publicView(r, now = Date.now(), returning = null) {
   return {
     load_no: r.load_no, po: r.po || "", customer: r.customer, contact_name: r.contact_name || "",
     pickup: { place: place(r, "pickup"), date: r.pickup_date }, delivery: { place: place(r, "delivery"), date: r.delivery_date },
     rate: money(r.rate_cents), equipment: r.equipment || "", notes: r.notes || "", status: statusOf(r, now),
     confirmed: r.status === "confirmed" ? { name: r.confirmed_name, at: r.confirmed_at } : null,
     terms: r.status === "confirmed" ? termsFor(r.terms_version) : TERMS, terms_version: r.terms_version || TERMS_VERSION,
+    returning: statusOf(r, now) === "open" && returning?.signer_name && returning?.signer_email ? { name: returning.signer_name, email: returning.signer_email } : null,
   };
 }
 // Only one version exists so far; older versions get added here when the wording changes.
@@ -185,7 +197,7 @@ export async function buildPdf(r, logoPng) {
     row("Accepted by email", r.confirmed_email || r.email);
     if (r.confirmed_email && r.confirmed_email !== r.email) row("Link sent to", r.email);
     row("Date and time", `${stampText(r.confirmed_at)}   |   IP address ${r.confirmed_ip || "not recorded"}`);
-    row("Method", "Typed name, terms checkbox and Confirm button at www.swiftlinkusa.com");
+    row("Method", r.confirm_method === "returning" ? "Saved signer details, then Agree & Confirm button at www.swiftlinkusa.com" : "Typed name, terms checkbox and Confirm button at www.swiftlinkusa.com");
     row("Agreement ID", `${r.id}   |   Terms version ${r.terms_version}`);
   } else {
     row("Status", "Not yet accepted by the customer");
@@ -275,8 +287,23 @@ export async function internalRoute(request, env, deps) {
     await db.batch([
       db.prepare("UPDATE ratecons SET status='void', voided_by=? WHERE load_no=? AND status='open'").bind("Replaced by a newer link", r.load_no),
       db.prepare(`INSERT INTO ratecons(${cols.join(",")}) VALUES(${cols.map(() => "?").join(",")})`).bind(...cols.map((c) => r[c] === "" ? null : r[c])),
+      db.prepare(`INSERT INTO ratecon_customers(name, contact_name, email, loads, last_used) VALUES(?,?,?,1,?)
+        ON CONFLICT(name) DO UPDATE SET contact_name=COALESCE(excluded.contact_name, ratecon_customers.contact_name), email=excluded.email,
+        loads=ratecon_customers.loads+1, last_used=excluded.last_used, removed=0`).bind(r.customer, r.contact_name || null, r.email, r.created),
     ]);
     return json({ item: staffView(r, now) }, 200);
+  }
+  if (path === "/customers" && request.method === "GET") {
+    const rows = (await db.prepare("SELECT name, contact_name, email, signer_name, signer_email, loads, last_used FROM ratecon_customers WHERE removed=0 ORDER BY last_used DESC LIMIT 500").all()).results;
+    return json({ customers: rows }, 200);
+  }
+  if (path === "/customers/remove" && request.method === "POST") {
+    let input;
+    try { input = JSON.parse(await request.text()); } catch { return json({ error: "Invalid request" }, 400); }
+    const name = clean(input?.name, 120);
+    if (!name) return json({ error: "Invalid request" }, 400);
+    await db.prepare("UPDATE ratecon_customers SET removed=1 WHERE name=?").bind(name).run();
+    return json({ ok: true }, 200);
   }
   const m = path.match(/^\/([0-9a-f]{16})(\/void|\/pdf)?$/);
   if (!m) return json({ error: "Not found" }, 404);
@@ -302,7 +329,8 @@ export async function publicRoute(request, env, deps, allowed) {
   const now = deps.now();
   if (!m[2] && request.method === "GET") {
     if (!r.viewed_at && r.status === "open") await db.prepare("UPDATE ratecons SET viewed_at=? WHERE id=? AND viewed_at IS NULL").bind(new Date(now).toISOString(), r.id).run();
-    return json(publicView(r, now), 200, allowed);
+    const returning = await db.prepare("SELECT signer_name, signer_email FROM ratecon_customers WHERE name=?").bind(r.customer).first();
+    return json(publicView(r, now, returning), 200, allowed);
   }
   if (m[2] === "/pdf" && request.method === "GET") {
     if (r.status !== "confirmed") return json({ error: "Not confirmed yet" }, 409, allowed);
@@ -323,11 +351,15 @@ export async function publicRoute(request, env, deps, allowed) {
   const state = statusOf(r, now);
   if (state !== "open") return json({ error: state === "confirmed" ? "This rate was already confirmed." : state === "expired" ? "This link has expired. Ask SwiftLink to send a new one." : "This link was cancelled. Ask SwiftLink to send a new one." }, 409, allowed);
   const at = new Date(now).toISOString(), ip = clean(request.headers.get("CF-Connecting-IP"), 64), ua = clean(request.headers.get("User-Agent"), 300);
+  const method = form.get("method") === "returning" ? "returning" : "typed";
   // Only one confirmation can win, even if the button is pressed twice.
-  const result = await db.prepare("UPDATE ratecons SET status='confirmed', confirmed_at=?, confirmed_name=?, confirmed_email=?, confirmed_ip=?, confirmed_ua=?, terms_version=? WHERE id=? AND status='open'")
-    .bind(at, name, email, ip || null, ua || null, TERMS_VERSION, r.id).run();
+  const result = await db.prepare("UPDATE ratecons SET status='confirmed', confirmed_at=?, confirmed_name=?, confirmed_email=?, confirmed_ip=?, confirmed_ua=?, terms_version=?, confirm_method=? WHERE id=? AND status='open'")
+    .bind(at, name, email, ip || null, ua || null, TERMS_VERSION, method, r.id).run();
   if (!result.meta.changes) return json({ error: "This rate was already confirmed." }, 409, allowed);
-  const done = { ...r, status: "confirmed", confirmed_at: at, confirmed_name: name, confirmed_email: email, confirmed_ip: ip || null, terms_version: TERMS_VERSION };
+  // Next time this customer gets a link, these details are filled in for them.
+  await db.prepare(`INSERT INTO ratecon_customers(name, email, signer_name, signer_email, last_used) VALUES(?,?,?,?,?)
+    ON CONFLICT(name) DO UPDATE SET signer_name=excluded.signer_name, signer_email=excluded.signer_email`).bind(r.customer, r.email, name, email, at).run();
+  const done = { ...r, status: "confirmed", confirmed_at: at, confirmed_name: name, confirmed_email: email, confirmed_ip: ip || null, terms_version: TERMS_VERSION, confirm_method: method };
   try {
     const pdf = await buildPdf(done, deps.logo);
     for (const message of confirmationMessages(env, done, pdf)) await deps.sendMail(env, message);

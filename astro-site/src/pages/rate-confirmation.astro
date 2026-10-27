@@ -63,13 +63,22 @@ const field = "w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 
         </dialog>
 
         <form id="rc-form" class="px-6 sm:px-10 pb-8 sm:pb-10 space-y-5 hidden" novalidate>
-          <div class="grid sm:grid-cols-2 gap-4">
+          <input type="hidden" name="method" id="rc-method" value="typed" />
+          <div id="rc-returning" class="hidden rounded-2xl border border-slate-700 bg-slate-950/60 p-5 flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <p class="text-sm text-slate-400">Welcome back — confirming as</p>
+              <p class="font-semibold text-lg" id="rc-ret-name"></p>
+              <p class="text-slate-400 text-sm" id="rc-ret-email"></p>
+            </div>
+            <button type="button" id="rc-not-me" class="text-sm text-orange-400 underline hover:text-orange-300">Not you?</button>
+          </div>
+          <div class="grid sm:grid-cols-2 gap-4" id="rc-fields">
             <div><label for="rc-name" class="block text-sm font-medium mb-2">Your full name <span class="text-orange-500">*</span></label><input id="rc-name" name="name" required autocomplete="name" maxlength="80" class={field} /></div>
             <div><label for="rc-email" class="block text-sm font-medium mb-2">Your email <span class="text-orange-500">*</span></label><input id="rc-email" name="email" type="email" required autocomplete="email" maxlength="200" placeholder="We'll email your copy" class={field} /></div>
           </div>
-          <label class="flex items-start gap-3 text-sm text-slate-300 cursor-pointer">
+          <label class="flex items-start gap-3 text-sm text-slate-300 cursor-pointer" id="rc-agree-row">
             <input type="checkbox" name="agree" id="rc-agree" class="mt-1 w-5 h-5 accent-orange-500 shrink-0" required />
-            <span>I agree to the <button type="button" id="rc-open-terms" class="text-orange-400 underline hover:text-orange-300 font-semibold">Terms and Conditions</button>.</span>
+            <span>I agree to the <button type="button" data-open-terms class="text-orange-400 underline hover:text-orange-300 font-semibold">Terms and Conditions</button>.</span>
           </label>
           {TURNSTILE_SITE_KEY && (
             <>
@@ -81,7 +90,8 @@ const field = "w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 
           <button type="submit" id="rc-submit" class="w-full bg-orange-500 hover:bg-orange-600 disabled:opacity-60 py-4 rounded-2xl font-semibold text-lg transition flex items-center justify-center gap-2">
             <i class="fa-solid fa-circle-check" aria-hidden="true"></i> <span id="rc-submit-label">Confirm rate</span>
           </button>
-          <p class="text-xs text-slate-500 text-center">Typing your name and confirming is your electronic signature. We record the time and your IP address.</p>
+          <p id="rc-oneclick-terms" class="hidden text-sm text-slate-300 text-center">By clicking, you agree to the <button type="button" data-open-terms class="text-orange-400 underline hover:text-orange-300 font-semibold">Terms and Conditions</button>.</p>
+          <p class="text-xs text-slate-500 text-center">Confirming is your electronic signature. We record the time and your IP address.</p>
         </form>
 
         <div id="rc-done" class="hidden px-6 sm:px-10 pb-10" role="status">
@@ -143,11 +153,30 @@ const field = "w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 
       if (d.status === "expired") return fail("This link has expired", `The confirmation link for load ${d.load_no} is more than 30 days old. Ask your SwiftLink contact to send a new one.`);
       if (d.status === "void") return fail("This link was replaced", `SwiftLink cancelled or replaced this link for load ${d.load_no}. Check your email for a newer link, or contact us.`);
       $("rc-form").classList.remove("hidden");
+      setReturning(d.returning);
     }
+
+    // Returning signers: details are filled in and the checkbox becomes a single Agree & confirm click.
+    function setReturning(who: { name: string; email: string } | null) {
+      const on = Boolean(who);
+      ($("rc-name") as HTMLInputElement).value = who?.name || "";
+      ($("rc-email") as HTMLInputElement).value = who?.email || "";
+      ($("rc-agree") as HTMLInputElement).checked = on;
+      ($("rc-method") as HTMLInputElement).value = on ? "returning" : "typed";
+      $("rc-ret-name").textContent = who?.name || "";
+      $("rc-ret-email").textContent = who?.email || "";
+      $("rc-returning").classList.toggle("hidden", !on);
+      $("rc-fields").classList.toggle("hidden", on);
+      $("rc-agree-row").classList.toggle("hidden", on);
+      $("rc-oneclick-terms").classList.toggle("hidden", !on);
+      $("rc-submit-label").textContent = submitLabel();
+    }
+    const submitLabel = () => (($("rc-method") as HTMLInputElement).value === "returning" ? `Agree & confirm rate of ${data.rate}` : `Confirm rate of ${data.rate}`);
+    $("rc-not-me").addEventListener("click", () => { setReturning(null); ($("rc-name") as HTMLInputElement).focus(); });
 
     // Terms open in a pop-up; clicking the dimmed backdrop or a Close button shuts it.
     const terms = $("rc-terms-dialog") as HTMLDialogElement;
-    $("rc-open-terms").addEventListener("click", (event) => { event.preventDefault(); terms.showModal(); });
+    document.querySelectorAll("[data-open-terms]").forEach((b) => b.addEventListener("click", (event) => { event.preventDefault(); terms.showModal(); }));
     terms.querySelectorAll("[data-close-terms]").forEach((b) => b.addEventListener("click", () => terms.close()));
     terms.addEventListener("click", (event) => { if (event.target === terms) terms.close(); });
 
@@ -194,7 +223,7 @@ const field = "w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 
         error.textContent = (e as Error).message;
         error.classList.remove("hidden");
         button.disabled = false;
-        $("rc-submit-label").textContent = `Confirm rate of ${data.rate}`;
+        $("rc-submit-label").textContent = submitLabel();
         // Turnstile tokens are single-use; get a fresh one for the retry.
         (window as any).turnstile?.reset();
       }

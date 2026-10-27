@@ -130,3 +130,35 @@ test("expired, cancelled and replaced links cannot be confirmed; email failure i
   assert.equal((await publicRoute(view("not-a-token"), env, deps, SITE)).status, 404);
   assert.equal((await publicRoute(view("A".repeat(32)), env, deps, SITE)).status, 404);
 });
+
+test("saves customers and prefills the last signer for their next link", async () => {
+  const { env, deps } = setup();
+  const first = (await (await internalRoute(staff("POST", "", sample), env, deps)).json()).item;
+  let customers = (await (await internalRoute(staff("GET", "/customers", null), env, deps)).json()).customers;
+  assert.equal(customers.length, 1);
+  assert.equal(customers[0].email, "dana@acmefoods.com");
+  assert.equal(customers[0].contact_name, "Dana Lee");
+  const t1 = first.link.split("#")[1];
+  assert.equal((await (await publicRoute(view(t1), env, deps, SITE)).json()).returning, null);
+  assert.equal((await publicRoute(confirm(t1, { name: "Dana Lee", email: "dana.lee@acmefoods.com", agree: "on" }), env, deps, SITE)).status, 200);
+
+  const second = (await (await internalRoute(staff("POST", "", { ...sample, load_no: "SLL2000", customer: "ACME FOODS, INC." }), env, deps)).json()).item;
+  const t2 = second.link.split("#")[1];
+  assert.deepEqual((await (await publicRoute(view(t2), env, deps, SITE)).json()).returning, { name: "Dana Lee", email: "dana.lee@acmefoods.com" });
+  customers = (await (await internalRoute(staff("GET", "/customers", null), env, deps)).json()).customers;
+  assert.equal(customers.length, 1);
+  assert.equal(customers[0].loads, 2);
+  assert.equal((await publicRoute(confirm(t2, { name: "Dana Lee", email: "dana.lee@acmefoods.com", agree: "on", method: "returning" }), env, deps, SITE)).status, 200);
+  assert.equal(env.RATECONS.raw.prepare("SELECT confirm_method FROM ratecons WHERE load_no=?").get("SLL2000").confirm_method, "returning");
+  assert.equal(env.RATECONS.raw.prepare("SELECT confirm_method FROM ratecons WHERE load_no=?").get("SLL1005").confirm_method, "typed");
+
+  const other = (await (await internalRoute(staff("POST", "", { ...sample, load_no: "SLL3000", customer: "Other Co", email: "ops@other.co" }), env, deps)).json()).item;
+  assert.equal((await (await publicRoute(view(other.link.split("#")[1]), env, deps, SITE)).json()).returning, null);
+
+  assert.equal((await internalRoute(staff("POST", "/customers/remove", { name: "acme foods, inc." }), env, deps)).status, 200);
+  customers = (await (await internalRoute(staff("GET", "/customers", null), env, deps)).json()).customers;
+  assert.deepEqual(customers.map((c) => c.name), ["Other Co"]);
+  await internalRoute(staff("POST", "", { ...sample, load_no: "SLL4000" }), env, deps);
+  customers = (await (await internalRoute(staff("GET", "/customers", null), env, deps)).json()).customers;
+  assert.equal(customers.length, 2);
+});
