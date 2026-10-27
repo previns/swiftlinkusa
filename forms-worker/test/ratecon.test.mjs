@@ -162,3 +162,13 @@ test("saves customers and prefills the last signer for their next link", async (
   customers = (await (await internalRoute(staff("GET", "/customers", null), env, deps)).json()).customers;
   assert.equal(customers.length, 2);
 });
+
+test("capitalizes typed names and keeps the customer copy short", async () => {
+  const { env, deps, sent } = setup();
+  const item = (await (await internalRoute(staff("POST", "", { ...sample, contact_name: "dana LEE" }), env, deps)).json()).item;
+  assert.equal(item.contact_name, "Dana Lee");
+  assert.equal((await publicRoute(confirm(item.link.split("#")[1], { name: "mary o'neil", email: "mary@acmefoods.com", agree: "on" }), env, deps, SITE)).status, 200);
+  assert.equal(env.RATECONS.raw.prepare("SELECT confirmed_name FROM ratecons").get().confirmed_name, "Mary O'Neil");
+  assert.match(sent[1].message.body.content, /^Hello Mary O'Neil,/);
+  assert.ok(!sent[1].message.body.content.includes("looks wrong"));
+});

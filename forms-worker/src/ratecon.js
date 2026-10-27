@@ -52,6 +52,8 @@ export async function ensureSchema(db) {
 }
 
 const clean = (v, max) => String(v ?? "").replace(/\s+/g, " ").trim().slice(0, max);
+// "dana lee" / "DANA LEE" -> "Dana Lee", "o'neil-smith" -> "O'Neil-Smith"; mixed-case words like "McDonald" are kept as typed.
+export const properName = (v) => String(v ?? "").split(" ").map((w) => (w === w.toLowerCase() || w === w.toUpperCase() ? w.toLowerCase().replace(/(^|[-'’])(\p{L})/gu, (_, p, c) => p + c.toUpperCase()) : w)).join(" ");
 const isEmail = (v) => /^[^\s@<>"]+@[^\s@<>"]+\.[^\s@<>"]+$/.test(v);
 const isDate = (v) => /^\d{4}-\d{2}-\d{2}$/.test(v) && !Number.isNaN(Date.parse(v + "T00:00:00Z"));
 const hex = (bytes) => [...bytes].map((b) => b.toString(16).padStart(2, "0")).join("");
@@ -67,7 +69,7 @@ export function parseNew(input) {
   if (!input || typeof input !== "object") return { errors: ["Invalid request"] };
   const d = {
     load_no: clean(input.load_no, 20).toUpperCase(), po: clean(input.po, 40), customer: clean(input.customer, 120),
-    contact_name: clean(input.contact_name, 80), email: clean(input.email, 200).toLowerCase(),
+    contact_name: properName(clean(input.contact_name, 80)), email: clean(input.email, 200).toLowerCase(),
     pickup_zip: clean(input.pickup_zip, 5), pickup_city: clean(input.pickup_city, 60), pickup_state: clean(input.pickup_state, 2).toUpperCase(), pickup_date: clean(input.pickup_date, 10),
     delivery_zip: clean(input.delivery_zip, 5), delivery_city: clean(input.delivery_city, 60), delivery_state: clean(input.delivery_state, 2).toUpperCase(), delivery_date: clean(input.delivery_date, 10),
     equipment: clean(input.equipment, 40), notes: clean(input.notes, 500),
@@ -107,7 +109,7 @@ export function publicView(r, now = Date.now(), returning = null) {
     rate: money(r.rate_cents), equipment: r.equipment || "", notes: r.notes || "", status: statusOf(r, now),
     confirmed: r.status === "confirmed" ? { name: r.confirmed_name, at: r.confirmed_at } : null,
     terms: r.status === "confirmed" ? termsFor(r.terms_version) : TERMS, terms_version: r.terms_version || TERMS_VERSION,
-    returning: statusOf(r, now) === "open" && returning?.signer_name && returning?.signer_email ? { name: returning.signer_name, email: returning.signer_email } : null,
+    returning: statusOf(r, now) === "open" && returning?.signer_name && returning?.signer_email ? { name: properName(returning.signer_name), email: returning.signer_email } : null,
   };
 }
 // Only one version exists so far; older versions get added here when the wording changes.
@@ -193,7 +195,7 @@ export async function buildPdf(r, logoPng) {
   ensure(120); // keep the acceptance record together on one page
   heading("Acceptance");
   if (r.status === "confirmed") {
-    row("Accepted by", `${[r.confirmed_name, r.confirmed_title].filter(Boolean).join(", ")}, for ${r.customer}`);
+    row("Accepted by", `${[properName(r.confirmed_name), r.confirmed_title].filter(Boolean).join(", ")}, for ${r.customer}`);
     row("Accepted by email", r.confirmed_email || r.email);
     if (r.confirmed_email && r.confirmed_email !== r.email) row("Link sent to", r.email);
     row("Date and time", `${stampText(r.confirmed_at)}   |   IP address ${r.confirmed_ip || "not recorded"}`);
@@ -236,8 +238,6 @@ export function confirmationMessages(env, r, pdf) {
     `Hello ${r.confirmed_name || r.contact_name || ""},`.replace(/ ,$/, ","),
     "",
     `Thank you for confirming the rate for load ${r.load_no} (${lane}, ${money(r.rate_cents)}). Your copy of the Customer Rate Agreement is attached.`,
-    "",
-    "If anything looks wrong, reply to this email or call (248) 987-6776.",
     "",
     "SwiftLink Logistics, LLC",
     "www.swiftlinkusa.com",
@@ -344,7 +344,7 @@ export async function publicRoute(request, env, deps, allowed) {
   const notHuman = await deps.verifyHuman(form, request, env, allowed);
   if (notHuman) return notHuman;
   // Pages cached from before the email field existed send no "email" at all; fall back to the address the link went to.
-  const name = clean(form.get("name"), 80), email = form.has("email") ? clean(form.get("email"), 200).toLowerCase() : r.email;
+  const name = properName(clean(form.get("name"), 80)), email = form.has("email") ? clean(form.get("email"), 200).toLowerCase() : r.email;
   if (name.length < 2) return json({ error: "Type your full name to sign." }, 422, allowed);
   if (!isEmail(email)) return json({ error: "Enter your email so we can send your copy." }, 422, allowed);
   if (form.get("agree") !== "on") return json({ error: "Check the box to agree to the rate and terms." }, 422, allowed);
