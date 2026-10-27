@@ -70,7 +70,7 @@ test("create, view, confirm once, email the signed PDF", async () => {
 
   assert.equal((await publicRoute(confirm(token, { name: "Dana Lee" }), env, deps, SITE)).status, 422);
   assert.equal((await publicRoute(confirm(token, { agree: "on" }), env, deps, SITE)).status, 422);
-  assert.equal((await publicRoute(confirm(token, { name: "Dana Lee", agree: "on" }), env, deps, SITE)).status, 422);
+  assert.equal((await publicRoute(confirm(token, { name: "Dana Lee", email: "", agree: "on" }), env, deps, SITE)).status, 422);
   const ok = await publicRoute(confirm(token, { name: "Dana Lee", email: "Dana.Lee@AcmeFoods.com", agree: "on" }), env, deps, SITE);
   assert.equal(ok.status, 200);
   assert.equal((await ok.json()).status, "confirmed");
@@ -120,6 +120,8 @@ test("expired, cancelled and replaced links cannot be confirmed; email failure i
   assert.equal((await (await publicRoute(view(t3), env, deps, SITE)).json()).status, "expired");
   assert.equal((await publicRoute(confirm(t3, { name: "Dana Lee", email: "dana@acmefoods.com", agree: "on" }), env, deps, SITE)).status, 409);
 
+  const older = (await (await internalRoute(staff("POST", "", { ...sample, load_no: "SLL1008" }), env, deps)).json()).item;
+  assert.equal((await publicRoute(confirm(older.link.split("#")[1], { name: "Dana Lee", title: "Old page", agree: "on" }), env, deps, SITE)).status, 200);
   const fourth = (await (await internalRoute(staff("POST", "", { ...sample, load_no: "SLL1007" }), env, deps)).json()).item;
   const failing = { ...deps, sendMail: async () => { throw new Error("Graph down"); } };
   assert.equal((await publicRoute(confirm(fourth.link.split("#")[1], { name: "Dana Lee", email: "dana@acmefoods.com", agree: "on" }), env, failing, SITE)).status, 200);

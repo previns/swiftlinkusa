@@ -315,7 +315,8 @@ export async function publicRoute(request, env, deps, allowed) {
   try { form = await request.formData(); } catch { return json({ error: "Invalid submission" }, 400, allowed); }
   const notHuman = await deps.verifyHuman(form, request, env, allowed);
   if (notHuman) return notHuman;
-  const name = clean(form.get("name"), 80), email = clean(form.get("email"), 200).toLowerCase();
+  // Pages cached from before the email field existed send no "email" at all; fall back to the address the link went to.
+  const name = clean(form.get("name"), 80), email = form.has("email") ? clean(form.get("email"), 200).toLowerCase() : r.email;
   if (name.length < 2) return json({ error: "Type your full name to sign." }, 422, allowed);
   if (!isEmail(email)) return json({ error: "Enter your email so we can send your copy." }, 422, allowed);
   if (form.get("agree") !== "on") return json({ error: "Check the box to agree to the rate and terms." }, 422, allowed);
