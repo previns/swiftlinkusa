@@ -203,3 +203,29 @@ test("removing a customer forgets their signer; deleted links never come back as
   await ensureSchema(fresh);
   assert.equal(env2.RATECONS.raw.prepare("SELECT COUNT(*) AS n FROM ratecon_customers").get().n, 0);
 });
+
+test("invitation email has a button, a hyperlink and a copy-paste link, and can be sent", async () => {
+  const { env, deps, sent } = setup();
+  const item = (await (await internalRoute(staff("POST", "", { ...sample, customer: "Acme <Foods>", notes: "" }), env, deps)).json()).item;
+  const mail = await (await internalRoute(staff("GET", `/${item.id}/email`, null), env, deps)).json();
+  const link = item.link;
+  assert.equal(mail.subject, "Rate confirmation – Load SLL1005");
+  assert.equal(mail.to, "dana@acmefoods.com");
+  assert.ok(mail.html.includes(`href="${link}"`), "button/hyperlink");
+  assert.ok(mail.html.includes(">Review &amp; confirm rate</a>"), "button text");
+  assert.ok(mail.html.includes(">Open the rate confirmation for load SLL1005</a>"), "hyperlink text");
+  assert.ok(mail.html.includes(`monospace;font-size:12px;color:#1b2a4a;word-break:break-all">${link}</span>`), "copy-paste link");
+  assert.ok(mail.html.includes("Hi Dana,"));
+  assert.ok(!mail.html.includes("<Foods>"));
+  assert.ok(mail.text.includes(link));
+  const res = await internalRoute(staff("POST", `/${item.id}/send`, {}), env, deps);
+  assert.equal(res.status, 200);
+  const m = sent.at(-1).message;
+  assert.equal(m.body.contentType, "HTML");
+  assert.deepEqual([m.toRecipients[0].emailAddress.address, m.ccRecipients[0].emailAddress.address, m.replyTo[0].emailAddress.address], ["dana@acmefoods.com", "previn@swiftlinkusa.com", "previn@swiftlinkusa.com"]);
+  const row = (await (await internalRoute(staff("GET", "", null), env, deps)).json()).items[0];
+  assert.ok(row.sent_at); assert.equal(row.sent_by, "previn@swiftlinkusa.com");
+  await publicRoute(confirm(link.split("#")[1], { name: "Dana Lee", email: "dana@acmefoods.com", agree: "on" }), env, deps, SITE);
+  assert.equal((await internalRoute(staff("POST", `/${item.id}/send`, {}), env, deps)).status, 409);
+  require_html: { const fsx = await import("node:fs"); fsx.mkdirSync(new URL("./output/", import.meta.url), { recursive: true }); fsx.writeFileSync(new URL("./output/invite.html", import.meta.url), mail.html); }
+});

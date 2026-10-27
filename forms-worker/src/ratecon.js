@@ -43,6 +43,8 @@ export async function ensureSchema(db) {
   // Tables created before confirmed_email existed get the column added once; "duplicate column" means it is already there.
   try { await db.prepare("ALTER TABLE ratecons ADD COLUMN confirmed_email TEXT").run(); } catch {}
   try { await db.prepare("ALTER TABLE ratecons ADD COLUMN confirm_method TEXT").run(); } catch {}
+  try { await db.prepare("ALTER TABLE ratecons ADD COLUMN sent_at TEXT").run(); } catch {}
+  try { await db.prepare("ALTER TABLE ratecons ADD COLUMN sent_by TEXT").run(); } catch {}
   // Customers from links made before saved customers existed (INSERT OR IGNORE never revives a removed one).
   await db.batch([
     db.prepare("INSERT OR IGNORE INTO ratecon_customers(name, contact_name, email, loads, last_used) SELECT customer, contact_name, email, COUNT(*), MAX(created) FROM ratecons WHERE status!='deleted' GROUP BY customer COLLATE NOCASE"),
@@ -211,6 +213,45 @@ export async function buildPdf(r, logoPng) {
 
 export const pdfName = (r) => `${r.load_no} - Customer Rate Agreement.pdf`;
 
+// ---------- invitation email (what the customer receives with their link)
+
+const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+const LOGO_URL = "https://www.swiftlinkusa.com/img/swiftlink-logo-email.png";
+
+/** The invitation email: a big button, a hyperlink and the plain link to copy. Table layout and inline styles for Outlook. */
+export function inviteEmail(r) {
+  const link = LINK_BASE + r.token;
+  const subject = `Rate confirmation – Load ${r.load_no}`;
+  const hi = r.contact_name ? `Hi ${properName(r.contact_name).split(" ")[0]},` : "Hello,";
+  const lane = `${place(r, "pickup")} → ${place(r, "delivery")}`;
+  const rows = [["Load", r.load_no + (r.po ? `  ·  PO ${r.po}` : "")], ["Lane", lane], ["Pickup", dateText(r.pickup_date)], ["Delivery", dateText(r.delivery_date)], ...(r.equipment ? [["Equipment", r.equipment]] : []), ["Rate", money(r.rate_cents)]];
+  const font = "font-family:'Segoe UI',Arial,Helvetica,sans-serif;";
+  const html = `<!doctype html><html><body style="margin:0;padding:0;background:#f2f4f8">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f2f4f8"><tr><td align="center" style="padding:24px 12px">
+<table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px;max-width:600px;background:#ffffff;border:1px solid #dce2eb;${font}color:#1b2a4a">
+<tr><td style="padding:22px 28px 18px 28px;border-bottom:4px solid #c9a227"><img src="${LOGO_URL}" width="170" alt="SwiftLink Logistics" style="display:block;border:0;width:170px;height:auto"></td></tr>
+<tr><td style="padding:28px 28px 8px 28px;${font}font-size:15px;line-height:22px;color:#1b2a4a">
+<p style="margin:0 0 14px 0">${esc(hi)}</p>
+<p style="margin:0 0 18px 0">Please review and confirm the rate for load <b>${esc(r.load_no)}</b>. It only takes a few seconds.</p>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border:1px solid #dce2eb;background:#f8f9fc">
+${rows.map(([k, v], i) => `<tr><td style="padding:9px 14px;${i ? "border-top:1px solid #e6eaf0;" : ""}${font}font-size:13px;color:#626e83;width:110px">${esc(k)}</td><td style="padding:9px 14px;${i ? "border-top:1px solid #e6eaf0;" : ""}${font}font-size:14px;color:#1b2a4a;${k === "Rate" ? "font-weight:700;font-size:16px;" : ""}">${esc(v)}</td></tr>`).join("\n")}
+</table>
+</td></tr>
+<tr><td align="center" style="padding:24px 28px 8px 28px">
+<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td align="center" bgcolor="#c9a227" style="background:#c9a227;border-radius:8px">
+<a href="${esc(link)}" target="_blank" style="display:inline-block;padding:15px 34px;${font}font-size:16px;font-weight:700;color:#1b2a4a;text-decoration:none;border-radius:8px">Review &amp; confirm rate</a>
+</td></tr></table>
+</td></tr>
+<tr><td style="padding:14px 28px 26px 28px;${font}font-size:13px;line-height:20px;color:#626e83">
+<p style="margin:0 0 10px 0">Or click here: <a href="${esc(link)}" target="_blank" style="color:#2c5d8f;text-decoration:underline">Open the rate confirmation for load ${esc(r.load_no)}</a></p>
+<p style="margin:0">If the button and link don't work, copy and paste this into your browser:<br><span style="font-family:Consolas,'Courier New',monospace;font-size:12px;color:#1b2a4a;word-break:break-all">${esc(link)}</span></p>
+</td></tr>
+<tr><td style="padding:14px 28px;background:#f8f9fc;border-top:1px solid #e6eaf0;${font}font-size:12px;color:#626e83">SwiftLink Logistics, LLC &nbsp;·&nbsp; <a href="https://www.swiftlinkusa.com" style="color:#626e83">www.swiftlinkusa.com</a></td></tr>
+</table></td></tr></table></body></html>`;
+  const text = [hi, "", `Please review and confirm the rate for load ${r.load_no}. It only takes a few seconds.`, "", ...rows.map(([k, v]) => `${k}: ${v}`), "", `Review & confirm rate: ${link}`, "", "Thank you,"].join("\n");
+  return { subject, html, text, to: r.email };
+}
+
 function base64(bytes) {
   let binary = "";
   for (let i = 0; i < bytes.length; i += 0x8000) binary += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
@@ -314,7 +355,7 @@ export async function internalRoute(request, env, deps) {
     await db.prepare("UPDATE ratecon_customers SET removed=1, signer_name=NULL, signer_email=NULL WHERE name=?").bind(name).run();
     return json({ ok: true }, 200);
   }
-  const m = path.match(/^\/([0-9a-f]{16})(\/void|\/pdf|\/delete)?$/);
+  const m = path.match(/^\/([0-9a-f]{16})(\/void|\/pdf|\/delete|\/email|\/send)?$/);
   if (!m) return json({ error: "Not found" }, 404);
   const r = await db.prepare("SELECT * FROM ratecons WHERE id=?").bind(m[1]).first();
   if (!r) return json({ error: "Not found" }, 404);
@@ -324,6 +365,21 @@ export async function internalRoute(request, env, deps) {
     return json({ ok: true }, 200);
   }
   if (m[2] === "/pdf" && request.method === "GET") return pdfResponse(await buildPdf(r, deps.logo), r);
+  if (m[2] === "/email" && request.method === "GET") return json(inviteEmail(r), 200);
+  // Sends the invitation from SwiftLink's mailbox; the employee is copied and replies go to them.
+  if (m[2] === "/send" && request.method === "POST") {
+    if (statusOf(r, now) !== "open") return json({ error: "Only links that are still waiting can be emailed." }, 409);
+    const mail = inviteEmail(r);
+    try {
+      await deps.sendMail(env, { message: { subject: mail.subject, body: { contentType: "HTML", content: mail.html }, toRecipients: [{ emailAddress: { address: r.email } }], ccRecipients: [{ emailAddress: { address: staff } }], replyTo: [{ emailAddress: { address: staff } }] }, saveToSentItems: true });
+    } catch (error) {
+      console.error("Rate confirmation invite failed", error);
+      return json({ error: "The email could not be sent. Try again, or use Open in Outlook." }, 502);
+    }
+    const at = new Date(now).toISOString();
+    await db.prepare("UPDATE ratecons SET sent_at=?, sent_by=? WHERE id=?").bind(at, staff, r.id).run();
+    return json({ ok: true, sent_at: at, sent_by: staff }, 200);
+  }
   // Deleting hides the record from staff and turns its link off; the row stays in the database as a record.
   if (m[2] === "/delete" && request.method === "POST") {
     await db.prepare("UPDATE ratecons SET status='deleted', voided_by=? WHERE id=?").bind(staff, r.id).run();
