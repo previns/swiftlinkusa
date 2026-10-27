@@ -50,11 +50,17 @@ const field = "w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 
           </div>
         </div>
 
-        <details class="mx-6 sm:mx-10 mb-6 group" id="rc-terms-box">
-          <summary class="cursor-pointer select-none text-sm font-semibold text-slate-300 hover:text-white flex items-center gap-2"><i class="fa-solid fa-chevron-right text-xs text-orange-500 transition group-open:rotate-90" aria-hidden="true"></i> Rate agreement terms</summary>
-          <ol class="mt-4 space-y-2 text-sm text-slate-400 list-decimal pl-5" id="rc-terms"></ol>
-          <p class="mt-3 text-sm text-slate-500">Full <a class="text-orange-400 underline" href="/terms" target="_blank" rel="noopener">Terms &amp; Conditions</a>.</p>
-        </details>
+        <dialog id="rc-terms-dialog" aria-labelledby="rc-terms-title" class="rc-dialog m-auto bg-slate-900 text-white border border-slate-700 rounded-3xl p-0 w-[min(640px,calc(100vw-32px))] max-h-[85vh] backdrop:bg-slate-950/80">
+          <div class="flex items-center justify-between gap-4 px-6 sm:px-8 pt-6 pb-4 border-b border-slate-800">
+            <h2 id="rc-terms-title" class="text-xl font-bold">Terms and Conditions</h2>
+            <button type="button" data-close-terms class="w-9 h-9 rounded-full border border-slate-700 hover:border-orange-500 hover:text-orange-400 transition" aria-label="Close"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+          </div>
+          <div class="px-6 sm:px-8 py-5 overflow-y-auto max-h-[60vh]">
+            <ol class="space-y-3 text-sm text-slate-300 list-decimal pl-5" id="rc-terms"></ol>
+            <p class="mt-4 text-sm text-slate-500">These terms are in addition to SwiftLink's full <a class="text-orange-400 underline" href="/terms" target="_blank" rel="noopener">Terms &amp; Conditions</a>.</p>
+          </div>
+          <div class="px-6 sm:px-8 pb-6 pt-2"><button type="button" data-close-terms class="w-full bg-orange-500 hover:bg-orange-600 py-3 rounded-2xl font-semibold transition">Close</button></div>
+        </dialog>
 
         <form id="rc-form" class="px-6 sm:px-10 pb-8 sm:pb-10 space-y-5 hidden" novalidate>
           <div class="grid sm:grid-cols-2 gap-4">
@@ -63,7 +69,7 @@ const field = "w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 
           </div>
           <label class="flex items-start gap-3 text-sm text-slate-300 cursor-pointer">
             <input type="checkbox" name="agree" id="rc-agree" class="mt-1 w-5 h-5 accent-orange-500 shrink-0" required />
-            <span>I'm authorized to approve this rate for <span id="rc-customer-2" class="font-semibold text-white"></span>, and I agree to the rate and the terms above.</span>
+            <span>I agree to the <button type="button" id="rc-open-terms" class="text-orange-400 underline hover:text-orange-300 font-semibold">Terms and Conditions</button>.</span>
           </label>
           {TURNSTILE_SITE_KEY && (
             <>
@@ -115,7 +121,6 @@ const field = "w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 
       $("rc-loading").classList.add("hidden");
       $("rc-load").textContent = d.load_no;
       $("rc-customer").textContent = d.customer;
-      $("rc-customer-2").textContent = d.customer;
       $("rc-po").textContent = d.po ? ` · PO ${d.po}` : "";
       $("rc-pickup").textContent = d.pickup.place;
       $("rc-pickup-date").textContent = dateText(d.pickup.date);
@@ -138,8 +143,13 @@ const field = "w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 
       if (d.status === "expired") return fail("This link has expired", `The confirmation link for load ${d.load_no} is more than 30 days old. Ask your SwiftLink contact to send a new one.`);
       if (d.status === "void") return fail("This link was replaced", `SwiftLink cancelled or replaced this link for load ${d.load_no}. Check your email for a newer link, or contact us.`);
       $("rc-form").classList.remove("hidden");
-      ($("rc-terms-box") as HTMLDetailsElement).open = window.innerWidth >= 640;
     }
+
+    // Terms open in a pop-up; clicking the dimmed backdrop or a Close button shuts it.
+    const terms = $("rc-terms-dialog") as HTMLDialogElement;
+    $("rc-open-terms").addEventListener("click", (event) => { event.preventDefault(); terms.showModal(); });
+    terms.querySelectorAll("[data-close-terms]").forEach((b) => b.addEventListener("click", () => terms.close()));
+    terms.addEventListener("click", (event) => { if (event.target === terms) terms.close(); });
 
     function done(d: any) {
       $("rc-form").classList.add("hidden");

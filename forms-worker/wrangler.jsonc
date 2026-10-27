@@ -15,6 +15,6 @@
   // TURNSTILE_SECRET (optional Worker secret) turns on the Cloudflare Turnstile check.
   // RATECON_KEY (Worker secret, same value as the portal's) authorizes the portal's /internal/ratecons calls.
   // Rate confirmations live in their own database, separate from the portal's employee data.
-  "d1_databases": [{ "binding": "RATECONS", "database_name": "swiftlink-ratecons", "database_id": "PENDING" }],
+  "d1_databases": [{ "binding": "RATECONS", "database_name": "swiftlink-ratecons", "database_id": "c1a36634-4c82-4387-ae6b-749925947e09" }],
   "observability": { "enabled": true }
 }

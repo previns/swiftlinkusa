@@ -8,7 +8,7 @@ import { json } from "./guard.js";
 // stores the version it was accepted under and its PDF prints that exact wording.
 export const TERMS_VERSION = "2026-10-27";
 export const TERMS = [
-  "Customer agrees to pay SwiftLink Logistics, LLC (\"SwiftLink\") the rate shown above for the shipment described in this agreement.",
+  "Customer agrees to pay SwiftLink Logistics, LLC (\"SwiftLink\"), or its designated factoring company, the rate shown above for the shipment described in this agreement.",
   "Accessorial charges not included above (such as detention, layover, lumper fees, truck ordered not used, extra stops or redelivery) are billed only when incurred and supported by documentation or approved by Customer.",
   "Invoices are due NET 30 from the invoice date unless other terms are approved in writing by SwiftLink. Accounts thirty (30) days or more past due accrue a finance charge of 1.5% per month (18% per annum), and Customer agrees to pay reasonable collection costs and attorney fees.",
   "SwiftLink acts as a property broker and arranges transportation with independent, licensed motor carriers. Carriers maintain cargo insurance of $100,000 per shipment; Customer must notify SwiftLink in writing before tender if the cargo value exceeds $100,000.",
