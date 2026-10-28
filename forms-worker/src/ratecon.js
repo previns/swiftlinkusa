@@ -45,6 +45,8 @@ export async function ensureSchema(db) {
   try { await db.prepare("ALTER TABLE ratecons ADD COLUMN confirm_method TEXT").run(); } catch {}
   try { await db.prepare("ALTER TABLE ratecons ADD COLUMN sent_at TEXT").run(); } catch {}
   try { await db.prepare("ALTER TABLE ratecons ADD COLUMN sent_by TEXT").run(); } catch {}
+  try { await db.prepare("ALTER TABLE ratecons ADD COLUMN batch TEXT").run(); } catch {}
+  await db.prepare("CREATE INDEX IF NOT EXISTS ratecons_batch ON ratecons(batch)").run();
   // Customers from links made before saved customers existed (INSERT OR IGNORE never revives a removed one).
   await db.batch([
     db.prepare("INSERT OR IGNORE INTO ratecon_customers(name, contact_name, email, loads, last_used) SELECT customer, contact_name, email, COUNT(*), MAX(created) FROM ratecons WHERE status!='deleted' GROUP BY customer COLLATE NOCASE"),
@@ -218,37 +220,55 @@ export const pdfName = (r) => `${r.load_no} - Customer Rate Agreement.pdf`;
 const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const LOGO_URL = "https://www.swiftlinkusa.com/img/swiftlink-logo-email.png";
 
-/** The invitation email: a big button, a hyperlink and the plain link to copy. Table layout and inline styles for Outlook. */
-export function inviteEmail(r) {
-  const link = LINK_BASE + r.token;
-  const subject = `Rate confirmation – Load ${r.load_no}`;
+/** The invitation email: a big button, a hyperlink and the plain link to copy. Table layout and inline styles for Outlook.
+ *  Takes one load or every waiting load of a multi-load link (they share one link). */
+export function inviteEmail(input) {
+  const list = Array.isArray(input) ? input : [input], r = list[0], multi = list.length > 1;
+  const link = LINK_BASE + (r.batch || r.token);
+  const loadNos = list.map((x) => x.load_no);
+  const subject = multi ? `Rate confirmation – ${list.length} loads (${loadNos.slice(0, 4).join(", ")}${list.length > 4 ? ", …" : ""})` : `Rate confirmation – Load ${r.load_no}`;
   const hi = r.contact_name ? `Hi ${properName(r.contact_name).split(" ")[0]},` : "Hello,";
-  const lane = `${place(r, "pickup")} → ${place(r, "delivery")}`;
-  const rows = [["Load", r.load_no + (r.po ? `  ·  PO ${r.po}` : "")], ["Lane", lane], ["Pickup", dateText(r.pickup_date)], ["Delivery", dateText(r.delivery_date)], ...(r.equipment ? [["Equipment", r.equipment]] : []), ["Rate", money(r.rate_cents)]];
   const font = "font-family:'Segoe UI',Arial,Helvetica,sans-serif;";
+  const cell = (i, extra = "") => `padding:9px 12px;${i ? "border-top:1px solid #e6eaf0;" : ""}${font}font-size:13px;color:#1b2a4a;${extra}`;
+  const total = list.reduce((t, x) => t + x.rate_cents, 0);
+  let details;
+  if (multi) {
+    details = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border:1px solid #dce2eb;background:#f8f9fc">
+<tr><td style="${cell(0, "color:#626e83;font-size:12px;font-weight:600")}">Load</td><td style="${cell(0, "color:#626e83;font-size:12px;font-weight:600")}">Lane</td><td style="${cell(0, "color:#626e83;font-size:12px;font-weight:600")}">Pickup</td><td align="right" style="${cell(0, "color:#626e83;font-size:12px;font-weight:600;text-align:right")}">Rate</td></tr>
+${list.map((x) => `<tr><td style="${cell(1, "font-weight:600;white-space:nowrap")}">${esc(x.load_no)}${x.po ? `<br><span style="color:#626e83;font-weight:400;font-size:12px">PO ${esc(x.po)}</span>` : ""}</td><td style="${cell(1)}">${esc(place(x, "pickup"))} → ${esc(place(x, "delivery"))}</td><td style="${cell(1, "white-space:nowrap")}">${esc(dateText(x.pickup_date))}</td><td align="right" style="${cell(1, "font-weight:700;text-align:right;white-space:nowrap")}">${esc(money(x.rate_cents))}</td></tr>`).join("\n")}
+<tr><td colspan="3" style="${cell(1, "font-weight:700")}">Total (${list.length} loads)</td><td align="right" style="${cell(1, "font-weight:700;font-size:15px;text-align:right;white-space:nowrap")}">${esc(money(total))}</td></tr>
+</table>`;
+  } else {
+    const rows = [["Load", r.load_no + (r.po ? `  ·  PO ${r.po}` : "")], ["Lane", `${place(r, "pickup")} → ${place(r, "delivery")}`], ["Pickup", dateText(r.pickup_date)], ["Delivery", dateText(r.delivery_date)], ...(r.equipment ? [["Equipment", r.equipment]] : []), ["Rate", money(r.rate_cents)]];
+    details = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border:1px solid #dce2eb;background:#f8f9fc">
+${rows.map(([k, v], i) => `<tr><td style="padding:9px 14px;${i ? "border-top:1px solid #e6eaf0;" : ""}${font}font-size:13px;color:#626e83;width:110px">${esc(k)}</td><td style="padding:9px 14px;${i ? "border-top:1px solid #e6eaf0;" : ""}${font}font-size:14px;color:#1b2a4a;${k === "Rate" ? "font-weight:700;font-size:16px;" : ""}">${esc(v)}</td></tr>`).join("\n")}
+</table>`;
+  }
+  const intro = multi ? `Please review and confirm the rates for these <b>${list.length} loads</b>. You can approve them all at once, and it only takes a few seconds.` : `Please review and confirm the rate for load <b>${esc(r.load_no)}</b>. It only takes a few seconds.`;
+  const button = multi ? `Review &amp; confirm ${list.length} loads` : "Review &amp; confirm rate";
+  const linkText = multi ? `Open the rate confirmation for ${list.length} loads` : `Open the rate confirmation for load ${esc(r.load_no)}`;
   const html = `<!doctype html><html><body style="margin:0;padding:0;background:#f2f4f8">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f2f4f8"><tr><td align="center" style="padding:24px 12px">
 <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px;max-width:600px;background:#ffffff;border:1px solid #dce2eb;${font}color:#1b2a4a">
 <tr><td style="padding:22px 28px 18px 28px;border-bottom:4px solid #c9a227"><img src="${LOGO_URL}" width="170" alt="SwiftLink Logistics" style="display:block;border:0;width:170px;height:auto"></td></tr>
 <tr><td style="padding:28px 28px 8px 28px;${font}font-size:15px;line-height:22px;color:#1b2a4a">
 <p style="margin:0 0 14px 0">${esc(hi)}</p>
-<p style="margin:0 0 18px 0">Please review and confirm the rate for load <b>${esc(r.load_no)}</b>. It only takes a few seconds.</p>
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border:1px solid #dce2eb;background:#f8f9fc">
-${rows.map(([k, v], i) => `<tr><td style="padding:9px 14px;${i ? "border-top:1px solid #e6eaf0;" : ""}${font}font-size:13px;color:#626e83;width:110px">${esc(k)}</td><td style="padding:9px 14px;${i ? "border-top:1px solid #e6eaf0;" : ""}${font}font-size:14px;color:#1b2a4a;${k === "Rate" ? "font-weight:700;font-size:16px;" : ""}">${esc(v)}</td></tr>`).join("\n")}
-</table>
+<p style="margin:0 0 18px 0">${intro}</p>
+${details}
 </td></tr>
 <tr><td align="center" style="padding:24px 28px 8px 28px">
 <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td align="center" bgcolor="#c9a227" style="background:#c9a227;border-radius:8px">
-<a href="${esc(link)}" target="_blank" style="display:inline-block;padding:15px 34px;${font}font-size:16px;font-weight:700;color:#1b2a4a;text-decoration:none;border-radius:8px">Review &amp; confirm rate</a>
+<a href="${esc(link)}" target="_blank" style="display:inline-block;padding:15px 34px;${font}font-size:16px;font-weight:700;color:#1b2a4a;text-decoration:none;border-radius:8px">${button}</a>
 </td></tr></table>
 </td></tr>
 <tr><td style="padding:14px 28px 26px 28px;${font}font-size:13px;line-height:20px;color:#626e83">
-<p style="margin:0 0 10px 0">Or click here: <a href="${esc(link)}" target="_blank" style="color:#2c5d8f;text-decoration:underline">Open the rate confirmation for load ${esc(r.load_no)}</a></p>
+<p style="margin:0 0 10px 0">Or click here: <a href="${esc(link)}" target="_blank" style="color:#2c5d8f;text-decoration:underline">${linkText}</a></p>
 <p style="margin:0">If the button and link don't work, copy and paste this into your browser:<br><span style="font-family:Consolas,'Courier New',monospace;font-size:12px;color:#1b2a4a;word-break:break-all">${esc(link)}</span></p>
 </td></tr>
 <tr><td style="padding:14px 28px;background:#f8f9fc;border-top:1px solid #e6eaf0;${font}font-size:12px;color:#626e83">SwiftLink Logistics, LLC &nbsp;·&nbsp; <a href="https://www.swiftlinkusa.com" style="color:#626e83">www.swiftlinkusa.com</a></td></tr>
 </table></td></tr></table></body></html>`;
-  const text = [hi, "", `Please review and confirm the rate for load ${r.load_no}. It only takes a few seconds.`, "", ...rows.map(([k, v]) => `${k}: ${v}`), "", `Review & confirm rate: ${link}`, "", "Thank you,"].join("\n");
+  const lines = multi ? [...list.map((x) => `${x.load_no}: ${place(x, "pickup")} -> ${place(x, "delivery")}, pickup ${dateText(x.pickup_date)}, ${money(x.rate_cents)}`), `Total (${list.length} loads): ${money(total)}`] : [`Load: ${r.load_no}${r.po ? `  PO ${r.po}` : ""}`, `Lane: ${place(r, "pickup")} -> ${place(r, "delivery")}`, `Pickup: ${dateText(r.pickup_date)}`, `Delivery: ${dateText(r.delivery_date)}`, `Rate: ${money(r.rate_cents)}`];
+  const text = [hi, "", multi ? `Please review and confirm the rates for these ${list.length} loads. You can approve them all at once.` : `Please review and confirm the rate for load ${r.load_no}. It only takes a few seconds.`, "", ...lines, "", `${multi ? `Review & confirm ${list.length} loads` : "Review & confirm rate"}: ${link}`, "", "Thank you,"].join("\n");
   return { subject, html, text, to: r.email };
 }
 
@@ -258,40 +278,44 @@ function base64(bytes) {
   return btoa(binary);
 }
 
-/** Graph messages after a confirmation: one to SwiftLink (and the employee who sent the link), one copy to the customer. */
-export function confirmationMessages(env, r, pdf) {
-  const attachment = { "@odata.type": "#microsoft.graph.fileAttachment", name: pdfName(r), contentType: "application/pdf", contentBytes: base64(pdf) };
-  const lane = `${place(r, "pickup")} -> ${place(r, "delivery")}`;
+/** Graph messages after a confirmation: one to SwiftLink (and whoever sent the link), one copy to the customer.
+ *  rows/pdfs: every load confirmed in this one action (one for a single-load link). Each PDF is attached separately. */
+export function confirmationMessages(env, rowsIn, pdfsIn) {
+  const rows = Array.isArray(rowsIn) ? rowsIn : [rowsIn], pdfs = Array.isArray(pdfsIn) ? pdfsIn : [pdfsIn], r = rows[0], multi = rows.length > 1;
+  const attachments = rows.map((x, i) => ({ "@odata.type": "#microsoft.graph.fileAttachment", name: pdfName(x), contentType: "application/pdf", contentBytes: base64(pdfs[i]) }));
+  const lane = (x) => `${place(x, "pickup")} -> ${place(x, "delivery")}`;
+  const total = rows.reduce((t, x) => t + x.rate_cents, 0);
+  const loadLines = rows.flatMap((x) => [`Load: ${x.load_no}${x.po ? `   PO: ${x.po}` : ""}`, `Lane: ${lane(x)}`, `Pickup: ${dateText(x.pickup_date)}   Delivery: ${dateText(x.delivery_date)}`, `Rate: ${money(x.rate_cents)}`, ...(multi ? [`Agreement ID: ${x.id}`, ""] : [])]);
   const internal = [
-    `${r.customer} approved the rate for load ${r.load_no}. The signed Customer Rate Agreement is attached for the invoice packet.`,
+    multi ? `${r.customer} approved the rates for ${rows.length} loads (${rows.map((x) => x.load_no).join(", ")}). A signed Customer Rate Agreement for each load is attached for the invoice packets.` : `${r.customer} approved the rate for load ${r.load_no}. The signed Customer Rate Agreement is attached for the invoice packet.`,
     "",
-    `Load: ${r.load_no}${r.po ? `   PO: ${r.po}` : ""}`,
-    `Lane: ${lane}`,
-    `Pickup: ${dateText(r.pickup_date)}   Delivery: ${dateText(r.delivery_date)}`,
-    `Rate: ${money(r.rate_cents)}`,
-    "",
+    ...loadLines,
+    ...(multi ? [`Total: ${money(total)}`, ""] : [""]),
     `Accepted by: ${[r.confirmed_name, r.confirmed_title].filter(Boolean).join(", ")} (${r.confirmed_email || r.email})${r.confirmed_email && r.confirmed_email !== r.email ? `   Link sent to: ${r.email}` : ""}`,
     `When: ${stampText(r.confirmed_at)}   IP: ${r.confirmed_ip || "not recorded"}`,
-    `Agreement ID: ${r.id}   Terms version: ${r.terms_version}`,
+    multi ? `Terms version: ${r.terms_version}` : `Agreement ID: ${r.id}   Terms version: ${r.terms_version}`,
   ].join("\r\n");
-  const to = [env.TO_ADDRESS, r.created_by].filter((v, i, a) => v && a.indexOf(v) === i).map((address) => ({ emailAddress: { address } }));
+  const to = [env.TO_ADDRESS, ...rows.map((x) => x.created_by)].filter((v, i, a) => v && a.indexOf(v) === i).map((address) => ({ emailAddress: { address } }));
   const customer = [
     `Hello ${r.confirmed_name || r.contact_name || ""},`.replace(/ ,$/, ","),
     "",
-    `Thank you for confirming the rate for load ${r.load_no} (${lane}, ${money(r.rate_cents)}). Your copy of the Customer Rate Agreement is attached.`,
+    multi ? `Thank you for confirming the rates for ${rows.length} loads. Your copies of the Customer Rate Agreements (one per load) are attached.` : `Thank you for confirming the rate for load ${r.load_no} (${lane(r)}, ${money(r.rate_cents)}). Your copy of the Customer Rate Agreement is attached.`,
+    ...(multi ? ["", ...rows.map((x) => `${x.load_no}: ${lane(x)}, ${money(x.rate_cents)}`), `Total: ${money(total)}`] : []),
     "",
     "SwiftLink Logistics, LLC",
     "www.swiftlinkusa.com",
   ].join("\r\n");
+  const subjectInternal = multi ? `${rows.length} loads - Customer Rate Agreements - confirmed by ${r.customer}` : `${r.load_no} - Customer Rate Agreement - confirmed by ${r.customer}`;
+  const subjectCustomer = multi ? `${rows.length} loads - your rate confirmations` : `Load ${r.load_no} - your rate confirmation`;
   return [
-    { message: { subject: `${r.load_no} - Customer Rate Agreement - confirmed by ${r.customer}`, body: { contentType: "Text", content: internal }, toRecipients: to, replyTo: [{ emailAddress: { address: r.email } }], attachments: [attachment] }, saveToSentItems: false },
-    { message: { subject: `Load ${r.load_no} - your rate confirmation`, body: { contentType: "Text", content: customer }, toRecipients: [{ emailAddress: { address: r.confirmed_email || r.email } }], ccRecipients: r.confirmed_email && r.confirmed_email !== r.email ? [{ emailAddress: { address: r.email } }] : [], replyTo: [{ emailAddress: { address: env.TO_ADDRESS } }], attachments: [attachment] }, saveToSentItems: true },
+    { message: { subject: subjectInternal, body: { contentType: "Text", content: internal }, toRecipients: to, replyTo: [{ emailAddress: { address: r.email } }], attachments }, saveToSentItems: false },
+    { message: { subject: subjectCustomer, body: { contentType: "Text", content: customer }, toRecipients: [{ emailAddress: { address: r.confirmed_email || r.email } }], ccRecipients: r.confirmed_email && r.confirmed_email !== r.email ? [{ emailAddress: { address: r.email } }] : [], replyTo: [{ emailAddress: { address: env.TO_ADDRESS } }], attachments }, saveToSentItems: true },
   ];
 }
 
 // ---------- HTTP
 
-const LIST_LIMIT = 300;
+const LIST_LIMIT = 300, MAX_LOADS = 25;
 
 function timingSafeEqual(a, b) {
   const x = new TextEncoder().encode(a), y = new TextEncoder().encode(b);
@@ -301,7 +325,24 @@ function timingSafeEqual(a, b) {
   return diff === 0;
 }
 
-const pdfResponse = (bytes, r) => new Response(bytes, { headers: { "Content-Type": "application/pdf", "Content-Disposition": `attachment; filename="${pdfName(r).replace(/"/g, "")}"`, "Cache-Control": "no-store" } });
+const pdfResponse = (bytes, name) => new Response(bytes, { headers: { "Content-Type": "application/pdf", "Content-Disposition": `attachment; filename="${name.replace(/"/g, "")}"`, "Cache-Control": "no-store" } });
+// Every load of a multi-load link shares one "batch" token; a single-load link is a group of one.
+const groupLink = (r) => LINK_BASE + (r.batch || r.token);
+async function groupRows(db, r) {
+  if (!r.batch) return [r];
+  return (await db.prepare("SELECT * FROM ratecons WHERE batch=? AND status!='deleted' ORDER BY rowid").bind(r.batch).all()).results;
+}
+/** One PDF holding every confirmed agreement of a multi-load link, in load order. */
+export async function combinedPdf(rows, logo) {
+  const out = await PDFDocument.create();
+  for (const r of rows) { const doc = await PDFDocument.load(await buildPdf(r, logo)); for (const page of await out.copyPages(doc, doc.getPageIndices())) out.addPage(page); }
+  out.setTitle(pdfSafe(`${rows.map((r) => r.load_no).join(", ")} - Customer Rate Agreements`));
+  out.setAuthor("SwiftLink Logistics, LLC");
+  return out.save();
+}
+const combinedName = (rows) => `${rows.length > 3 ? `${rows[0].load_no}-${rows.at(-1).load_no} (${rows.length} loads)` : rows.map((r) => r.load_no).join(", ")} - Customer Rate Agreements.pdf`;
+
+const INSERT_COLS = ["id", "token", "batch", "load_no", "po", "customer", "contact_name", "email", "pickup_zip", "pickup_city", "pickup_state", "pickup_date", "delivery_zip", "delivery_city", "delivery_state", "delivery_date", "rate_cents", "equipment", "notes", "status", "created_by", "created", "expires"];
 
 /** /internal/ratecons/* — called only by the employee portal, which authenticates staff with Cloudflare Access. */
 export async function internalRoute(request, env, deps) {
@@ -314,25 +355,35 @@ export async function internalRoute(request, env, deps) {
   const path = new URL(request.url).pathname.replace(/^\/internal\/ratecons/, "") || "/";
   const now = deps.now();
   if (path === "/" && request.method === "GET") {
-    const rows = (await db.prepare(`SELECT * FROM ratecons WHERE status!='deleted' ORDER BY created DESC LIMIT ${LIST_LIMIT}`).all()).results;
-    return json({ items: rows.map((r) => staffView(r, now)) }, 200);
+    const rows = (await db.prepare(`SELECT * FROM ratecons WHERE status!='deleted' ORDER BY created DESC, rowid ASC LIMIT ${LIST_LIMIT}`).all()).results;
+    const sizes = new Map((await db.prepare("SELECT batch, COUNT(*) AS n FROM ratecons WHERE batch IS NOT NULL AND status!='deleted' GROUP BY batch").all()).results.map((b) => [b.batch, b.n]));
+    return json({ items: rows.map((r) => ({ ...staffView(r, now), link: groupLink(r), batch: undefined, batch_id: r.batch ? r.batch.slice(0, 8) : null, batch_size: r.batch ? sizes.get(r.batch) || 1 : 1 })) }, 200);
   }
   if (path === "/" && request.method === "POST") {
     let input;
-    try { const raw = await request.text(); if (raw.length > 8000) throw Error(); input = JSON.parse(raw); } catch { return json({ error: "Invalid request" }, 400); }
-    const { data, errors } = parseNew(input);
-    if (errors) return json({ error: errors.join(" ") }, 422);
-    const r = { ...data, id: newId(), token: newToken(), status: "open", created_by: staff, created: new Date(now).toISOString(), expires: new Date(now + EXPIRY_DAYS * DAY).toISOString() };
-    const cols = ["id", "token", "load_no", "po", "customer", "contact_name", "email", "pickup_zip", "pickup_city", "pickup_state", "pickup_date", "delivery_zip", "delivery_city", "delivery_state", "delivery_date", "rate_cents", "equipment", "notes", "status", "created_by", "created", "expires"];
-    // A new link for the same load replaces any earlier link that was never confirmed.
+    try { const raw = await request.text(); if (raw.length > 60000) throw Error(); input = JSON.parse(raw); } catch { return json({ error: "Invalid request" }, 400); }
+    // One load, or several loads for the same customer sharing one link ({customer, contact_name, email, loads: [...]}).
+    const many = Array.isArray(input?.loads);
+    if (many && (input.loads.length < 1 || input.loads.length > MAX_LOADS)) return json({ error: `Send between 1 and ${MAX_LOADS} loads at a time.` }, 422);
+    const shared = many ? { customer: input.customer, contact_name: input.contact_name, email: input.email } : {};
+    const parsed = (many ? input.loads : [input]).map((load) => parseNew({ ...(load && typeof load === "object" ? load : {}), ...shared }));
+    const errors = parsed.flatMap((p, i) => (p.errors || []).map((e) => (parsed.length > 1 ? `Load ${i + 1}: ${e}` : e)));
+    const dupes = parsed.map((p) => p.data?.load_no).filter((n, i, a) => n && a.indexOf(n) !== i);
+    if (dupes.length) errors.push(`Load ${dupes[0]} is listed twice.`);
+    if (errors.length) return json({ error: errors.join(" ") }, 422);
+    const base = { status: "open", created_by: staff, created: new Date(now).toISOString(), expires: new Date(now + EXPIRY_DAYS * DAY).toISOString(), batch: parsed.length > 1 ? newToken() : null };
+    const rows = parsed.map((p) => ({ ...p.data, ...base, id: newId(), token: newToken() }));
+    const first = rows[0];
     await db.batch([
-      db.prepare("UPDATE ratecons SET status='void', voided_by=? WHERE load_no=? AND status='open'").bind("Replaced by a newer link", r.load_no),
-      db.prepare(`INSERT INTO ratecons(${cols.join(",")}) VALUES(${cols.map(() => "?").join(",")})`).bind(...cols.map((c) => r[c] === "" ? null : r[c])),
-      db.prepare(`INSERT INTO ratecon_customers(name, contact_name, email, loads, last_used) VALUES(?,?,?,1,?)
+      // A new link for the same load replaces any earlier link that was never confirmed.
+      ...rows.map((r) => db.prepare("UPDATE ratecons SET status='void', voided_by=? WHERE load_no=? AND status='open'").bind("Replaced by a newer link", r.load_no)),
+      ...rows.map((r) => db.prepare(`INSERT INTO ratecons(${INSERT_COLS.join(",")}) VALUES(${INSERT_COLS.map(() => "?").join(",")})`).bind(...INSERT_COLS.map((c) => r[c] === "" || r[c] === undefined ? null : r[c]))),
+      db.prepare(`INSERT INTO ratecon_customers(name, contact_name, email, loads, last_used) VALUES(?,?,?,?,?)
         ON CONFLICT(name) DO UPDATE SET contact_name=COALESCE(excluded.contact_name, ratecon_customers.contact_name), email=excluded.email,
-        loads=ratecon_customers.loads+1, last_used=excluded.last_used, removed=0`).bind(r.customer, r.contact_name || null, r.email, r.created),
+        loads=ratecon_customers.loads+excluded.loads, last_used=excluded.last_used, removed=0`).bind(first.customer, first.contact_name || null, first.email, rows.length, first.created),
     ]);
-    return json({ item: staffView(r, now) }, 200);
+    const items = rows.map((r) => ({ ...staffView(r, now), link: groupLink(r), batch: undefined, batch_id: r.batch ? r.batch.slice(0, 8) : null, batch_size: rows.length }));
+    return json(many ? { items, link: items[0].link } : { item: items[0] }, 200);
   }
   if (path === "/customers" && request.method === "GET") {
     const rows = (await db.prepare("SELECT name, contact_name, email, signer_name, signer_email, loads, last_used FROM ratecon_customers WHERE removed=0 ORDER BY last_used DESC LIMIT 500").all()).results;
@@ -364,12 +415,18 @@ export async function internalRoute(request, env, deps) {
     await db.prepare("UPDATE ratecons SET status='void', voided_by=? WHERE id=? AND status='open'").bind(staff, r.id).run();
     return json({ ok: true }, 200);
   }
-  if (m[2] === "/pdf" && request.method === "GET") return pdfResponse(await buildPdf(r, deps.logo), r);
-  if (m[2] === "/email" && request.method === "GET") return json(inviteEmail(r), 200);
+  if (m[2] === "/pdf" && request.method === "GET") return pdfResponse(await buildPdf(r, deps.logo), pdfName(r));
+  // The invitation covers every load on the link that is still waiting.
+  const waiting = async () => (await groupRows(db, r)).filter((x) => statusOf(x, now) === "open");
+  if (m[2] === "/email" && request.method === "GET") {
+    const list = await waiting();
+    return json(inviteEmail(list.length ? list : [r]), 200);
+  }
   // Sends the invitation from SwiftLink's mailbox; the employee is copied and replies go to them.
   if (m[2] === "/send" && request.method === "POST") {
-    if (statusOf(r, now) !== "open") return json({ error: "Only links that are still waiting can be emailed." }, 409);
-    const mail = inviteEmail(r);
+    const list = await waiting();
+    if (!list.length) return json({ error: "Only links that are still waiting can be emailed." }, 409);
+    const mail = inviteEmail(list);
     try {
       await deps.sendMail(env, { message: { subject: mail.subject, body: { contentType: "HTML", content: mail.html }, toRecipients: [{ emailAddress: { address: r.email } }], ccRecipients: [{ emailAddress: { address: staff } }], replyTo: [{ emailAddress: { address: staff } }] }, saveToSentItems: true });
     } catch (error) {
@@ -377,8 +434,8 @@ export async function internalRoute(request, env, deps) {
       return json({ error: "The email could not be sent. Try again, or use Open in Outlook." }, 502);
     }
     const at = new Date(now).toISOString();
-    await db.prepare("UPDATE ratecons SET sent_at=?, sent_by=? WHERE id=?").bind(at, staff, r.id).run();
-    return json({ ok: true, sent_at: at, sent_by: staff }, 200);
+    await db.batch(list.map((x) => db.prepare("UPDATE ratecons SET sent_at=?, sent_by=? WHERE id=?").bind(at, staff, x.id)));
+    return json({ ok: true, sent_at: at, sent_by: staff, ids: list.map((x) => x.id) }, 200);
   }
   // Deleting hides the record from staff and turns its link off; the row stays in the database as a record.
   if (m[2] === "/delete" && request.method === "POST") {
@@ -388,24 +445,51 @@ export async function internalRoute(request, env, deps) {
   return json({ error: "Not found" }, 404);
 }
 
+/** Customer-facing view of a multi-load link. status: open while any load is still waiting. */
+export function groupView(rows, now = Date.now(), returning = null) {
+  const states = rows.map((r) => statusOf(r, now)), first = rows[0];
+  const status = states.includes("open") ? "open" : states.includes("confirmed") ? "confirmed" : states.includes("expired") ? "expired" : "void";
+  const shown = rows.filter((r, i) => states[i] === "open" || states[i] === "confirmed");
+  const last = rows.filter((r) => r.status === "confirmed").sort((a, b) => String(b.confirmed_at).localeCompare(String(a.confirmed_at)))[0];
+  return {
+    multi: true, customer: first.customer, contact_name: first.contact_name || "", status,
+    loads: shown.map((r) => ({ id: r.id, load_no: r.load_no, po: r.po || "", pickup: { place: place(r, "pickup"), date: r.pickup_date }, delivery: { place: place(r, "delivery"), date: r.delivery_date }, rate: money(r.rate_cents), equipment: r.equipment || "", notes: r.notes || "", status: statusOf(r, now) })),
+    total: money(shown.reduce((t, r) => t + r.rate_cents, 0)), open_count: states.filter((s) => s === "open").length,
+    confirmed: last ? { name: last.confirmed_name, at: last.confirmed_at } : null,
+    terms: TERMS, terms_version: TERMS_VERSION,
+    returning: status === "open" && returning?.signer_name && returning?.signer_email ? { name: properName(returning.signer_name), email: returning.signer_email } : null,
+  };
+}
+
 /** /rate-confirmations/<token>[/confirm|/pdf] — the public customer side, called from www.swiftlinkusa.com. */
 export async function publicRoute(request, env, deps, allowed) {
-  const m = new URL(request.url).pathname.match(/^\/rate-confirmations\/([^/]+)(\/confirm|\/pdf)?$/);
+  const url = new URL(request.url);
+  const m = url.pathname.match(/^\/rate-confirmations\/([^/]+)(\/confirm|\/pdf)?$/);
   if (!m || !isToken(m[1])) return json({ error: "This link is not valid." }, 404, allowed);
   const db = env.RATECONS;
   await ensureSchema(db);
-  const r = await db.prepare("SELECT * FROM ratecons WHERE token=?").bind(m[1]).first();
-  if (!r || r.status === "deleted") return json({ error: "This link is not valid. Ask SwiftLink to send a new one." }, 404, allowed);
+  const single = await db.prepare("SELECT * FROM ratecons WHERE token=? AND batch IS NULL").bind(m[1]).first();
+  const rows = single ? [single] : (await db.prepare("SELECT * FROM ratecons WHERE batch=? AND status!='deleted' ORDER BY rowid").bind(m[1]).all()).results;
+  if (!rows.length || rows[0].status === "deleted") return json({ error: "This link is not valid. Ask SwiftLink to send a new one." }, 404, allowed);
+  const multi = !single, r = rows[0];
   const now = deps.now();
-  if (!m[2] && request.method === "GET") {
-    if (!r.viewed_at && r.status === "open") await db.prepare("UPDATE ratecons SET viewed_at=? WHERE id=? AND viewed_at IS NULL").bind(new Date(now).toISOString(), r.id).run();
+  const view = async (list) => {
     const returning = await db.prepare("SELECT signer_name, signer_email FROM ratecon_customers WHERE name=?").bind(r.customer).first();
-    return json(publicView(r, now, returning), 200, allowed);
+    return multi ? groupView(list, now, returning) : publicView(list[0], now, returning);
+  };
+  if (!m[2] && request.method === "GET") {
+    const unseen = rows.filter((x) => !x.viewed_at && x.status === "open");
+    if (unseen.length) await db.batch(unseen.map((x) => db.prepare("UPDATE ratecons SET viewed_at=? WHERE id=? AND viewed_at IS NULL").bind(new Date(now).toISOString(), x.id)));
+    return json(await view(rows), 200, allowed);
   }
   if (m[2] === "/pdf" && request.method === "GET") {
-    if (r.status !== "confirmed") return json({ error: "Not confirmed yet" }, 409, allowed);
-    const res = pdfResponse(await buildPdf(r, deps.logo), r);
-    if (allowed) { res.headers.set("Access-Control-Allow-Origin", allowed); res.headers.set("Vary", "Origin"); }
+    // ?load=<id> for one agreement; otherwise every confirmed agreement on the link (one combined PDF for multi-load links).
+    const confirmed = rows.filter((x) => x.status === "confirmed");
+    const pick = url.searchParams.get("load");
+    const target = pick ? confirmed.filter((x) => x.id === pick) : confirmed;
+    if (!target.length) return json({ error: "Not confirmed yet" }, 409, allowed);
+    const res = target.length === 1 ? pdfResponse(await buildPdf(target[0], deps.logo), pdfName(target[0])) : pdfResponse(await combinedPdf(target, deps.logo), combinedName(target));
+    if (allowed) { res.headers.set("Access-Control-Allow-Origin", allowed); res.headers.set("Vary", "Origin"); res.headers.set("Access-Control-Expose-Headers", "Content-Disposition"); }
     return res;
   }
   if (m[2] !== "/confirm" || request.method !== "POST") return json({ error: "Method not allowed" }, 405, allowed);
@@ -418,25 +502,30 @@ export async function publicRoute(request, env, deps, allowed) {
   if (name.length < 2) return json({ error: "Type your full name to sign." }, 422, allowed);
   if (!isEmail(email)) return json({ error: "Enter your email so we can send your copy." }, 422, allowed);
   if (form.get("agree") !== "on") return json({ error: "Check the box to agree to the rate and terms." }, 422, allowed);
-  const state = statusOf(r, now);
-  if (state !== "open") return json({ error: state === "confirmed" ? "This rate was already confirmed." : state === "expired" ? "This link has expired. Ask SwiftLink to send a new one." : "This link was cancelled. Ask SwiftLink to send a new one." }, 409, allowed);
+  const open = rows.filter((x) => statusOf(x, now) === "open");
+  if (!open.length) {
+    const state = multi ? groupView(rows, now).status : statusOf(r, now);
+    return json({ error: state === "confirmed" ? (multi ? "These rates were already confirmed." : "This rate was already confirmed.") : state === "expired" ? "This link has expired. Ask SwiftLink to send a new one." : "This link was cancelled. Ask SwiftLink to send a new one." }, 409, allowed);
+  }
   const at = new Date(now).toISOString(), ip = clean(request.headers.get("CF-Connecting-IP"), 64), ua = clean(request.headers.get("User-Agent"), 300);
   const method = form.get("method") === "returning" ? "returning" : "typed";
-  // Only one confirmation can win, even if the button is pressed twice.
-  const result = await db.prepare("UPDATE ratecons SET status='confirmed', confirmed_at=?, confirmed_name=?, confirmed_email=?, confirmed_ip=?, confirmed_ua=?, terms_version=?, confirm_method=? WHERE id=? AND status='open'")
-    .bind(at, name, email, ip || null, ua || null, TERMS_VERSION, method, r.id).run();
-  if (!result.meta.changes) return json({ error: "This rate was already confirmed." }, 409, allowed);
+  // Every waiting load is confirmed together; each row can only be confirmed once, even if the button is pressed twice.
+  const results = await db.batch(open.map((x) => db.prepare("UPDATE ratecons SET status='confirmed', confirmed_at=?, confirmed_name=?, confirmed_email=?, confirmed_ip=?, confirmed_ua=?, terms_version=?, confirm_method=? WHERE id=? AND status='open'")
+    .bind(at, name, email, ip || null, ua || null, TERMS_VERSION, method, x.id)));
+  const done = open.filter((x, i) => results[i].meta.changes).map((x) => ({ ...x, status: "confirmed", confirmed_at: at, confirmed_name: name, confirmed_email: email, confirmed_ip: ip || null, terms_version: TERMS_VERSION, confirm_method: method }));
+  if (!done.length) return json({ error: multi ? "These rates were already confirmed." : "This rate was already confirmed." }, 409, allowed);
   // Next time this customer gets a link, these details are filled in for them.
   await db.prepare(`INSERT INTO ratecon_customers(name, email, signer_name, signer_email, last_used) VALUES(?,?,?,?,?)
     ON CONFLICT(name) DO UPDATE SET signer_name=excluded.signer_name, signer_email=excluded.signer_email`).bind(r.customer, r.email, name, email, at).run();
-  const done = { ...r, status: "confirmed", confirmed_at: at, confirmed_name: name, confirmed_email: email, confirmed_ip: ip || null, terms_version: TERMS_VERSION, confirm_method: method };
   try {
-    const pdf = await buildPdf(done, deps.logo);
-    for (const message of confirmationMessages(env, done, pdf)) await deps.sendMail(env, message);
+    const pdfs = [];
+    for (const x of done) pdfs.push(await buildPdf(x, deps.logo));
+    for (const message of confirmationMessages(env, done, pdfs)) await deps.sendMail(env, message);
   } catch (error) {
-    // The confirmation still counts; staff see the flag in the portal and can download the PDF there.
+    // The confirmation still counts; staff see the flag in the portal and can download the PDFs there.
     console.error("Rate confirmation email failed", error);
-    await db.prepare("UPDATE ratecons SET email_error=? WHERE id=?").bind(String(error.message || error).slice(0, 300), r.id).run();
+    await db.batch(done.map((x) => db.prepare("UPDATE ratecons SET email_error=? WHERE id=?").bind(String(error.message || error).slice(0, 300), x.id)));
   }
-  return json(publicView(done, now), 200, allowed);
+  const updated = rows.map((x) => done.find((d) => d.id === x.id) || x);
+  return json(multi ? groupView(updated, now) : publicView(updated[0], now), 200, allowed);
 }

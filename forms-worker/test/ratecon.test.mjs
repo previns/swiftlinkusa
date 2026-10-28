@@ -229,3 +229,45 @@ test("invitation email has a button, a hyperlink and a copy-paste link, and can 
   assert.equal((await internalRoute(staff("POST", `/${item.id}/send`, {}), env, deps)).status, 409);
   require_html: { const fsx = await import("node:fs"); fsx.mkdirSync(new URL("./output/", import.meta.url), { recursive: true }); fsx.writeFileSync(new URL("./output/invite.html", import.meta.url), mail.html); }
 });
+
+test("multi-load links: one link, approve all at once, one PDF per load", async () => {
+  const { env, deps, sent } = setup();
+  const shared = { customer: "Acme Foods, Inc.", contact_name: "Dana Lee", email: "dana@acmefoods.com" };
+  const leg = (load_no, rate) => ({ load_no, pickup_zip: "48334", pickup_city: "Farmington", pickup_state: "MI", pickup_date: "2026-10-28", delivery_zip: "30303", delivery_city: "Atlanta", delivery_state: "GA", delivery_date: "2026-10-30", rate });
+  assert.equal((await internalRoute(staff("POST", "", { ...shared, loads: [leg("SLL1", "100"), leg("sll1", "200")] }), env, deps)).status, 422);
+  const bad = await (await internalRoute(staff("POST", "", { ...shared, loads: [leg("SLL1", "100"), { ...leg("SLL2", "200"), pickup_zip: "1" }] }), env, deps)).json();
+  assert.match(bad.error, /^Load 2: /);
+  const made = await (await internalRoute(staff("POST", "", { ...shared, loads: [leg("SLL2001", "2,100"), leg("SLL2002", "1500"), leg("SLL2003", "900")] }), env, deps)).json();
+  assert.equal(made.items.length, 3);
+  assert.ok(made.items.every((i) => i.link === made.link && i.batch_size === 3));
+  const token = made.link.split("#")[1];
+  const mail = await (await internalRoute(staff("GET", `/${made.items[1].id}/email`, null), env, deps)).json();
+  assert.ok(mail.subject.includes("3 loads (SLL2001, SLL2002, SLL2003)"));
+  assert.ok(mail.html.includes("Review &amp; confirm 3 loads") && mail.html.includes("$4,500.00"));
+  assert.equal((await internalRoute(staff("POST", `/${made.items[2].id}/void`, {}), env, deps)).status, 200);
+  const page = await (await publicRoute(view(token), env, deps, SITE)).json();
+  assert.equal(page.multi, true);
+  assert.deepEqual(page.loads.map((l) => l.load_no), ["SLL2001", "SLL2002"]);
+  assert.equal(page.total, "$3,600.00");
+  const before = sent.length;
+  const ok = await publicRoute(confirm(token, { name: "dana lee", email: "dana@acmefoods.com", agree: "on" }), env, deps, SITE);
+  assert.equal(ok.status, 200);
+  const after = await ok.json();
+  assert.equal(after.status, "confirmed");
+  assert.ok(after.loads.every((l) => l.status === "confirmed"));
+  const msgs = sent.slice(before);
+  assert.equal(msgs.length, 2);
+  assert.deepEqual(msgs[0].message.attachments.map((a) => a.name), ["SLL2001 - Customer Rate Agreement.pdf", "SLL2002 - Customer Rate Agreement.pdf"]);
+  assert.match(msgs[0].message.subject, /^2 loads - Customer Rate Agreements - confirmed by Acme Foods, Inc.$/);
+  assert.equal(msgs[1].message.attachments.length, 2);
+  assert.equal(env.RATECONS.raw.prepare("SELECT status FROM ratecons WHERE load_no='SLL2003'").get().status, "void");
+  assert.equal((await publicRoute(confirm(token, { name: "Dana Lee", email: "dana@acmefoods.com", agree: "on" }), env, deps, SITE)).status, 409);
+  const one = await publicRoute(new Request(`https://forms.swiftlinkusa.com/rate-confirmations/${token}/pdf?load=${made.items[0].id}`, { headers: { Origin: SITE } }), env, deps, SITE);
+  assert.match(one.headers.get("Content-Disposition"), /SLL2001 - Customer Rate Agreement.pdf/);
+  const all = await publicRoute(new Request(`https://forms.swiftlinkusa.com/rate-confirmations/${token}/pdf`, { headers: { Origin: SITE } }), env, deps, SITE);
+  assert.match(all.headers.get("Content-Disposition"), /SLL2001, SLL2002 - Customer Rate Agreements.pdf/);
+  const combined = await PDFDocument.load(Buffer.from(await all.arrayBuffer()));
+  assert.equal(combined.getPageCount(), 2);
+  const list = (await (await internalRoute(staff("GET", "", null), env, deps)).json()).items.filter((i) => i.load_no.startsWith("SLL200"));
+  assert.ok(list.every((i) => i.batch_size === 3 && i.link === made.link));
+});

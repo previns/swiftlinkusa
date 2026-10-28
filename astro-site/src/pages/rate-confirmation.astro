@@ -30,11 +30,19 @@ const field = "w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 
       <article id="rc-card" class="hidden bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden">
         <header class="px-6 sm:px-10 pt-8 sm:pt-10 pb-6 border-b border-slate-800">
           <p class="text-orange-500 font-semibold text-xs tracking-widest uppercase mb-2">Rate confirmation</p>
-          <h1 class="text-3xl sm:text-4xl font-bold">Load <span id="rc-load"></span></h1>
+          <h1 class="text-3xl sm:text-4xl font-bold" id="rc-title">Load <span id="rc-load"></span></h1>
           <p class="text-slate-400 mt-2">Prepared for <span id="rc-customer" class="text-slate-200 font-medium"></span><span id="rc-po"></span></p>
         </header>
 
-        <div class="px-6 sm:px-10 py-7 grid sm:grid-cols-2 gap-5">
+        <div class="hidden px-6 sm:px-10 py-7 space-y-3" id="rc-multi">
+          <div id="rc-loads" class="space-y-3"></div>
+          <div class="rounded-2xl border border-orange-500/40 bg-orange-500/10 p-6 flex flex-wrap items-end justify-between gap-3">
+            <div><p class="text-xs uppercase tracking-widest text-orange-400 font-semibold">Total for <span id="rc-count"></span> (USD)</p><p class="text-4xl font-bold mt-1" id="rc-total"></p></div>
+            <p class="text-slate-400 text-sm">All-in rates, one agreement per load</p>
+          </div>
+        </div>
+
+        <div class="px-6 sm:px-10 py-7 grid sm:grid-cols-2 gap-5" id="rc-single">
           <div class="bg-slate-950/60 border border-slate-800 rounded-2xl p-5">
             <p class="text-xs uppercase tracking-widest text-slate-500 mb-1"><i class="fa-solid fa-arrow-up-from-bracket mr-1 text-orange-500" aria-hidden="true"></i> Pickup</p>
             <p class="font-semibold text-lg" id="rc-pickup"></p><p class="text-slate-400" id="rc-pickup-date"></p>
@@ -100,6 +108,7 @@ const field = "w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 
             <div>
               <h2 class="text-xl font-bold">Rate confirmed</h2>
               <p class="text-slate-300 mt-1" id="rc-done-text"></p>
+              <div id="rc-downloads" class="hidden mt-4 flex flex-wrap gap-2"></div>
               <button type="button" id="rc-download" class="mt-4 inline-flex items-center gap-2 border border-slate-600 hover:border-orange-500 hover:text-orange-400 px-5 py-2.5 rounded-xl font-semibold text-sm transition"><i class="fa-solid fa-file-arrow-down" aria-hidden="true"></i> Download your copy (PDF)</button>
             </div>
           </div>
@@ -129,6 +138,7 @@ const field = "w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 
     function show(d: any) {
       data = d;
       $("rc-loading").classList.add("hidden");
+      if (d.multi) return showMulti(d);
       $("rc-load").textContent = d.load_no;
       $("rc-customer").textContent = d.customer;
       $("rc-po").textContent = d.po ? ` · PO ${d.po}` : "";
@@ -171,7 +181,47 @@ const field = "w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 
       $("rc-oneclick-terms").classList.toggle("hidden", !on);
       $("rc-submit-label").textContent = submitLabel();
     }
-    const submitLabel = () => (($("rc-method") as HTMLInputElement).value === "returning" ? `Agree & confirm rate of ${data.rate}` : `Confirm rate of ${data.rate}`);
+    const submitLabel = () => {
+      const returning = ($("rc-method") as HTMLInputElement).value === "returning";
+      if (data.multi && data.open_count > 1) return returning ? `Agree & confirm all ${data.open_count} rates (${data.total})` : `Confirm all ${data.open_count} rates (${data.total})`;
+      const rate = data.multi ? data.loads.find((l: any) => l.status === "open")?.rate || data.total : data.rate;
+      return returning ? `Agree & confirm rate of ${rate}` : `Confirm rate of ${rate}`;
+    };
+
+    // Multi-load links: one card per load, a total, and one confirmation for every load still waiting.
+    const el = (tag: string, cls: string, text?: string) => { const n = document.createElement(tag); n.className = cls; if (text !== undefined) n.textContent = text; return n; };
+    function renderLoads(d: any) {
+      $("rc-loads").replaceChildren(...d.loads.map((l: any) => {
+        const card = el("div", "bg-slate-950/60 border border-slate-800 rounded-2xl p-5 grid sm:grid-cols-[1fr_auto] gap-x-6 gap-y-2");
+        const left = el("div", "min-w-0");
+        const title = el("p", "font-semibold text-lg", l.load_no);
+        if (l.po) title.append(el("span", "text-slate-500 text-sm font-normal", `  ·  PO ${l.po}`));
+        left.append(title, el("p", "text-slate-200", `${l.pickup.place} → ${l.delivery.place}`), el("p", "text-slate-400 text-sm", [`Pickup ${dateText(l.pickup.date)}`, `Delivery ${dateText(l.delivery.date)}`, l.equipment].filter(Boolean).join("  ·  ")));
+        if (l.notes) left.append(el("p", "text-slate-400 text-sm", l.notes));
+        const right = el("div", "sm:text-right");
+        right.append(el("p", "text-2xl font-bold", l.rate));
+        if (l.status === "confirmed") right.append(el("span", "inline-block mt-1 text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300", "Confirmed"));
+        card.append(left, right);
+        return card;
+      }));
+    }
+    function showMulti(d: any) {
+      $("rc-title").textContent = `${d.loads.length} loads`;
+      $("rc-customer").textContent = d.customer;
+      $("rc-po").textContent = "";
+      $("rc-single").classList.add("hidden");
+      $("rc-multi").classList.remove("hidden");
+      $("rc-count").textContent = `${d.loads.length} loads`;
+      $("rc-total").textContent = d.total;
+      renderLoads(d);
+      $("rc-terms").replaceChildren(...d.terms.map((t: string) => { const li = document.createElement("li"); li.textContent = t; return li; }));
+      $("rc-card").classList.remove("hidden");
+      if (d.status === "confirmed") return done(d);
+      if (d.status === "expired") return fail("This link has expired", "This rate confirmation link is more than 30 days old. Ask your SwiftLink contact to send a new one.");
+      if (d.status === "void") return fail("This link was replaced", "SwiftLink cancelled or replaced these loads. Check your email for a newer link, or contact us.");
+      $("rc-form").classList.remove("hidden");
+      setReturning(d.returning);
+    }
     $("rc-not-me").addEventListener("click", () => { setReturning(null); ($("rc-name") as HTMLInputElement).focus(); });
 
     // Terms open in a pop-up; clicking the dimmed backdrop or a Close button shuts it.
@@ -183,6 +233,20 @@ const field = "w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 
     function done(d: any) {
       $("rc-form").classList.add("hidden");
       const sentTo = ($("rc-email") as HTMLInputElement).value.trim();
+      if (d.multi) {
+        data = d;
+        renderLoads(d);
+        const confirmed = d.loads.filter((l: any) => l.status === "confirmed");
+        $("rc-done").querySelector("h2")!.textContent = confirmed.length > 1 ? `${confirmed.length} rates confirmed` : "Rate confirmed";
+        $("rc-done-text").textContent = `${d.confirmed.name} confirmed ${confirmed.length > 1 ? `${confirmed.length} loads (${confirmed.map((l: any) => l.load_no).join(", ")})` : `load ${confirmed[0].load_no}`} on ${stamp(d.confirmed.at)}. ${sentTo ? `Copies have been emailed to ${sentTo}.` : "Copies were emailed when the rates were confirmed."}`;
+        const box = $("rc-downloads");
+        const btn = (label: string, load: any) => { const b = el("button", "inline-flex items-center gap-2 border border-slate-600 hover:border-orange-500 hover:text-orange-400 px-4 py-2 rounded-xl font-semibold text-sm transition", label); b.setAttribute("type", "button"); b.addEventListener("click", () => download(b as HTMLButtonElement, load)); return b; };
+        box.replaceChildren(...(confirmed.length > 1 ? [btn("Download all (one PDF)", null)] : []), ...confirmed.map((l: any) => btn(`${l.load_no} PDF`, l)));
+        box.classList.remove("hidden");
+        $("rc-download").style.display = "none";
+        $("rc-done").classList.remove("hidden");
+        return;
+      }
       $("rc-done-text").textContent = `${d.confirmed.name} confirmed ${d.rate} for load ${d.load_no} on ${stamp(d.confirmed.at)}. ${sentTo ? `A copy has been emailed to ${sentTo}.` : "A copy was emailed when the rate was confirmed."}`;
       $("rc-done").classList.remove("hidden");
     }
@@ -229,15 +293,16 @@ const field = "w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 
       }
     });
 
-    $("rc-download").addEventListener("click", async () => {
-      const button = $("rc-download") as HTMLButtonElement;
+    // load: one load of a multi-load link; null: this link's agreement(s) (combined into one PDF when several).
+    async function download(button: HTMLButtonElement, load: any) {
       button.disabled = true;
       try {
-        const res = await fetch(`${endpoint}/rate-confirmations/${token}/pdf`);
+        const res = await fetch(`${endpoint}/rate-confirmations/${token}/pdf${load ? `?load=${encodeURIComponent(load.id)}` : ""}`);
         if (!res.ok) throw new Error();
         const url = URL.createObjectURL(await res.blob());
         const a = document.createElement("a");
-        a.href = url; a.download = `${data.load_no} - Customer Rate Agreement.pdf`;
+        const name = (res.headers.get("Content-Disposition") || "").match(/filename="([^"]+)"/)?.[1];
+        a.href = url; a.download = name || (load ? `${load.load_no} - Customer Rate Agreement.pdf` : data.multi ? "Customer Rate Agreements.pdf" : `${data.load_no} - Customer Rate Agreement.pdf`);
         document.body.append(a); a.click(); a.remove();
         setTimeout(() => URL.revokeObjectURL(url), 10000);
       } catch {
@@ -245,7 +310,8 @@ const field = "w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 
       } finally {
         button.disabled = false;
       }
-    });
+    }
+    $("rc-download").addEventListener("click", () => download($("rc-download") as HTMLButtonElement, null));
 
     load();
   </script>
