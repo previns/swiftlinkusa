@@ -271,3 +271,35 @@ test("multi-load links: one link, approve all at once, one PDF per load", async 
   const list = (await (await internalRoute(staff("GET", "", null), env, deps)).json()).items.filter((i) => i.load_no.startsWith("SLL200"));
   assert.ok(list.every((i) => i.batch_size === 3 && i.link === made.link));
 });
+
+test("several contacts: pick who gets the link, everyone gets the invite and the confirmed copy", async () => {
+  const { env, deps, sent } = setup();
+  const body = { ...sample, cc: [{ name: "mike ross", email: "Mike@AcmeFoods.com" }, { name: "", email: "ap@acmefoods.com" }, { name: "Dup", email: "dana@acmefoods.com" }] };
+  assert.equal((await internalRoute(staff("POST", "", { ...sample, cc: [{ name: "Bad", email: "nope" }] }), env, deps)).status, 422);
+  const item = (await (await internalRoute(staff("POST", "", body), env, deps)).json()).item;
+  assert.deepEqual(item.recipients.map((c) => c.email), ["dana@acmefoods.com", "mike@acmefoods.com", "ap@acmefoods.com"]);
+  assert.equal(item.recipients[1].name, "Mike Ross");
+  const mail = await (await internalRoute(staff("GET", `/${item.id}/email`, null), env, deps)).json();
+  assert.equal(mail.to, "dana@acmefoods.com,mike@acmefoods.com,ap@acmefoods.com");
+  assert.ok(mail.html.includes("Hello,"), "no single first name with three people");
+  await internalRoute(staff("POST", `/${item.id}/send`, {}), env, deps);
+  assert.deepEqual(sent.at(-1).message.toRecipients.map((r) => r.emailAddress.address), ["dana@acmefoods.com", "mike@acmefoods.com", "ap@acmefoods.com"]);
+  // Saved customer keeps all three, picked; next link to just Mike leaves the others saved but unpicked.
+  let cust = (await (await internalRoute(staff("GET", "/customers", null), env, deps)).json()).customers[0];
+  assert.deepEqual(cust.contacts.map((c) => [c.email, c.on]), [["dana@acmefoods.com", true], ["mike@acmefoods.com", true], ["ap@acmefoods.com", true]]);
+  await internalRoute(staff("POST", "", { ...sample, load_no: "SLL2000", contact_name: "Mike Ross", email: "mike@acmefoods.com" }), env, deps);
+  cust = (await (await internalRoute(staff("GET", "/customers", null), env, deps)).json()).customers[0];
+  assert.deepEqual(cust.contacts.map((c) => [c.email, c.on]), [["dana@acmefoods.com", false], ["mike@acmefoods.com", true], ["ap@acmefoods.com", false]]);
+  assert.equal(cust.email, "mike@acmefoods.com");
+  // Editing the list: the first picked becomes the main contact; an empty list is refused.
+  const upd = await (await internalRoute(staff("POST", "/customers/update", { name: cust.name, contacts: [{ name: "AP", email: "ap@acmefoods.com", on: false }, { name: "Dana Lee", email: "dana@acmefoods.com" }] }), env, deps)).json();
+  assert.equal(upd.email, "dana@acmefoods.com"); assert.equal(upd.contacts.length, 2);
+  assert.equal((await internalRoute(staff("POST", "/customers/update", { name: cust.name, contacts: [] }), env, deps)).status, 422);
+  // Confirmed by Mike: his copy goes to him, the other people on the link are copied.
+  sent.length = 0;
+  await publicRoute(confirm(item.link.split("#")[1], { name: "Mike Ross", email: "mike@acmefoods.com", agree: "on" }), env, deps, SITE);
+  const copy = sent.find((m) => m.message.subject.startsWith("Load"));
+  assert.deepEqual(copy.message.toRecipients.map((r) => r.emailAddress.address), ["mike@acmefoods.com"]);
+  assert.deepEqual(copy.message.ccRecipients.map((r) => r.emailAddress.address), ["dana@acmefoods.com", "ap@acmefoods.com"]);
+  assert.ok(sent.find((m) => m.message.subject.includes("confirmed by")).message.body.content.includes("Link sent to: dana@acmefoods.com, mike@acmefoods.com, ap@acmefoods.com"));
+});

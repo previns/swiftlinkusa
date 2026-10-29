@@ -46,6 +46,9 @@ export async function ensureSchema(db) {
   try { await db.prepare("ALTER TABLE ratecons ADD COLUMN sent_at TEXT").run(); } catch {}
   try { await db.prepare("ALTER TABLE ratecons ADD COLUMN sent_by TEXT").run(); } catch {}
   try { await db.prepare("ALTER TABLE ratecons ADD COLUMN batch TEXT").run(); } catch {}
+  // More than one person per link (cc: the others, JSON) and every saved contact of a customer (contacts, JSON).
+  try { await db.prepare("ALTER TABLE ratecons ADD COLUMN cc TEXT").run(); } catch {}
+  try { await db.prepare("ALTER TABLE ratecon_customers ADD COLUMN contacts TEXT").run(); } catch {}
   await db.prepare("CREATE INDEX IF NOT EXISTS ratecons_batch ON ratecons(batch)").run();
   // Customers from links made before saved customers existed (INSERT OR IGNORE never revives a removed one).
   await db.batch([
@@ -59,6 +62,24 @@ const clean = (v, max) => String(v ?? "").replace(/\s+/g, " ").trim().slice(0, m
 // "dana lee" / "DANA LEE" -> "Dana Lee", "o'neil-smith" -> "O'Neil-Smith"; mixed-case words like "McDonald" are kept as typed.
 export const properName = (v) => String(v ?? "").split(" ").map((w) => (w === w.toLowerCase() || w === w.toUpperCase() ? w.toLowerCase().replace(/(^|[-'’])(\p{L})/gu, (_, p, c) => p + c.toUpperCase()) : w)).join(" ");
 const isEmail = (v) => /^[^\s@<>"]+@[^\s@<>"]+\.[^\s@<>"]+$/.test(v);
+const MAX_CONTACTS = 20;
+/** Contacts from the portal: [{name, email}] → cleaned, deduplicated by email. Returns { list } or { error }. */
+export function parseContacts(input, max = MAX_CONTACTS) {
+  if (input === undefined || input === null) return { list: [] };
+  if (!Array.isArray(input) || input.length > max) return { error: `Choose up to ${max} contacts.` };
+  const list = [];
+  for (const c of input) {
+    const email = clean(c?.email, 200).toLowerCase(), name = properName(clean(c?.name, 80));
+    if (!isEmail(email)) return { error: `Check the email${name ? ` for ${name}` : ""}.` };
+    if (!list.some((x) => x.email === email)) list.push({ name, email, ...(c?.on === false ? { on: false } : {}) });
+  }
+  return { list };
+}
+const parseJson = (v) => { try { const x = JSON.parse(v || "null"); return Array.isArray(x) ? x : []; } catch { return []; } };
+/** Everyone a link went to: the main contact first, then the others. */
+export const recipientsOf = (r) => [{ name: r.contact_name || "", email: r.email }, ...parseJson(r.cc).filter((c) => c.email !== r.email)];
+/** A saved customer's contacts; customers saved before contacts existed have just their one contact. on: picked last time. */
+export const contactsOf = (c) => { const list = parseJson(c.contacts); return list.length ? list.map((x) => ({ name: x.name || "", email: x.email, on: x.on !== false })) : c.email ? [{ name: c.contact_name || "", email: c.email, on: true }] : []; };
 const isDate = (v) => /^\d{4}-\d{2}-\d{2}$/.test(v) && !Number.isNaN(Date.parse(v + "T00:00:00Z"));
 const hex = (bytes) => [...bytes].map((b) => b.toString(16).padStart(2, "0")).join("");
 const base64url = (bytes) => btoa(String.fromCharCode(...bytes)).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
@@ -81,6 +102,10 @@ export function parseNew(input) {
   if (!/^[A-Z0-9-]{1,20}$/.test(d.load_no)) errors.push("Load number: letters, numbers and dashes only.");
   if (!d.customer) errors.push("Customer company is required.");
   if (!isEmail(d.email)) errors.push("Enter the customer's email address.");
+  // Other people the link goes to, besides the main contact.
+  const cc = parseContacts(input.cc, MAX_CONTACTS - 1);
+  if (cc.error) errors.push(cc.error);
+  else { const others = cc.list.filter((c) => c.email !== d.email).map(({ name, email }) => ({ name, email })); d.cc = others.length ? JSON.stringify(others) : null; }
   for (const leg of ["pickup", "delivery"]) {
     if (!/^\d{5}$/.test(d[leg + "_zip"])) errors.push(`Enter a 5-digit ${leg} ZIP.`);
     if (!isDate(d[leg + "_date"])) errors.push(`Enter the ${leg} date.`);
@@ -119,7 +144,7 @@ export function publicView(r, now = Date.now(), returning = null) {
 // Only one version exists so far; older versions get added here when the wording changes.
 const termsFor = () => TERMS;
 
-const staffView = (r, now) => ({ ...r, status: statusOf(r, now), rate: money(r.rate_cents), link: LINK_BASE + r.token, token: undefined, confirmed_ua: undefined });
+const staffView = (r, now) => ({ ...r, status: statusOf(r, now), rate: money(r.rate_cents), link: LINK_BASE + r.token, token: undefined, confirmed_ua: undefined, cc: undefined, recipients: recipientsOf(r) });
 
 // ---------- PDF
 
@@ -201,7 +226,8 @@ export async function buildPdf(r, logoPng) {
   if (r.status === "confirmed") {
     row("Accepted by", `${[properName(r.confirmed_name), r.confirmed_title].filter(Boolean).join(", ")}, for ${r.customer}`);
     row("Accepted by email", r.confirmed_email || r.email);
-    if (r.confirmed_email && r.confirmed_email !== r.email) row("Link sent to", r.email);
+    const sentTo = recipientsOf(r).map((c) => c.email);
+    if (sentTo.length > 1 || (r.confirmed_email && r.confirmed_email !== r.email)) row("Link sent to", sentTo.join(", "));
     row("Date and time", `${stampText(r.confirmed_at)}   |   IP address ${r.confirmed_ip || "not recorded"}`);
     row("Method", r.confirm_method === "returning" ? "Saved signer details, then Agree & Confirm button at www.swiftlinkusa.com" : "Typed name, terms checkbox and Confirm button at www.swiftlinkusa.com");
     row("Agreement ID", `${r.id}   |   Terms version ${r.terms_version}`);
@@ -227,7 +253,9 @@ export function inviteEmail(input) {
   const link = LINK_BASE + (r.batch || r.token);
   const loadNos = list.map((x) => x.load_no);
   const subject = multi ? `Rate confirmation – ${list.length} loads (${loadNos.slice(0, 4).join(", ")}${list.length > 4 ? ", …" : ""})` : `Rate confirmation – Load ${r.load_no}`;
-  const hi = r.contact_name ? `Hi ${properName(r.contact_name).split(" ")[0]},` : "Hello,";
+  // "Hi Dana," for one person, "Hi Dana and Mike," for two, "Hello," otherwise or when a name is missing.
+  const people = recipientsOf(r), firsts = people.map((c) => properName(c.name).split(" ")[0]).filter(Boolean);
+  const hi = firsts.length === people.length && people.length <= 2 ? `Hi ${firsts.join(" and ")},` : "Hello,";
   const font = "font-family:'Segoe UI',Arial,Helvetica,sans-serif;";
   const cell = (i, extra = "") => `padding:9px 12px;${i ? "border-top:1px solid #e6eaf0;" : ""}${font}font-size:13px;color:#1b2a4a;${extra}`;
   const total = list.reduce((t, x) => t + x.rate_cents, 0);
@@ -269,7 +297,7 @@ ${details}
 </table></td></tr></table></body></html>`;
   const lines = multi ? [...list.map((x) => `${x.load_no}: ${place(x, "pickup")} -> ${place(x, "delivery")}, pickup ${dateText(x.pickup_date)}, ${money(x.rate_cents)}`), `Total (${list.length} loads): ${money(total)}`] : [`Load: ${r.load_no}${r.po ? `  PO ${r.po}` : ""}`, `Lane: ${place(r, "pickup")} -> ${place(r, "delivery")}`, `Pickup: ${dateText(r.pickup_date)}`, `Delivery: ${dateText(r.delivery_date)}`, `Rate: ${money(r.rate_cents)}`];
   const text = [hi, "", multi ? `Please review and confirm the rates for these ${list.length} loads. You can approve them all at once.` : `Please review and confirm the rate for load ${r.load_no}. It only takes a few seconds.`, "", ...lines, "", `${multi ? `Review & confirm ${list.length} loads` : "Review & confirm rate"}: ${link}`, "", "Thank you,"].join("\n");
-  return { subject, html, text, to: r.email };
+  return { subject, html, text, to: people.map((c) => c.email).join(","), recipients: people };
 }
 
 function base64(bytes) {
@@ -284,6 +312,7 @@ export function confirmationMessages(env, rowsIn, pdfsIn) {
   const rows = Array.isArray(rowsIn) ? rowsIn : [rowsIn], pdfs = Array.isArray(pdfsIn) ? pdfsIn : [pdfsIn], r = rows[0], multi = rows.length > 1;
   const attachments = rows.map((x, i) => ({ "@odata.type": "#microsoft.graph.fileAttachment", name: pdfName(x), contentType: "application/pdf", contentBytes: base64(pdfs[i]) }));
   const lane = (x) => `${place(x, "pickup")} -> ${place(x, "delivery")}`;
+  const signer = r.confirmed_email || r.email, sentTo = recipientsOf(r).map((c) => c.email);
   const total = rows.reduce((t, x) => t + x.rate_cents, 0);
   const loadLines = rows.flatMap((x) => [`Load: ${x.load_no}${x.po ? `   PO: ${x.po}` : ""}`, `Lane: ${lane(x)}`, `Pickup: ${dateText(x.pickup_date)}   Delivery: ${dateText(x.delivery_date)}`, `Rate: ${money(x.rate_cents)}`, ...(multi ? [`Agreement ID: ${x.id}`, ""] : [])]);
   const internal = [
@@ -291,7 +320,7 @@ export function confirmationMessages(env, rowsIn, pdfsIn) {
     "",
     ...loadLines,
     ...(multi ? [`Total: ${money(total)}`, ""] : [""]),
-    `Accepted by: ${[r.confirmed_name, r.confirmed_title].filter(Boolean).join(", ")} (${r.confirmed_email || r.email})${r.confirmed_email && r.confirmed_email !== r.email ? `   Link sent to: ${r.email}` : ""}`,
+    `Accepted by: ${[r.confirmed_name, r.confirmed_title].filter(Boolean).join(", ")} (${r.confirmed_email || r.email})${sentTo.length > 1 || (r.confirmed_email && r.confirmed_email !== r.email) ? `   Link sent to: ${sentTo.join(", ")}` : ""}`,
     `When: ${stampText(r.confirmed_at)}   IP: ${r.confirmed_ip || "not recorded"}`,
     multi ? `Terms version: ${r.terms_version}` : `Agreement ID: ${r.id}   Terms version: ${r.terms_version}`,
   ].join("\r\n");
@@ -309,7 +338,7 @@ export function confirmationMessages(env, rowsIn, pdfsIn) {
   const subjectCustomer = multi ? `${rows.length} loads - your rate confirmations` : `Load ${r.load_no} - your rate confirmation`;
   return [
     { message: { subject: subjectInternal, body: { contentType: "Text", content: internal }, toRecipients: to, replyTo: [{ emailAddress: { address: r.email } }], attachments }, saveToSentItems: false },
-    { message: { subject: subjectCustomer, body: { contentType: "Text", content: customer }, toRecipients: [{ emailAddress: { address: r.confirmed_email || r.email } }], ccRecipients: r.confirmed_email && r.confirmed_email !== r.email ? [{ emailAddress: { address: r.email } }] : [], replyTo: [{ emailAddress: { address: env.TO_ADDRESS } }], attachments }, saveToSentItems: true },
+    { message: { subject: subjectCustomer, body: { contentType: "Text", content: customer }, toRecipients: [{ emailAddress: { address: signer } }], ccRecipients: sentTo.filter((e) => e !== signer).map((address) => ({ emailAddress: { address } })), replyTo: [{ emailAddress: { address: env.TO_ADDRESS } }], attachments }, saveToSentItems: true },
   ];
 }
 
@@ -342,7 +371,7 @@ export async function combinedPdf(rows, logo) {
 }
 const combinedName = (rows) => `${rows.length > 3 ? `${rows[0].load_no}-${rows.at(-1).load_no} (${rows.length} loads)` : rows.map((r) => r.load_no).join(", ")} - Customer Rate Agreements.pdf`;
 
-const INSERT_COLS = ["id", "token", "batch", "load_no", "po", "customer", "contact_name", "email", "pickup_zip", "pickup_city", "pickup_state", "pickup_date", "delivery_zip", "delivery_city", "delivery_state", "delivery_date", "rate_cents", "equipment", "notes", "status", "created_by", "created", "expires"];
+const INSERT_COLS = ["id", "token", "batch", "load_no", "po", "customer", "contact_name", "email", "pickup_zip", "pickup_city", "pickup_state", "pickup_date", "delivery_zip", "delivery_city", "delivery_state", "delivery_date", "rate_cents", "equipment", "notes", "cc", "status", "created_by", "created", "expires"];
 
 /** /internal/ratecons/* — called only by the employee portal, which authenticates staff with Cloudflare Access. */
 export async function internalRoute(request, env, deps) {
@@ -362,10 +391,11 @@ export async function internalRoute(request, env, deps) {
   if (path === "/" && request.method === "POST") {
     let input;
     try { const raw = await request.text(); if (raw.length > 60000) throw Error(); input = JSON.parse(raw); } catch { return json({ error: "Invalid request" }, 400); }
-    // One load, or several loads for the same customer sharing one link ({customer, contact_name, email, loads: [...]}).
+    // One load, or several loads for the same customer sharing one link ({customer, contact_name, email, cc, loads: [...]}).
+    // contact_name/email is the main contact; cc is everyone else picked to receive the link.
     const many = Array.isArray(input?.loads);
     if (many && (input.loads.length < 1 || input.loads.length > MAX_LOADS)) return json({ error: `Send between 1 and ${MAX_LOADS} loads at a time.` }, 422);
-    const shared = many ? { customer: input.customer, contact_name: input.contact_name, email: input.email } : {};
+    const shared = many ? { customer: input.customer, contact_name: input.contact_name, email: input.email, cc: input.cc } : {};
     const parsed = (many ? input.loads : [input]).map((load) => parseNew({ ...(load && typeof load === "object" ? load : {}), ...shared }));
     const errors = parsed.flatMap((p, i) => (p.errors || []).map((e) => (parsed.length > 1 ? `Load ${i + 1}: ${e}` : e)));
     const dupes = parsed.map((p) => p.data?.load_no).filter((n, i, a) => n && a.indexOf(n) !== i);
@@ -374,28 +404,38 @@ export async function internalRoute(request, env, deps) {
     const base = { status: "open", created_by: staff, created: new Date(now).toISOString(), expires: new Date(now + EXPIRY_DAYS * DAY).toISOString(), batch: parsed.length > 1 ? newToken() : null };
     const rows = parsed.map((p) => ({ ...p.data, ...base, id: newId(), token: newToken() }));
     const first = rows[0];
+    // The customer's saved contacts: everyone picked this time is marked on (picked by default next time), the rest off;
+    // new people are added after the ones already saved.
+    const saved = await db.prepare("SELECT name, contact_name, email, contacts, removed FROM ratecon_customers WHERE name=?").bind(first.customer).first();
+    const picked = recipientsOf(first), known = saved && !saved.removed ? contactsOf(saved) : [];
+    const contacts = [...known.map((c) => { const p = picked.find((x) => x.email === c.email); return { name: p?.name || c.name, email: c.email, on: !!p }; }), ...picked.filter((p) => !known.some((c) => c.email === p.email)).map((p) => ({ ...p, on: true }))].slice(-MAX_CONTACTS);
     await db.batch([
       // A new link for the same load replaces any earlier link that was never confirmed.
       ...rows.map((r) => db.prepare("UPDATE ratecons SET status='void', voided_by=? WHERE load_no=? AND status='open'").bind("Replaced by a newer link", r.load_no)),
       ...rows.map((r) => db.prepare(`INSERT INTO ratecons(${INSERT_COLS.join(",")}) VALUES(${INSERT_COLS.map(() => "?").join(",")})`).bind(...INSERT_COLS.map((c) => r[c] === "" || r[c] === undefined ? null : r[c]))),
-      db.prepare(`INSERT INTO ratecon_customers(name, contact_name, email, loads, last_used) VALUES(?,?,?,?,?)
-        ON CONFLICT(name) DO UPDATE SET contact_name=COALESCE(excluded.contact_name, ratecon_customers.contact_name), email=excluded.email,
-        loads=ratecon_customers.loads+excluded.loads, last_used=excluded.last_used, removed=0`).bind(first.customer, first.contact_name || null, first.email, rows.length, first.created),
+      db.prepare(`INSERT INTO ratecon_customers(name, contact_name, email, contacts, loads, last_used) VALUES(?,?,?,?,?,?)
+        ON CONFLICT(name) DO UPDATE SET contact_name=excluded.contact_name, email=excluded.email, contacts=excluded.contacts,
+        loads=ratecon_customers.loads+excluded.loads, last_used=excluded.last_used, removed=0`).bind(first.customer, first.contact_name || null, first.email, JSON.stringify(contacts), rows.length, first.created),
     ]);
     const items = rows.map((r) => ({ ...staffView(r, now), link: groupLink(r), batch: undefined, batch_id: r.batch ? r.batch.slice(0, 8) : null, batch_size: rows.length }));
     return json(many ? { items, link: items[0].link } : { item: items[0] }, 200);
   }
   if (path === "/customers" && request.method === "GET") {
-    const rows = (await db.prepare("SELECT name, contact_name, email, signer_name, signer_email, loads, last_used FROM ratecon_customers WHERE removed=0 ORDER BY last_used DESC LIMIT 500").all()).results;
-    return json({ customers: rows }, 200);
+    const rows = (await db.prepare("SELECT name, contact_name, email, contacts, signer_name, signer_email, loads, last_used FROM ratecon_customers WHERE removed=0 ORDER BY last_used DESC LIMIT 500").all()).results;
+    return json({ customers: rows.map((c) => ({ ...c, contacts: contactsOf(c) })) }, 200);
   }
   if (path === "/customers/update" && request.method === "POST") {
     let input;
     try { input = JSON.parse(await request.text()); } catch { return json({ error: "Invalid request" }, 400); }
-    const name = clean(input?.name, 120), email = clean(input?.email, 200).toLowerCase(), contact = properName(clean(input?.contact_name, 80));
-    if (!name || !isEmail(email)) return json({ error: "Enter a valid email for this customer." }, 422);
-    const res = await db.prepare("UPDATE ratecon_customers SET contact_name=?, email=? WHERE name=?").bind(contact || null, email, name).run();
-    return res.meta.changes ? json({ ok: true, contact_name: contact, email }, 200) : json({ error: "Customer not found" }, 404);
+    const name = clean(input?.name, 120);
+    // The whole contact list ({contacts: [...]}); the first one picked becomes the main contact. Older pages send one contact_name/email.
+    const parsed = Array.isArray(input?.contacts) ? parseContacts(input.contacts) : parseContacts([{ name: input?.contact_name, email: input?.email }]);
+    if (!name) return json({ error: "Invalid request" }, 400);
+    if (parsed.error) return json({ error: parsed.error }, 422);
+    if (!parsed.list.length) return json({ error: "Keep at least one contact for this customer." }, 422);
+    const contacts = parsed.list.map((c) => ({ ...c, on: c.on !== false })), main = contacts.find((c) => c.on) || contacts[0];
+    const res = await db.prepare("UPDATE ratecon_customers SET contact_name=?, email=?, contacts=? WHERE name=?").bind(main.name || null, main.email, JSON.stringify(contacts), name).run();
+    return res.meta.changes ? json({ ok: true, contact_name: main.name, email: main.email, contacts }, 200) : json({ error: "Customer not found" }, 404);
   }
   if (path === "/customers/remove" && request.method === "POST") {
     let input;
@@ -428,14 +468,14 @@ export async function internalRoute(request, env, deps) {
     if (!list.length) return json({ error: "Only links that are still waiting can be emailed." }, 409);
     const mail = inviteEmail(list);
     try {
-      await deps.sendMail(env, { message: { subject: mail.subject, body: { contentType: "HTML", content: mail.html }, toRecipients: [{ emailAddress: { address: r.email } }], ccRecipients: [{ emailAddress: { address: staff } }], replyTo: [{ emailAddress: { address: staff } }] }, saveToSentItems: true });
+      await deps.sendMail(env, { message: { subject: mail.subject, body: { contentType: "HTML", content: mail.html }, toRecipients: mail.recipients.map((c) => ({ emailAddress: { address: c.email, ...(c.name ? { name: c.name } : {}) } })), ccRecipients: [{ emailAddress: { address: staff } }], replyTo: [{ emailAddress: { address: staff } }] }, saveToSentItems: true });
     } catch (error) {
       console.error("Rate confirmation invite failed", error);
       return json({ error: "The email could not be sent. Try again, or use Open in Outlook." }, 502);
     }
     const at = new Date(now).toISOString();
     await db.batch(list.map((x) => db.prepare("UPDATE ratecons SET sent_at=?, sent_by=? WHERE id=?").bind(at, staff, x.id)));
-    return json({ ok: true, sent_at: at, sent_by: staff, ids: list.map((x) => x.id) }, 200);
+    return json({ ok: true, sent_at: at, sent_by: staff, ids: list.map((x) => x.id), to: mail.recipients.map((c) => c.email) }, 200);
   }
   // Deleting hides the record from staff and turns its link off; the row stays in the database as a record.
   if (m[2] === "/delete" && request.method === "POST") {
