@@ -20,6 +20,9 @@ const LINK_BASE = "https://www.swiftlinkusa.com/rate-confirmation/#";
 const DAY = 86_400_000;
 export const EXPIRY_DAYS = 30;
 export const EQUIPMENT = ["", "Dry Van", "Reefer", "Flatbed", "Step Deck", "Conestoga", "Straight Truck", "Sprinter / Cargo Van", "Power Only", "Other"];
+// The dropdown in the portal (apps/rate-confirmations/app.js) lists these same names. "Other" needs a typed description.
+export const ACCESSORIALS = ["Detention", "Layover", "Lumper", "Truck Ordered Not Used", "Extra Stop", "Redelivery", "Reconsignment", "Driver Assist", "Liftgate", "Pallet Jack", "Tarps", "Hazmat", "Team Drivers", "Residential Delivery", "Inside Delivery", "Limited Access", "Storage", "Other"];
+const MAX_ACCESSORIALS = 10;
 
 const SCHEMA = [
   `CREATE TABLE IF NOT EXISTS ratecons (
@@ -49,6 +52,8 @@ export async function ensureSchema(db) {
   // More than one person per link (cc: the others, JSON) and every saved contact of a customer (contacts, JSON).
   try { await db.prepare("ALTER TABLE ratecons ADD COLUMN cc TEXT").run(); } catch {}
   try { await db.prepare("ALTER TABLE ratecon_customers ADD COLUMN contacts TEXT").run(); } catch {}
+  // Accessorial charges agreed with the load (JSON [{label, cents}]); empty means the standard agreement.
+  try { await db.prepare("ALTER TABLE ratecons ADD COLUMN accessorials TEXT").run(); } catch {}
   await db.prepare("CREATE INDEX IF NOT EXISTS ratecons_batch ON ratecons(batch)").run();
   // Customers from links made before saved customers existed (INSERT OR IGNORE never revives a removed one).
   await db.batch([
@@ -80,6 +85,24 @@ const parseJson = (v) => { try { const x = JSON.parse(v || "null"); return Array
 export const recipientsOf = (r) => [{ name: r.contact_name || "", email: r.email }, ...parseJson(r.cc).filter((c) => c.email !== r.email)];
 /** A saved customer's contacts; customers saved before contacts existed have just their one contact. on: picked last time. */
 export const contactsOf = (c) => { const list = parseJson(c.contacts); return list.length ? list.map((x) => ({ name: x.name || "", email: x.email, on: x.on !== false })) : c.email ? [{ name: c.contact_name || "", email: c.email, on: true }] : []; };
+/** Accessorials from the portal: [{type, description, amount}] -> [{label, cents}]. Returns { list } or { error }. */
+export function parseAccessorials(input) {
+  if (input === undefined || input === null) return { list: [] };
+  if (!Array.isArray(input) || input.length > MAX_ACCESSORIALS) return { error: `Add up to ${MAX_ACCESSORIALS} accessorials per load.` };
+  const list = [];
+  for (const a of input) {
+    const type = clean(a?.type, 40), label = type === "Other" ? clean(a?.description, 60) : type;
+    if (!ACCESSORIALS.includes(type)) return { error: "Choose each accessorial from the list." };
+    if (!label) return { error: "Describe the Other accessorial." };
+    const amount = Number(String(a?.amount ?? "").replace(/[$,\s]/g, ""));
+    if (!Number.isFinite(amount) || amount <= 0 || amount > 100_000) return { error: `Enter the ${label} charge in dollars.` };
+    list.push({ label, cents: Math.round(amount * 100) });
+  }
+  return { list };
+}
+export const accessorialsOf = (r) => parseJson(r.accessorials);
+/** What the customer pays for a load: the rate plus any accessorials on the agreement. */
+export const totalCents = (r) => r.rate_cents + accessorialsOf(r).reduce((t, a) => t + a.cents, 0);
 const isDate = (v) => /^\d{4}-\d{2}-\d{2}$/.test(v) && !Number.isNaN(Date.parse(v + "T00:00:00Z"));
 const hex = (bytes) => [...bytes].map((b) => b.toString(16).padStart(2, "0")).join("");
 const base64url = (bytes) => btoa(String.fromCharCode(...bytes)).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
@@ -116,10 +139,14 @@ export function parseNew(input) {
   const rate = Number(String(input.rate ?? "").replace(/[$,\s]/g, ""));
   if (!Number.isFinite(rate) || rate <= 0 || rate > 1_000_000) errors.push("Enter the rate in dollars.");
   else d.rate_cents = Math.round(rate * 100);
+  const extras = parseAccessorials(input.accessorials);
+  if (extras.error) errors.push(extras.error);
+  else d.accessorials = extras.list.length ? JSON.stringify(extras.list) : null;
   return errors.length ? { errors } : { data: d };
 }
 
 export const money = (cents) => "$" + (cents / 100).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const shownAccessorials = (r) => accessorialsOf(r).map((a) => ({ label: a.label, amount: money(a.cents) }));
 const place = (r, leg) => [[r[leg + "_city"], r[leg + "_state"]].filter(Boolean).join(", "), r[leg + "_zip"]].filter(Boolean).join(" ");
 export const dateText = (ymd) => new Date(ymd + "T12:00:00Z").toLocaleDateString("en-US", { timeZone: "UTC", weekday: "short", month: "short", day: "numeric", year: "numeric" });
 export const stampText = (iso) => new Date(iso).toLocaleString("en-US", { timeZone: "America/Detroit", month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit", timeZoneName: "short" });
@@ -135,7 +162,7 @@ export function publicView(r, now = Date.now(), returning = null) {
   return {
     load_no: r.load_no, po: r.po || "", customer: r.customer, contact_name: r.contact_name || "",
     pickup: { place: place(r, "pickup"), date: r.pickup_date }, delivery: { place: place(r, "delivery"), date: r.delivery_date },
-    rate: money(r.rate_cents), equipment: r.equipment || "", notes: r.notes || "", status: statusOf(r, now),
+    rate: money(totalCents(r)), base_rate: money(r.rate_cents), accessorials: shownAccessorials(r), equipment: r.equipment || "", notes: r.notes || "", status: statusOf(r, now),
     confirmed: r.status === "confirmed" ? { name: r.confirmed_name, at: r.confirmed_at } : null,
     terms: r.status === "confirmed" ? termsFor(r.terms_version) : TERMS, terms_version: r.terms_version || TERMS_VERSION,
     returning: statusOf(r, now) === "open" && returning?.signer_name && returning?.signer_email ? { name: properName(returning.signer_name), email: returning.signer_email } : null,
@@ -144,7 +171,7 @@ export function publicView(r, now = Date.now(), returning = null) {
 // Only one version exists so far; older versions get added here when the wording changes.
 const termsFor = () => TERMS;
 
-const staffView = (r, now) => ({ ...r, status: statusOf(r, now), rate: money(r.rate_cents), link: LINK_BASE + r.token, token: undefined, confirmed_ua: undefined, cc: undefined, recipients: recipientsOf(r) });
+const staffView = (r, now) => ({ ...r, status: statusOf(r, now), rate: money(totalCents(r)), total_cents: totalCents(r), accessorials: accessorialsOf(r), link: LINK_BASE + r.token, token: undefined, confirmed_ua: undefined, cc: undefined, recipients: recipientsOf(r) });
 
 // ---------- PDF
 
@@ -207,11 +234,21 @@ export async function buildPdf(r, logoPng) {
   row("Delivery", `${place(r, "delivery")}  -  ${dateText(r.delivery_date)}`);
   if (r.equipment) row("Equipment", r.equipment);
   if (r.notes) row("Notes", r.notes);
-  y -= 2; ensure(60);
-  page.drawRectangle({ x: M, y: y - 38, width: W - M * 2, height: 50, color: rgb(0.97, 0.95, 0.88), borderColor: GOLD, borderWidth: 1 });
-  page.drawText("AGREED RATE (USD)", { x: M + 16, y: y - 8, size: 9, font: bold, color: MUTED });
-  page.drawText(money(r.rate_cents), { x: M + 16, y: y - 30, size: 20, font: bold, color: NAVY });
-  y -= 62;
+  // The rate and each accessorial sit on the right of the box, which grows only when the list needs it.
+  const extras = accessorialsOf(r), charges = extras.length ? [{ label: "Line haul", cents: r.rate_cents }, ...extras] : [];
+  const boxH = Math.max(50, charges.length * 13 + 12);
+  y -= 2; ensure(boxH + 10);
+  page.drawRectangle({ x: M, y: y + 12 - boxH, width: W - M * 2, height: boxH, color: rgb(0.97, 0.95, 0.88), borderColor: GOLD, borderWidth: 1 });
+  charges.forEach((a, i) => {
+    let label = pdfSafe(a.label);
+    while (font.widthOfTextAtSize(label, 9) > 190) label = label.slice(0, -1);
+    const amount = money(a.cents), line = y - 2 - i * 13;
+    page.drawText(label, { x: W - M - 100 - font.widthOfTextAtSize(label, 9), y: line, size: 9, font, color: MUTED });
+    page.drawText(amount, { x: W - M - 12 - bold.widthOfTextAtSize(amount, 9), y: line, size: 9, font: bold, color: INK });
+  });
+  page.drawText(extras.length ? "TOTAL ALL-IN (USD)" : "AGREED RATE (USD)", { x: M + 16, y: y - 8, size: 9, font: bold, color: MUTED });
+  page.drawText(money(totalCents(r)), { x: M + 16, y: y - 30, size: 20, font: bold, color: NAVY });
+  y -= boxH + 12;
   heading("Terms");
   (r.status === "confirmed" ? termsFor(r.terms_version) : TERMS).forEach((t, i) => {
     const lines = wrap(t, font, 8.8, W - M * 2 - 16);
@@ -258,18 +295,20 @@ export function inviteEmail(input) {
   const hi = firsts.length === people.length && people.length <= 2 ? `Hi ${firsts.join(" and ")},` : "Hello,";
   const font = "font-family:'Segoe UI',Arial,Helvetica,sans-serif;";
   const cell = (i, extra = "") => `padding:9px 12px;${i ? "border-top:1px solid #e6eaf0;" : ""}${font}font-size:13px;color:#1b2a4a;${extra}`;
-  const total = list.reduce((t, x) => t + x.rate_cents, 0);
+  const total = list.reduce((t, x) => t + totalCents(x), 0);
+  const includes = (x) => accessorialsOf(x).map((a) => `${a.label} ${money(a.cents)}`).join(", ");
   let details;
   if (multi) {
     details = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border:1px solid #dce2eb;background:#f8f9fc">
 <tr><td style="${cell(0, "color:#626e83;font-size:12px;font-weight:600")}">Load</td><td style="${cell(0, "color:#626e83;font-size:12px;font-weight:600")}">Lane</td><td style="${cell(0, "color:#626e83;font-size:12px;font-weight:600")}">Pickup</td><td align="right" style="${cell(0, "color:#626e83;font-size:12px;font-weight:600;text-align:right")}">Rate</td></tr>
-${list.map((x) => `<tr><td style="${cell(1, "font-weight:600;white-space:nowrap")}">${esc(x.load_no)}${x.po ? `<br><span style="color:#626e83;font-weight:400;font-size:12px">PO ${esc(x.po)}</span>` : ""}</td><td style="${cell(1)}">${esc(place(x, "pickup"))} → ${esc(place(x, "delivery"))}</td><td style="${cell(1, "white-space:nowrap")}">${esc(dateText(x.pickup_date))}</td><td align="right" style="${cell(1, "font-weight:700;text-align:right;white-space:nowrap")}">${esc(money(x.rate_cents))}</td></tr>`).join("\n")}
+${list.map((x) => `<tr><td style="${cell(1, "font-weight:600;white-space:nowrap")}">${esc(x.load_no)}${x.po ? `<br><span style="color:#626e83;font-weight:400;font-size:12px">PO ${esc(x.po)}</span>` : ""}</td><td style="${cell(1)}">${esc(place(x, "pickup"))} → ${esc(place(x, "delivery"))}${includes(x) ? `<br><span style="color:#626e83;font-size:12px">Includes ${esc(includes(x))}</span>` : ""}</td><td style="${cell(1, "white-space:nowrap")}">${esc(dateText(x.pickup_date))}</td><td align="right" style="${cell(1, "font-weight:700;text-align:right;white-space:nowrap")}">${esc(money(totalCents(x)))}</td></tr>`).join("\n")}
 <tr><td colspan="3" style="${cell(1, "font-weight:700")}">Total (${list.length} loads)</td><td align="right" style="${cell(1, "font-weight:700;font-size:15px;text-align:right;white-space:nowrap")}">${esc(money(total))}</td></tr>
 </table>`;
   } else {
-    const rows = [["Load", r.load_no + (r.po ? `  ·  PO ${r.po}` : "")], ["Lane", `${place(r, "pickup")} → ${place(r, "delivery")}`], ["Pickup", dateText(r.pickup_date)], ["Delivery", dateText(r.delivery_date)], ...(r.equipment ? [["Equipment", r.equipment]] : []), ["Rate", money(r.rate_cents)]];
+    const rows = [["Load", r.load_no + (r.po ? `  ·  PO ${r.po}` : "")], ["Lane", `${place(r, "pickup")} → ${place(r, "delivery")}`], ["Pickup", dateText(r.pickup_date)], ["Delivery", dateText(r.delivery_date)], ...(r.equipment ? [["Equipment", r.equipment]] : []), [accessorialsOf(r).length ? "Line haul" : "Rate", money(r.rate_cents)], ...accessorialsOf(r).map((a) => [a.label, money(a.cents)]), ...(accessorialsOf(r).length ? [["Total all-in", money(totalCents(r))]] : [])];
+    const strong = rows.length - 1;
     details = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border:1px solid #dce2eb;background:#f8f9fc">
-${rows.map(([k, v], i) => `<tr><td style="padding:9px 14px;${i ? "border-top:1px solid #e6eaf0;" : ""}${font}font-size:13px;color:#626e83;width:110px">${esc(k)}</td><td style="padding:9px 14px;${i ? "border-top:1px solid #e6eaf0;" : ""}${font}font-size:14px;color:#1b2a4a;${k === "Rate" ? "font-weight:700;font-size:16px;" : ""}">${esc(v)}</td></tr>`).join("\n")}
+${rows.map(([k, v], i) => `<tr><td style="padding:9px 14px;${i ? "border-top:1px solid #e6eaf0;" : ""}${font}font-size:13px;color:#626e83;width:110px">${esc(k)}</td><td style="padding:9px 14px;${i ? "border-top:1px solid #e6eaf0;" : ""}${font}font-size:14px;color:#1b2a4a;${i === strong ? "font-weight:700;font-size:16px;" : ""}">${esc(v)}</td></tr>`).join("\n")}
 </table>`;
   }
   const intro = multi ? `Please review and confirm the rates for these <b>${list.length} loads</b>. You can approve them all at once, and it only takes a few seconds.` : `Please review and confirm the rate for load <b>${esc(r.load_no)}</b>. It only takes a few seconds.`;
@@ -295,7 +334,7 @@ ${details}
 </td></tr>
 <tr><td style="padding:14px 28px;background:#f8f9fc;border-top:1px solid #e6eaf0;${font}font-size:12px;color:#626e83">SwiftLink Logistics, LLC &nbsp;·&nbsp; <a href="https://www.swiftlinkusa.com" style="color:#626e83">www.swiftlinkusa.com</a></td></tr>
 </table></td></tr></table></body></html>`;
-  const lines = multi ? [...list.map((x) => `${x.load_no}: ${place(x, "pickup")} -> ${place(x, "delivery")}, pickup ${dateText(x.pickup_date)}, ${money(x.rate_cents)}`), `Total (${list.length} loads): ${money(total)}`] : [`Load: ${r.load_no}${r.po ? `  PO ${r.po}` : ""}`, `Lane: ${place(r, "pickup")} -> ${place(r, "delivery")}`, `Pickup: ${dateText(r.pickup_date)}`, `Delivery: ${dateText(r.delivery_date)}`, `Rate: ${money(r.rate_cents)}`];
+  const lines = multi ? [...list.map((x) => `${x.load_no}: ${place(x, "pickup")} -> ${place(x, "delivery")}, pickup ${dateText(x.pickup_date)}, ${money(totalCents(x))}${includes(x) ? ` (includes ${includes(x)})` : ""}`), `Total (${list.length} loads): ${money(total)}`] : [`Load: ${r.load_no}${r.po ? `  PO ${r.po}` : ""}`, `Lane: ${place(r, "pickup")} -> ${place(r, "delivery")}`, `Pickup: ${dateText(r.pickup_date)}`, `Delivery: ${dateText(r.delivery_date)}`, `${accessorialsOf(r).length ? "Line haul" : "Rate"}: ${money(r.rate_cents)}`, ...accessorialsOf(r).map((a) => `${a.label}: ${money(a.cents)}`), ...(accessorialsOf(r).length ? [`Total all-in: ${money(totalCents(r))}`] : [])];
   const text = [hi, "", multi ? `Please review and confirm the rates for these ${list.length} loads. You can approve them all at once.` : `Please review and confirm the rate for load ${r.load_no}. It only takes a few seconds.`, "", ...lines, "", `${multi ? `Review & confirm ${list.length} loads` : "Review & confirm rate"}: ${link}`, "", "Thank you,"].join("\n");
   return { subject, html, text, to: people.map((c) => c.email).join(","), recipients: people };
 }
@@ -313,8 +352,8 @@ export function confirmationMessages(env, rowsIn, pdfsIn) {
   const attachments = rows.map((x, i) => ({ "@odata.type": "#microsoft.graph.fileAttachment", name: pdfName(x), contentType: "application/pdf", contentBytes: base64(pdfs[i]) }));
   const lane = (x) => `${place(x, "pickup")} -> ${place(x, "delivery")}`;
   const signer = r.confirmed_email || r.email, sentTo = recipientsOf(r).map((c) => c.email);
-  const total = rows.reduce((t, x) => t + x.rate_cents, 0);
-  const loadLines = rows.flatMap((x) => [`Load: ${x.load_no}${x.po ? `   PO: ${x.po}` : ""}`, `Lane: ${lane(x)}`, `Pickup: ${dateText(x.pickup_date)}   Delivery: ${dateText(x.delivery_date)}`, `Rate: ${money(x.rate_cents)}`, ...(multi ? [`Agreement ID: ${x.id}`, ""] : [])]);
+  const total = rows.reduce((t, x) => t + totalCents(x), 0);
+  const loadLines = rows.flatMap((x) => [`Load: ${x.load_no}${x.po ? `   PO: ${x.po}` : ""}`, `Lane: ${lane(x)}`, `Pickup: ${dateText(x.pickup_date)}   Delivery: ${dateText(x.delivery_date)}`, `${accessorialsOf(x).length ? "Line haul" : "Rate"}: ${money(x.rate_cents)}`, ...accessorialsOf(x).map((a) => `${a.label}: ${money(a.cents)}`), ...(accessorialsOf(x).length ? [`Total all-in: ${money(totalCents(x))}`] : []), ...(multi ? [`Agreement ID: ${x.id}`, ""] : [])]);
   const internal = [
     multi ? `${r.customer} approved the rates for ${rows.length} loads (${rows.map((x) => x.load_no).join(", ")}). A signed Customer Rate Agreement for each load is attached for the invoice packets.` : `${r.customer} approved the rate for load ${r.load_no}. The signed Customer Rate Agreement is attached for the invoice packet.`,
     "",
@@ -328,8 +367,8 @@ export function confirmationMessages(env, rowsIn, pdfsIn) {
   const customer = [
     `Hello ${r.confirmed_name || r.contact_name || ""},`.replace(/ ,$/, ","),
     "",
-    multi ? `Thank you for confirming the rates for ${rows.length} loads. Your copies of the Customer Rate Agreements (one per load) are attached.` : `Thank you for confirming the rate for load ${r.load_no} (${lane(r)}, ${money(r.rate_cents)}). Your copy of the Customer Rate Agreement is attached.`,
-    ...(multi ? ["", ...rows.map((x) => `${x.load_no}: ${lane(x)}, ${money(x.rate_cents)}`), `Total: ${money(total)}`] : []),
+    multi ? `Thank you for confirming the rates for ${rows.length} loads. Your copies of the Customer Rate Agreements (one per load) are attached.` : `Thank you for confirming the rate for load ${r.load_no} (${lane(r)}, ${money(totalCents(r))}${accessorialsOf(r).length ? ` including ${accessorialsOf(r).map((a) => `${a.label} ${money(a.cents)}`).join(", ")}` : ""}). Your copy of the Customer Rate Agreement is attached.`,
+    ...(multi ? ["", ...rows.map((x) => `${x.load_no}: ${lane(x)}, ${money(totalCents(x))}${accessorialsOf(x).length ? ` including ${accessorialsOf(x).map((a) => `${a.label} ${money(a.cents)}`).join(", ")}` : ""}`), `Total: ${money(total)}`] : []),
     "",
     "SwiftLink Logistics, LLC",
     "www.swiftlinkusa.com",
@@ -371,7 +410,7 @@ export async function combinedPdf(rows, logo) {
 }
 const combinedName = (rows) => `${rows.length > 3 ? `${rows[0].load_no}-${rows.at(-1).load_no} (${rows.length} loads)` : rows.map((r) => r.load_no).join(", ")} - Customer Rate Agreements.pdf`;
 
-const INSERT_COLS = ["id", "token", "batch", "load_no", "po", "customer", "contact_name", "email", "pickup_zip", "pickup_city", "pickup_state", "pickup_date", "delivery_zip", "delivery_city", "delivery_state", "delivery_date", "rate_cents", "equipment", "notes", "cc", "status", "created_by", "created", "expires"];
+const INSERT_COLS = ["id", "token", "batch", "load_no", "po", "customer", "contact_name", "email", "pickup_zip", "pickup_city", "pickup_state", "pickup_date", "delivery_zip", "delivery_city", "delivery_state", "delivery_date", "rate_cents", "accessorials", "equipment", "notes", "cc", "status", "created_by", "created", "expires"];
 
 /** /internal/ratecons/* — called only by the employee portal, which authenticates staff with Cloudflare Access. */
 export async function internalRoute(request, env, deps) {
@@ -493,8 +532,8 @@ export function groupView(rows, now = Date.now(), returning = null) {
   const last = rows.filter((r) => r.status === "confirmed").sort((a, b) => String(b.confirmed_at).localeCompare(String(a.confirmed_at)))[0];
   return {
     multi: true, customer: first.customer, contact_name: first.contact_name || "", status,
-    loads: shown.map((r) => ({ id: r.id, load_no: r.load_no, po: r.po || "", pickup: { place: place(r, "pickup"), date: r.pickup_date }, delivery: { place: place(r, "delivery"), date: r.delivery_date }, rate: money(r.rate_cents), equipment: r.equipment || "", notes: r.notes || "", status: statusOf(r, now) })),
-    total: money(shown.reduce((t, r) => t + r.rate_cents, 0)), open_count: states.filter((s) => s === "open").length,
+    loads: shown.map((r) => ({ id: r.id, load_no: r.load_no, po: r.po || "", pickup: { place: place(r, "pickup"), date: r.pickup_date }, delivery: { place: place(r, "delivery"), date: r.delivery_date }, rate: money(totalCents(r)), base_rate: money(r.rate_cents), accessorials: shownAccessorials(r), equipment: r.equipment || "", notes: r.notes || "", status: statusOf(r, now) })),
+    total: money(shown.reduce((t, r) => t + totalCents(r), 0)), open_count: states.filter((s) => s === "open").length,
     confirmed: last ? { name: last.confirmed_name, at: last.confirmed_at } : null,
     terms: TERMS, terms_version: TERMS_VERSION,
     returning: status === "open" && returning?.signer_name && returning?.signer_email ? { name: properName(returning.signer_name), email: returning.signer_email } : null,

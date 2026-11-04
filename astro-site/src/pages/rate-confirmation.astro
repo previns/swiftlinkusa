@@ -38,7 +38,7 @@ const field = "w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 
           <div id="rc-loads" class="space-y-3"></div>
           <div class="rounded-2xl border border-orange-500/40 bg-orange-500/10 p-6 flex flex-wrap items-end justify-between gap-3">
             <div><p class="text-xs uppercase tracking-widest text-orange-400 font-semibold">Total for <span id="rc-count"></span> (USD)</p><p class="text-4xl font-bold mt-1" id="rc-total"></p></div>
-            <p class="text-slate-400 text-sm">All-in rates, one agreement per load</p>
+            <p class="text-slate-400 text-sm" id="rc-total-note">All-in rates, one agreement per load</p>
           </div>
         </div>
 
@@ -53,8 +53,9 @@ const field = "w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 
           </div>
           <dl class="sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-sm" id="rc-extra"></dl>
           <div class="sm:col-span-2 rounded-2xl border border-orange-500/40 bg-orange-500/10 p-6 flex flex-wrap items-end justify-between gap-3">
-            <div><p class="text-xs uppercase tracking-widest text-orange-400 font-semibold">Agreed rate (USD)</p><p class="text-4xl font-bold mt-1" id="rc-rate"></p></div>
-            <p class="text-slate-400 text-sm">All-in rate for this shipment</p>
+            <div class="w-full hidden" id="rc-breakdown"></div>
+            <div><p class="text-xs uppercase tracking-widest text-orange-400 font-semibold" id="rc-rate-label">Agreed rate (USD)</p><p class="text-4xl font-bold mt-1" id="rc-rate"></p></div>
+            <p class="text-slate-400 text-sm" id="rc-rate-note">All-in rate for this shipment</p>
           </div>
         </div>
 
@@ -147,6 +148,14 @@ const field = "w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 
       $("rc-delivery").textContent = d.delivery.place;
       $("rc-delivery-date").textContent = dateText(d.delivery.date);
       $("rc-rate").textContent = d.rate;
+      // Accessorials on the agreement: the rate and each charge are listed above the total. None: the standard rate box.
+      const extras = d.accessorials || [];
+      if (extras.length) {
+        $("rc-breakdown").replaceChildren(...[{ label: "Line haul", amount: d.base_rate }, ...extras].map((a: any) => chargeLine(a, "text-base py-1")));
+        $("rc-breakdown").classList.remove("hidden");
+        $("rc-rate-label").textContent = "Total all-in (USD)";
+        $("rc-rate-note").textContent = "Line haul plus the accessorials listed";
+      }
       $("rc-submit-label").textContent = `Confirm rate of ${d.rate}`;
       const extra = $("rc-extra");
       extra.replaceChildren();
@@ -190,6 +199,7 @@ const field = "w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 
 
     // Multi-load links: one card per load, a total, and one confirmation for every load still waiting.
     const el = (tag: string, cls: string, text?: string) => { const n = document.createElement(tag); n.className = cls; if (text !== undefined) n.textContent = text; return n; };
+    function chargeLine(a: { label: string; amount: string }, cls: string) { const row = el("div", `flex justify-between gap-4 ${cls}`); row.append(el("span", "text-slate-300", a.label), el("span", "font-semibold text-slate-100 whitespace-nowrap", a.amount)); return row; }
     function renderLoads(d: any) {
       $("rc-loads").replaceChildren(...d.loads.map((l: any) => {
         const card = el("div", "bg-slate-950/60 border border-slate-800 rounded-2xl p-5 grid sm:grid-cols-[1fr_auto] gap-x-6 gap-y-2");
@@ -198,6 +208,7 @@ const field = "w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 
         if (l.po) title.append(el("span", "text-slate-500 text-sm font-normal", `  ·  PO ${l.po}`));
         left.append(title, el("p", "text-slate-200", `${l.pickup.place} → ${l.delivery.place}`), el("p", "text-slate-400 text-sm", [`Pickup ${dateText(l.pickup.date)}`, `Delivery ${dateText(l.delivery.date)}`, l.equipment].filter(Boolean).join("  ·  ")));
         if (l.notes) left.append(el("p", "text-slate-400 text-sm", l.notes));
+        if (l.accessorials?.length) { const list = el("div", "mt-2 max-w-xs text-sm"); list.append(...[{ label: "Line haul", amount: l.base_rate }, ...l.accessorials].map((a: any) => chargeLine(a, ""))); left.append(list); }
         const right = el("div", "sm:text-right");
         right.append(el("p", "text-2xl font-bold", l.rate));
         if (l.status === "confirmed") right.append(el("span", "inline-block mt-1 text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300", "Confirmed"));
@@ -213,6 +224,7 @@ const field = "w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 
       $("rc-multi").classList.remove("hidden");
       $("rc-count").textContent = `${d.loads.length} loads`;
       $("rc-total").textContent = d.total;
+      if (d.loads.some((l: any) => l.accessorials?.length)) $("rc-total-note").textContent = "Line haul and accessorials, one agreement per load";
       renderLoads(d);
       $("rc-terms").replaceChildren(...d.terms.map((t: string) => { const li = document.createElement("li"); li.textContent = t; return li; }));
       $("rc-card").classList.remove("hidden");

@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { DatabaseSync } from "node:sqlite";
 import { readFileSync, mkdirSync, writeFileSync } from "node:fs";
 import { PDFDocument } from "pdf-lib";
-import { parseNew, internalRoute, publicRoute, isToken, TERMS_VERSION } from "../src/ratecon.js";
+import { parseNew, internalRoute, publicRoute, isToken, TERMS_VERSION, inviteEmail, confirmationMessages, buildPdf } from "../src/ratecon.js";
 
 const logo = readFileSync(new URL("../src/logo-white.png", import.meta.url));
 const SITE = "https://www.swiftlinkusa.com";
@@ -302,4 +302,71 @@ test("several contacts: pick who gets the link, everyone gets the invite and the
   assert.deepEqual(copy.message.toRecipients.map((r) => r.emailAddress.address), ["mike@acmefoods.com"]);
   assert.deepEqual(copy.message.ccRecipients.map((r) => r.emailAddress.address), ["dana@acmefoods.com", "ap@acmefoods.com"]);
   assert.ok(sent.find((m) => m.message.subject.includes("confirmed by")).message.body.content.includes("Link sent to: dana@acmefoods.com, mike@acmefoods.com, ap@acmefoods.com"));
+});
+
+test("accessorials validate against the list; Other needs a description", () => {
+  const extras = (accessorials) => parseNew({ ...sample, accessorials });
+  assert.equal(parseNew(sample).data.accessorials, null);
+  assert.equal(extras([]).data.accessorials, null);
+  assert.deepEqual(JSON.parse(extras([{ type: "Detention", amount: "$1,150.50" }, { type: "Other", description: "Pier fee", amount: "75" }]).data.accessorials), [{ label: "Detention", cents: 115050 }, { label: "Pier fee", cents: 7500 }]);
+  for (const bad of [[{ type: "Spaceship", amount: "10" }], [{ type: "Other", amount: "10" }], [{ type: "Lumper", amount: "0" }], [{ type: "Lumper", amount: "-5" }], [{ type: "Lumper", amount: "abc" }], [{ type: "Lumper" }], "Lumper", Array(11).fill({ type: "Lumper", amount: "1" })])
+    assert.ok(extras(bad).errors, JSON.stringify(bad));
+});
+
+test("an accessorial shows the customer the breakdown, and is on the total, PDF and emails", async () => {
+  const { env, deps, sent } = setup();
+  const created = (await (await internalRoute(staff("POST", "", { ...sample, accessorials: [{ type: "Detention", amount: "150" }, { type: "Lumper", amount: "75.50" }] }), env, deps)).json()).item;
+  assert.equal(created.rate, "$2,325.50");
+  assert.equal(created.total_cents, 232550);
+  assert.equal(created.rate_cents, 210000);
+  assert.deepEqual(created.accessorials, [{ label: "Detention", cents: 15000 }, { label: "Lumper", cents: 7550 }]);
+  const token = created.link.split("#")[1];
+  const page = await (await publicRoute(view(token), env, deps, SITE)).json();
+  assert.equal(page.rate, "$2,325.50");
+  assert.equal(page.base_rate, "$2,100.00");
+  assert.deepEqual(page.accessorials, [{ label: "Detention", amount: "$150.00" }, { label: "Lumper", amount: "$75.50" }]);
+  const mail = inviteEmail({ ...created, token, accessorials: JSON.stringify(created.accessorials), cc: null });
+  for (const part of ["Line haul", "$2,100.00", "Detention", "$150.00", "Lumper", "$75.50", "Total all-in", "$2,325.50"]) { assert.ok(mail.html.includes(part), part); assert.ok(mail.text.includes(part), part); }
+  const res = await publicRoute(confirm(token, { name: "Dana Lee", email: "dana@acmefoods.com", agree: "on" }), env, deps, SITE);
+  assert.equal(res.status, 200);
+  assert.equal((await res.json()).rate, "$2,325.50");
+  assert.match(sent[0].message.body.content, /Line haul: \$2,100\.00/);
+  for (const m of sent) { assert.match(m.message.body.content, /Detention/); assert.match(m.message.body.content, /\$2,325\.50/); }
+  const row = await env.RATECONS.prepare("SELECT * FROM ratecons").first();
+  const pdf = await PDFDocument.load(await buildPdf(row, logo));
+  assert.equal(pdf.getPageCount(), 1);
+  mkdirSync(new URL("./output/", import.meta.url), { recursive: true });
+  writeFileSync(new URL("./output/agreement-accessorials.pdf", import.meta.url), await buildPdf(row, logo));
+});
+
+test("no accessorials: the customer, PDF and emails stay the standard agreement", async () => {
+  const { env, deps, sent } = setup();
+  const created = (await (await internalRoute(staff("POST", "", sample), env, deps)).json()).item;
+  assert.equal(created.rate, "$2,100.00");
+  assert.deepEqual(created.accessorials, []);
+  const token = created.link.split("#")[1];
+  const page = await (await publicRoute(view(token), env, deps, SITE)).json();
+  assert.equal(page.rate, "$2,100.00");
+  assert.deepEqual(page.accessorials, []);
+  const row = await env.RATECONS.prepare("SELECT * FROM ratecons").first();
+  assert.equal(row.accessorials, null);
+  const mail = inviteEmail(row);
+  assert.ok(!mail.text.includes("Total"));
+  assert.ok(!mail.text.includes("Line haul"));
+  assert.match(mail.text, /Rate: \$2,100\.00/);
+  await publicRoute(confirm(token, { name: "Dana Lee", email: "dana@acmefoods.com", agree: "on" }), env, deps, SITE);
+  for (const m of sent) assert.ok(!/Total|including/.test(m.message.body.content), m.message.subject);
+});
+
+test("multi-load links total each load's accessorials", async () => {
+  const { env, deps } = setup();
+  const two = { customer: sample.customer, contact_name: sample.contact_name, email: sample.email, loads: [{ ...sample, load_no: "SLL1", accessorials: [{ type: "Tarps", amount: "125" }] }, { ...sample, load_no: "SLL2" }] };
+  const made = await (await internalRoute(staff("POST", "", two), env, deps)).json();
+  const page = await (await publicRoute(view(made.link.split("#")[1]), env, deps, SITE)).json();
+  assert.equal(page.total, "$4,325.00");
+  assert.equal(page.loads[0].rate, "$2,225.00");
+  assert.deepEqual(page.loads[0].accessorials, [{ label: "Tarps", amount: "$125.00" }]);
+  assert.deepEqual(page.loads[1].accessorials, []);
+  const rows = (await env.RATECONS.prepare("SELECT * FROM ratecons ORDER BY rowid").all()).results;
+  assert.match(inviteEmail(rows).html, /Includes Tarps \$125\.00/);
 });
