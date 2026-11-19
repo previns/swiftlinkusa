@@ -1,4 +1,4 @@
-// Customer rate confirmations: SwiftLink staff create a link from the employee portal (through the
+// Customer rate confirmations (with revisions): SwiftLink staff create a link from the employee portal (through the
 // key-protected /internal API), the customer approves the load and rate on www.swiftlinkusa.com, and
 // SwiftLink gets an email with the signed PDF ("SLL1005 - Customer Rate Agreement.pdf") for OTR.
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
