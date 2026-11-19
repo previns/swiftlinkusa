@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "build": "echo \"No build step: wrangler bundles the worker on deploy\"",
     "deploy": "wrangler deploy",
     "dev": "wrangler dev",
     "test": "node --test test/*.test.mjs"
