@@ -32,6 +32,11 @@ const field = "w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 
           <p class="text-orange-500 font-semibold text-xs tracking-widest uppercase mb-2">Rate confirmation</p>
           <h1 class="text-3xl sm:text-4xl font-bold" id="rc-title">Load <span id="rc-load"></span></h1>
           <p class="text-slate-400 mt-2">Prepared for <span id="rc-customer" class="text-slate-200 font-medium"></span><span id="rc-po"></span></p>
+          <div id="rc-revision" class="hidden mt-5 rounded-2xl border border-orange-500/40 bg-orange-500/10 p-5">
+            <p class="text-xs uppercase tracking-widest text-orange-400 font-semibold mb-2"><i class="fa-solid fa-pen-to-square mr-1" aria-hidden="true"></i> Revised agreement · <span id="rc-revision-no"></span></p>
+            <p class="text-slate-300 text-sm mb-2">This replaces the rate agreement you confirmed earlier for this load. What changed:</p>
+            <ul id="rc-changes" class="list-disc pl-5 text-slate-100 text-sm space-y-1"></ul>
+          </div>
         </header>
 
         <div class="hidden px-6 sm:px-10 py-7 space-y-3" id="rc-multi">
@@ -143,6 +148,13 @@ const field = "w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 
       $("rc-load").textContent = d.load_no;
       $("rc-customer").textContent = d.customer;
       $("rc-po").textContent = d.po ? ` · PO ${d.po}` : "";
+      // Revised agreements (a confirmed agreement SwiftLink modified): say so and list what changed.
+      const revised = (d.revision || 1) > 1;
+      $("rc-revision").classList.toggle("hidden", !revised);
+      if (revised) {
+        $("rc-revision-no").textContent = `Revision ${d.revision}`;
+        $("rc-changes").replaceChildren(...(d.changes || []).map((c: string) => { const li = document.createElement("li"); li.textContent = c; return li; }));
+      }
       $("rc-pickup").textContent = d.pickup.place;
       $("rc-pickup-date").textContent = dateText(d.pickup.date);
       $("rc-delivery").textContent = d.delivery.place;
@@ -259,7 +271,7 @@ const field = "w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 
         $("rc-done").classList.remove("hidden");
         return;
       }
-      $("rc-done-text").textContent = `${d.confirmed.name} confirmed ${d.rate} for load ${d.load_no} on ${stamp(d.confirmed.at)}. ${sentTo ? `A copy has been emailed to ${sentTo}.` : "A copy was emailed when the rate was confirmed."}`;
+      $("rc-done-text").textContent = `${d.confirmed.name} confirmed ${(d.revision || 1) > 1 ? "the revised rate of " : ""}${d.rate} for load ${d.load_no} on ${stamp(d.confirmed.at)}. ${sentTo ? `A copy has been emailed to ${sentTo}.` : "A copy was emailed when the rate was confirmed."}`;
       $("rc-done").classList.remove("hidden");
     }
 

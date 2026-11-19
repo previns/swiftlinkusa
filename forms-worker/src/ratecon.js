@@ -54,6 +54,13 @@ export async function ensureSchema(db) {
   try { await db.prepare("ALTER TABLE ratecon_customers ADD COLUMN contacts TEXT").run(); } catch {}
   // Accessorial charges agreed with the load (JSON [{label, cents}]); empty means the standard agreement.
   try { await db.prepare("ALTER TABLE ratecons ADD COLUMN accessorials TEXT").run(); } catch {}
+  // Revised agreements: a confirmed agreement can be modified (charges added or removed, rate or details changed).
+  // The revision is a new row and link (revision 2, 3, …) that points at the agreement it revises; the original stays
+  // confirmed and on file, and gets superseded_by once the customer confirms the revision. changes: JSON list of lines.
+  try { await db.prepare("ALTER TABLE ratecons ADD COLUMN revision INTEGER").run(); } catch {}
+  try { await db.prepare("ALTER TABLE ratecons ADD COLUMN revises TEXT").run(); } catch {}
+  try { await db.prepare("ALTER TABLE ratecons ADD COLUMN superseded_by TEXT").run(); } catch {}
+  try { await db.prepare("ALTER TABLE ratecons ADD COLUMN changes TEXT").run(); } catch {}
   await db.prepare("CREATE INDEX IF NOT EXISTS ratecons_batch ON ratecons(batch)").run();
   // Customers from links made before saved customers existed (INSERT OR IGNORE never revives a removed one).
   await db.batch([
@@ -146,6 +153,34 @@ export function parseNew(input) {
 }
 
 export const money = (cents) => "$" + (cents / 100).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+/** What a revision changes, in plain lines for the customer ("Added Detention $150.00", "Line haul $2,000.00 → $2,100.00").
+ *  Accessorials are matched by name; two of the same name are matched in order. Empty when nothing the customer agrees to changed. */
+export function describeChanges(before, after) {
+  const lines = [];
+  if (before.rate_cents !== after.rate_cents) lines.push(`Line haul ${money(before.rate_cents)} → ${money(after.rate_cents)}`);
+  const was = accessorialsOf(before), now = accessorialsOf(after);
+  for (const label of [...new Set([...was, ...now].map((a) => a.label))]) {
+    const a = was.filter((x) => x.label === label), b = now.filter((x) => x.label === label);
+    for (let i = 0; i < Math.max(a.length, b.length); i++) {
+      if (!a[i]) lines.push(`Added ${label} ${money(b[i].cents)}`);
+      else if (!b[i]) lines.push(`Removed ${label} (${money(a[i].cents)})`);
+      else if (a[i].cents !== b[i].cents) lines.push(`${label} ${money(a[i].cents)} → ${money(b[i].cents)}`);
+    }
+  }
+  for (const leg of ["pickup", "delivery"]) {
+    const name = leg === "pickup" ? "Pickup" : "Delivery";
+    if (before[leg + "_zip"] !== after[leg + "_zip"]) lines.push(`${name} ${place(before, leg)} → ${place(after, leg)}`);
+    if (before[leg + "_date"] !== after[leg + "_date"]) lines.push(`${name} date ${dateText(before[leg + "_date"])} → ${dateText(after[leg + "_date"])}`);
+  }
+  if ((before.po || "") !== (after.po || "")) lines.push(after.po ? `PO ${after.po}${before.po ? ` (was ${before.po})` : ""}` : `PO ${before.po} removed`);
+  if ((before.equipment || "") !== (after.equipment || "")) lines.push(`Equipment ${before.equipment || "not specified"} → ${after.equipment || "not specified"}`);
+  if ((before.notes || "") !== (after.notes || "")) lines.push(after.notes ? "Notes updated" : "Notes removed");
+  if (lines.length && totalCents(before) !== totalCents(after)) lines.push(`New total ${money(totalCents(after))} (was ${money(totalCents(before))})`);
+  return lines;
+}
+export const changesOf = (r) => parseJson(r.changes);
+const isRevision = (r) => (r.revision || 1) > 1;
 const shownAccessorials = (r) => accessorialsOf(r).map((a) => ({ label: a.label, amount: money(a.cents) }));
 const place = (r, leg) => [[r[leg + "_city"], r[leg + "_state"]].filter(Boolean).join(", "), r[leg + "_zip"]].filter(Boolean).join(" ");
 export const dateText = (ymd) => new Date(ymd + "T12:00:00Z").toLocaleDateString("en-US", { timeZone: "UTC", weekday: "short", month: "short", day: "numeric", year: "numeric" });
@@ -166,12 +201,13 @@ export function publicView(r, now = Date.now(), returning = null) {
     confirmed: r.status === "confirmed" ? { name: r.confirmed_name, at: r.confirmed_at } : null,
     terms: r.status === "confirmed" ? termsFor(r.terms_version) : TERMS, terms_version: r.terms_version || TERMS_VERSION,
     returning: statusOf(r, now) === "open" && returning?.signer_name && returning?.signer_email ? { name: properName(returning.signer_name), email: returning.signer_email } : null,
+    revision: r.revision || 1, changes: changesOf(r),
   };
 }
 // Only one version exists so far; older versions get added here when the wording changes.
 const termsFor = () => TERMS;
 
-const staffView = (r, now) => ({ ...r, status: statusOf(r, now), rate: money(totalCents(r)), total_cents: totalCents(r), accessorials: accessorialsOf(r), link: LINK_BASE + r.token, token: undefined, confirmed_ua: undefined, cc: undefined, recipients: recipientsOf(r) });
+const staffView = (r, now) => ({ ...r, status: statusOf(r, now), rate: money(totalCents(r)), total_cents: totalCents(r), accessorials: accessorialsOf(r), link: LINK_BASE + r.token, token: undefined, confirmed_ua: undefined, cc: undefined, recipients: recipientsOf(r), revision: r.revision || 1, changes: changesOf(r) });
 
 // ---------- PDF
 
@@ -208,9 +244,9 @@ export async function buildPdf(r, logoPng) {
     page.drawRectangle({ x: 0, y: H - 84, width: W, height: 84, color: NAVY });
     page.drawRectangle({ x: 0, y: H - 88, width: W, height: 4, color: GOLD });
     if (logo) { const w = 156, h = w * logo.height / logo.width; page.drawImage(logo, { x: M, y: H - 42 - h / 2, width: w, height: h }); }
-    const title = "CUSTOMER RATE AGREEMENT", ts = 13;
+    const title = isRevision(r) ? "REVISED CUSTOMER RATE AGREEMENT" : "CUSTOMER RATE AGREEMENT", ts = 13;
     page.drawText(title, { x: W - M - bold.widthOfTextAtSize(title, ts), y: H - 38, size: ts, font: bold, color: GOLD });
-    const sub = pdfSafe(`Load ${r.load_no}`);
+    const sub = pdfSafe(`Load ${r.load_no}${isRevision(r) ? `  |  Revision ${r.revision}` : ""}`);
     page.drawText(sub, { x: W - M - font.widthOfTextAtSize(sub, 11), y: H - 56, size: 11, font, color: rgb(1, 1, 1) });
     footer();
     y = H - 116;
@@ -249,6 +285,13 @@ export async function buildPdf(r, logoPng) {
   page.drawText(extras.length ? "TOTAL ALL-IN (USD)" : "AGREED RATE (USD)", { x: M + 16, y: y - 8, size: 9, font: bold, color: MUTED });
   page.drawText(money(totalCents(r)), { x: M + 16, y: y - 30, size: 20, font: bold, color: NAVY });
   y -= boxH + 12;
+  if (isRevision(r)) {
+    heading("Revision");
+    row("Revision", `${r.revision}. Replaces agreement ${r.revises} for this load once accepted; all other terms stay the same.`);
+    const changes = changesOf(r);
+    if (changes.length) row("Changes", changes.map((c) => pdfSafe(c)).join(";  "));
+    y -= 4;
+  }
   heading("Terms");
   (r.status === "confirmed" ? termsFor(r.terms_version) : TERMS).forEach((t, i) => {
     const lines = wrap(t, font, 8.8, W - M * 2 - 16);
@@ -271,12 +314,12 @@ export async function buildPdf(r, logoPng) {
   } else {
     row("Status", "Not yet accepted by the customer");
   }
-  doc.setTitle(pdfSafe(`${r.load_no} - Customer Rate Agreement`));
+  doc.setTitle(pdfSafe(pdfName(r).replace(/\.pdf$/, "")));
   doc.setAuthor("SwiftLink Logistics, LLC");
   return doc.save();
 }
 
-export const pdfName = (r) => `${r.load_no} - Customer Rate Agreement.pdf`;
+export const pdfName = (r) => `${r.load_no} - Customer Rate Agreement${isRevision(r) ? ` (Rev ${r.revision})` : ""}.pdf`;
 
 // ---------- invitation email (what the customer receives with their link)
 
@@ -289,7 +332,9 @@ export function inviteEmail(input) {
   const list = Array.isArray(input) ? input : [input], r = list[0], multi = list.length > 1;
   const link = LINK_BASE + (r.batch || r.token);
   const loadNos = list.map((x) => x.load_no);
-  const subject = multi ? `Rate confirmation – ${list.length} loads (${loadNos.slice(0, 4).join(", ")}${list.length > 4 ? ", …" : ""})` : `Rate confirmation – Load ${r.load_no}`;
+  // A revision is always a single-load link: the email says it's revised and lists what changed above the details.
+  const revised = !multi && isRevision(r), changes = revised ? changesOf(r) : [];
+  const subject = multi ? `Rate confirmation – ${list.length} loads (${loadNos.slice(0, 4).join(", ")}${list.length > 4 ? ", …" : ""})` : revised ? `Revised rate confirmation – Load ${r.load_no}` : `Rate confirmation – Load ${r.load_no}`;
   // "Hi Dana," for one person, "Hi Dana and Mike," for two, "Hello," otherwise or when a name is missing.
   const people = recipientsOf(r), firsts = people.map((c) => properName(c.name).split(" ")[0]).filter(Boolean);
   const hi = firsts.length === people.length && people.length <= 2 ? `Hi ${firsts.join(" and ")},` : "Hello,";
@@ -311,8 +356,9 @@ ${list.map((x) => `<tr><td style="${cell(1, "font-weight:600;white-space:nowrap"
 ${rows.map(([k, v], i) => `<tr><td style="padding:9px 14px;${i ? "border-top:1px solid #e6eaf0;" : ""}${font}font-size:13px;color:#626e83;width:110px">${esc(k)}</td><td style="padding:9px 14px;${i ? "border-top:1px solid #e6eaf0;" : ""}${font}font-size:14px;color:#1b2a4a;${i === strong ? "font-weight:700;font-size:16px;" : ""}">${esc(v)}</td></tr>`).join("\n")}
 </table>`;
   }
-  const intro = multi ? `Please review and confirm the rates for these <b>${list.length} loads</b>. You can approve them all at once, and it only takes a few seconds.` : `Please review and confirm the rate for load <b>${esc(r.load_no)}</b>. It only takes a few seconds.`;
-  const button = multi ? `Review &amp; confirm ${list.length} loads` : "Review &amp; confirm rate";
+  const changeBox = changes.length ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px 0;border:1px solid #e8d48a;background:#fbf6e3"><tr><td style="padding:12px 14px;${font}font-size:13px;line-height:20px;color:#1b2a4a"><b>What changed</b><br>${changes.map(esc).join("<br>")}</td></tr></table>` : "";
+  const intro = multi ? `Please review and confirm the rates for these <b>${list.length} loads</b>. You can approve them all at once, and it only takes a few seconds.` : revised ? `We've updated the rate agreement for load <b>${esc(r.load_no)}</b>. Please review the changes and confirm the revised agreement. It replaces the one you confirmed earlier.</p>${changeBox}<p style="margin:0 0 18px 0">The full revised agreement:` : `Please review and confirm the rate for load <b>${esc(r.load_no)}</b>. It only takes a few seconds.`;
+  const button = multi ? `Review &amp; confirm ${list.length} loads` : revised ? "Review &amp; confirm changes" : "Review &amp; confirm rate";
   const linkText = multi ? `Open the rate confirmation for ${list.length} loads` : `Open the rate confirmation for load ${esc(r.load_no)}`;
   const html = `<!doctype html><html><body style="margin:0;padding:0;background:#f2f4f8">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f2f4f8"><tr><td align="center" style="padding:24px 12px">
@@ -335,7 +381,8 @@ ${details}
 <tr><td style="padding:14px 28px;background:#f8f9fc;border-top:1px solid #e6eaf0;${font}font-size:12px;color:#626e83">SwiftLink Logistics, LLC &nbsp;·&nbsp; <a href="https://www.swiftlinkusa.com" style="color:#626e83">www.swiftlinkusa.com</a></td></tr>
 </table></td></tr></table></body></html>`;
   const lines = multi ? [...list.map((x) => `${x.load_no}: ${place(x, "pickup")} -> ${place(x, "delivery")}, pickup ${dateText(x.pickup_date)}, ${money(totalCents(x))}${includes(x) ? ` (includes ${includes(x)})` : ""}`), `Total (${list.length} loads): ${money(total)}`] : [`Load: ${r.load_no}${r.po ? `  PO ${r.po}` : ""}`, `Lane: ${place(r, "pickup")} -> ${place(r, "delivery")}`, `Pickup: ${dateText(r.pickup_date)}`, `Delivery: ${dateText(r.delivery_date)}`, `${accessorialsOf(r).length ? "Line haul" : "Rate"}: ${money(r.rate_cents)}`, ...accessorialsOf(r).map((a) => `${a.label}: ${money(a.cents)}`), ...(accessorialsOf(r).length ? [`Total all-in: ${money(totalCents(r))}`] : [])];
-  const text = [hi, "", multi ? `Please review and confirm the rates for these ${list.length} loads. You can approve them all at once.` : `Please review and confirm the rate for load ${r.load_no}. It only takes a few seconds.`, "", ...lines, "", `${multi ? `Review & confirm ${list.length} loads` : "Review & confirm rate"}: ${link}`, "", "Thank you,"].join("\n");
+  const opening = multi ? `Please review and confirm the rates for these ${list.length} loads. You can approve them all at once.` : revised ? `We've updated the rate agreement for load ${r.load_no}. Please review the changes and confirm the revised agreement. It replaces the one you confirmed earlier.` : `Please review and confirm the rate for load ${r.load_no}. It only takes a few seconds.`;
+  const text = [hi, "", opening, "", ...(changes.length ? ["What changed:", ...changes.map((c) => `- ${c}`), ""] : []), ...lines, "", `${multi ? `Review & confirm ${list.length} loads` : revised ? "Review & confirm changes" : "Review & confirm rate"}: ${link}`, "", "Thank you,"].join("\n");
   return { subject, html, text, to: people.map((c) => c.email).join(","), recipients: people };
 }
 
@@ -354,9 +401,11 @@ export function confirmationMessages(env, rowsIn, pdfsIn) {
   const signer = r.confirmed_email || r.email, sentTo = recipientsOf(r).map((c) => c.email);
   const total = rows.reduce((t, x) => t + totalCents(x), 0);
   const loadLines = rows.flatMap((x) => [`Load: ${x.load_no}${x.po ? `   PO: ${x.po}` : ""}`, `Lane: ${lane(x)}`, `Pickup: ${dateText(x.pickup_date)}   Delivery: ${dateText(x.delivery_date)}`, `${accessorialsOf(x).length ? "Line haul" : "Rate"}: ${money(x.rate_cents)}`, ...accessorialsOf(x).map((a) => `${a.label}: ${money(a.cents)}`), ...(accessorialsOf(x).length ? [`Total all-in: ${money(totalCents(x))}`] : []), ...(multi ? [`Agreement ID: ${x.id}`, ""] : [])]);
+  const revised = !multi && isRevision(r), changes = revised ? changesOf(r) : [];
   const internal = [
-    multi ? `${r.customer} approved the rates for ${rows.length} loads (${rows.map((x) => x.load_no).join(", ")}). A signed Customer Rate Agreement for each load is attached for the invoice packets.` : `${r.customer} approved the rate for load ${r.load_no}. The signed Customer Rate Agreement is attached for the invoice packet.`,
+    multi ? `${r.customer} approved the rates for ${rows.length} loads (${rows.map((x) => x.load_no).join(", ")}). A signed Customer Rate Agreement for each load is attached for the invoice packets.` : revised ? `${r.customer} approved revision ${r.revision} of the rate agreement for load ${r.load_no}. It replaces agreement ${r.revises}; use the attached signed revision for the invoice packet.` : `${r.customer} approved the rate for load ${r.load_no}. The signed Customer Rate Agreement is attached for the invoice packet.`,
     "",
+    ...(changes.length ? ["Changes:", ...changes.map((c) => `- ${c}`), ""] : []),
     ...loadLines,
     ...(multi ? [`Total: ${money(total)}`, ""] : [""]),
     `Accepted by: ${[r.confirmed_name, r.confirmed_title].filter(Boolean).join(", ")} (${r.confirmed_email || r.email})${sentTo.length > 1 || (r.confirmed_email && r.confirmed_email !== r.email) ? `   Link sent to: ${sentTo.join(", ")}` : ""}`,
@@ -367,14 +416,14 @@ export function confirmationMessages(env, rowsIn, pdfsIn) {
   const customer = [
     `Hello ${r.confirmed_name || r.contact_name || ""},`.replace(/ ,$/, ","),
     "",
-    multi ? `Thank you for confirming the rates for ${rows.length} loads. Your copies of the Customer Rate Agreements (one per load) are attached.` : `Thank you for confirming the rate for load ${r.load_no} (${lane(r)}, ${money(totalCents(r))}${accessorialsOf(r).length ? ` including ${accessorialsOf(r).map((a) => `${a.label} ${money(a.cents)}`).join(", ")}` : ""}). Your copy of the Customer Rate Agreement is attached.`,
+    multi ? `Thank you for confirming the rates for ${rows.length} loads. Your copies of the Customer Rate Agreements (one per load) are attached.` : `Thank you for confirming the ${revised ? "revised " : ""}rate for load ${r.load_no} (${lane(r)}, ${money(totalCents(r))}${accessorialsOf(r).length ? ` including ${accessorialsOf(r).map((a) => `${a.label} ${money(a.cents)}`).join(", ")}` : ""}). Your copy of the Customer Rate Agreement is attached.`,
     ...(multi ? ["", ...rows.map((x) => `${x.load_no}: ${lane(x)}, ${money(totalCents(x))}${accessorialsOf(x).length ? ` including ${accessorialsOf(x).map((a) => `${a.label} ${money(a.cents)}`).join(", ")}` : ""}`), `Total: ${money(total)}`] : []),
     "",
     "SwiftLink Logistics, LLC",
     "www.swiftlinkusa.com",
   ].join("\r\n");
-  const subjectInternal = multi ? `${rows.length} loads - Customer Rate Agreements - confirmed by ${r.customer}` : `${r.load_no} - Customer Rate Agreement - confirmed by ${r.customer}`;
-  const subjectCustomer = multi ? `${rows.length} loads - your rate confirmations` : `Load ${r.load_no} - your rate confirmation`;
+  const subjectInternal = multi ? `${rows.length} loads - Customer Rate Agreements - confirmed by ${r.customer}` : revised ? `${r.load_no} - Revised Customer Rate Agreement (Rev ${r.revision}) - confirmed by ${r.customer}` : `${r.load_no} - Customer Rate Agreement - confirmed by ${r.customer}`;
+  const subjectCustomer = multi ? `${rows.length} loads - your rate confirmations` : revised ? `Load ${r.load_no} - your revised rate confirmation` : `Load ${r.load_no} - your rate confirmation`;
   return [
     { message: { subject: subjectInternal, body: { contentType: "Text", content: internal }, toRecipients: to, replyTo: [{ emailAddress: { address: r.email } }], attachments }, saveToSentItems: false },
     { message: { subject: subjectCustomer, body: { contentType: "Text", content: customer }, toRecipients: [{ emailAddress: { address: signer } }], ccRecipients: sentTo.filter((e) => e !== signer).map((address) => ({ emailAddress: { address } })), replyTo: [{ emailAddress: { address: env.TO_ADDRESS } }], attachments }, saveToSentItems: true },
@@ -410,7 +459,20 @@ export async function combinedPdf(rows, logo) {
 }
 const combinedName = (rows) => `${rows.length > 3 ? `${rows[0].load_no}-${rows.at(-1).load_no} (${rows.length} loads)` : rows.map((r) => r.load_no).join(", ")} - Customer Rate Agreements.pdf`;
 
-const INSERT_COLS = ["id", "token", "batch", "load_no", "po", "customer", "contact_name", "email", "pickup_zip", "pickup_city", "pickup_state", "pickup_date", "delivery_zip", "delivery_city", "delivery_state", "delivery_date", "rate_cents", "accessorials", "equipment", "notes", "cc", "status", "created_by", "created", "expires"];
+const INSERT_COLS = ["id", "token", "batch", "load_no", "po", "customer", "contact_name", "email", "pickup_zip", "pickup_city", "pickup_state", "pickup_date", "delivery_zip", "delivery_city", "delivery_state", "delivery_date", "rate_cents", "accessorials", "equipment", "notes", "cc", "status", "created_by", "created", "expires", "revision", "revises", "changes"];
+const insertRow = (db, r) => db.prepare(`INSERT INTO ratecons(${INSERT_COLS.join(",")}) VALUES(${INSERT_COLS.map(() => "?").join(",")})`).bind(...INSERT_COLS.map((c) => r[c] === "" || r[c] === undefined ? null : r[c]));
+// A new link for the same load replaces any earlier link that was never confirmed.
+const voidOpen = (db, loadNo) => db.prepare("UPDATE ratecons SET status='void', voided_by=? WHERE load_no=? AND status='open'").bind("Replaced by a newer link", loadNo);
+/** Saves the customer and its contacts: everyone picked this time is marked on (picked by default next time), the rest off;
+ *  new people are added after the ones already saved. loads: how many new loads this link adds to their count. */
+async function saveCustomer(db, first, loads) {
+  const saved = await db.prepare("SELECT name, contact_name, email, contacts, removed FROM ratecon_customers WHERE name=?").bind(first.customer).first();
+  const picked = recipientsOf(first), known = saved && !saved.removed ? contactsOf(saved) : [];
+  const contacts = [...known.map((c) => { const p = picked.find((x) => x.email === c.email); return { name: p?.name || c.name, email: c.email, on: !!p }; }), ...picked.filter((p) => !known.some((c) => c.email === p.email)).map((p) => ({ ...p, on: true }))].slice(-MAX_CONTACTS);
+  return db.prepare(`INSERT INTO ratecon_customers(name, contact_name, email, contacts, loads, last_used) VALUES(?,?,?,?,?,?)
+    ON CONFLICT(name) DO UPDATE SET contact_name=excluded.contact_name, email=excluded.email, contacts=excluded.contacts,
+    loads=ratecon_customers.loads+excluded.loads, last_used=excluded.last_used, removed=0`).bind(first.customer, first.contact_name || null, first.email, JSON.stringify(contacts), loads, first.created);
+}
 
 /** /internal/ratecons/* — called only by the employee portal, which authenticates staff with Cloudflare Access. */
 export async function internalRoute(request, env, deps) {
@@ -442,20 +504,7 @@ export async function internalRoute(request, env, deps) {
     if (errors.length) return json({ error: errors.join(" ") }, 422);
     const base = { status: "open", created_by: staff, created: new Date(now).toISOString(), expires: new Date(now + EXPIRY_DAYS * DAY).toISOString(), batch: parsed.length > 1 ? newToken() : null };
     const rows = parsed.map((p) => ({ ...p.data, ...base, id: newId(), token: newToken() }));
-    const first = rows[0];
-    // The customer's saved contacts: everyone picked this time is marked on (picked by default next time), the rest off;
-    // new people are added after the ones already saved.
-    const saved = await db.prepare("SELECT name, contact_name, email, contacts, removed FROM ratecon_customers WHERE name=?").bind(first.customer).first();
-    const picked = recipientsOf(first), known = saved && !saved.removed ? contactsOf(saved) : [];
-    const contacts = [...known.map((c) => { const p = picked.find((x) => x.email === c.email); return { name: p?.name || c.name, email: c.email, on: !!p }; }), ...picked.filter((p) => !known.some((c) => c.email === p.email)).map((p) => ({ ...p, on: true }))].slice(-MAX_CONTACTS);
-    await db.batch([
-      // A new link for the same load replaces any earlier link that was never confirmed.
-      ...rows.map((r) => db.prepare("UPDATE ratecons SET status='void', voided_by=? WHERE load_no=? AND status='open'").bind("Replaced by a newer link", r.load_no)),
-      ...rows.map((r) => db.prepare(`INSERT INTO ratecons(${INSERT_COLS.join(",")}) VALUES(${INSERT_COLS.map(() => "?").join(",")})`).bind(...INSERT_COLS.map((c) => r[c] === "" || r[c] === undefined ? null : r[c]))),
-      db.prepare(`INSERT INTO ratecon_customers(name, contact_name, email, contacts, loads, last_used) VALUES(?,?,?,?,?,?)
-        ON CONFLICT(name) DO UPDATE SET contact_name=excluded.contact_name, email=excluded.email, contacts=excluded.contacts,
-        loads=ratecon_customers.loads+excluded.loads, last_used=excluded.last_used, removed=0`).bind(first.customer, first.contact_name || null, first.email, JSON.stringify(contacts), rows.length, first.created),
-    ]);
+    await db.batch([...rows.map((r) => voidOpen(db, r.load_no)), ...rows.map((r) => insertRow(db, r)), await saveCustomer(db, rows[0], rows.length)]);
     const items = rows.map((r) => ({ ...staffView(r, now), link: groupLink(r), batch: undefined, batch_id: r.batch ? r.batch.slice(0, 8) : null, batch_size: rows.length }));
     return json(many ? { items, link: items[0].link } : { item: items[0] }, 200);
   }
@@ -485,10 +534,26 @@ export async function internalRoute(request, env, deps) {
     await db.prepare("UPDATE ratecon_customers SET removed=1, signer_name=NULL, signer_email=NULL WHERE name=?").bind(name).run();
     return json({ ok: true }, 200);
   }
-  const m = path.match(/^\/([0-9a-f]{16})(\/void|\/pdf|\/delete|\/email|\/send)?$/);
+  const m = path.match(/^\/([0-9a-f]{16})(\/void|\/pdf|\/delete|\/email|\/send|\/revise)?$/);
   if (!m) return json({ error: "Not found" }, 404);
   const r = await db.prepare("SELECT * FROM ratecons WHERE id=?").bind(m[1]).first();
   if (!r) return json({ error: "Not found" }, 404);
+  // Modify a confirmed agreement: same load and customer, new details. Makes a revision link for the customer to confirm;
+  // the confirmed agreement stays in force until they do. A revision still waiting for this load is replaced.
+  if (m[2] === "/revise" && request.method === "POST") {
+    if (r.status !== "confirmed") return json({ error: "Only confirmed agreements can be modified. For a waiting link, send a new link instead." }, 409);
+    if (r.superseded_by) return json({ error: "This agreement was already replaced by a newer revision. Modify the latest one." }, 409);
+    let input;
+    try { const raw = await request.text(); if (raw.length > 60000) throw Error(); input = JSON.parse(raw); } catch { return json({ error: "Invalid request" }, 400); }
+    if (!input || typeof input !== "object" || Array.isArray(input.loads)) return json({ error: "Invalid request" }, 400);
+    const { data, errors } = parseNew({ ...input, load_no: r.load_no, customer: r.customer });
+    if (errors) return json({ error: errors.join(" ") }, 422);
+    const changes = describeChanges(r, data);
+    if (!changes.length) return json({ error: "Nothing changed. Edit the charges, rate or load details before sending a revision." }, 422);
+    const row = { ...data, id: newId(), token: newToken(), batch: null, status: "open", created_by: staff, created: new Date(now).toISOString(), expires: new Date(now + EXPIRY_DAYS * DAY).toISOString(), revision: (r.revision || 1) + 1, revises: r.id, changes: JSON.stringify(changes) };
+    await db.batch([voidOpen(db, row.load_no), insertRow(db, row), await saveCustomer(db, row, 0)]);
+    return json({ item: { ...staffView(row, now), link: groupLink(row), batch: undefined, batch_id: null, batch_size: 1 } }, 200);
+  }
   if (m[2] === "/void" && request.method === "POST") {
     if (r.status !== "open") return json({ error: "Only links that are still waiting can be cancelled." }, 409);
     await db.prepare("UPDATE ratecons SET status='void', voided_by=? WHERE id=? AND status='open'").bind(staff, r.id).run();
@@ -593,6 +658,9 @@ export async function publicRoute(request, env, deps, allowed) {
     .bind(at, name, email, ip || null, ua || null, TERMS_VERSION, method, x.id)));
   const done = open.filter((x, i) => results[i].meta.changes).map((x) => ({ ...x, status: "confirmed", confirmed_at: at, confirmed_name: name, confirmed_email: email, confirmed_ip: ip || null, terms_version: TERMS_VERSION, confirm_method: method }));
   if (!done.length) return json({ error: multi ? "These rates were already confirmed." : "This rate was already confirmed." }, 409, allowed);
+  // A confirmed revision replaces the agreement it revised (which stays on file, marked as replaced).
+  const revisions = done.filter((x) => x.revises);
+  if (revisions.length) await db.batch(revisions.map((x) => db.prepare("UPDATE ratecons SET superseded_by=? WHERE id=?").bind(x.id, x.revises)));
   // Next time this customer gets a link, these details are filled in for them.
   await db.prepare(`INSERT INTO ratecon_customers(name, email, signer_name, signer_email, last_used) VALUES(?,?,?,?,?)
     ON CONFLICT(name) DO UPDATE SET signer_name=excluded.signer_name, signer_email=excluded.signer_email`).bind(r.customer, r.email, name, email, at).run();

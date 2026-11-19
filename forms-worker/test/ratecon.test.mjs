@@ -370,3 +370,63 @@ test("multi-load links total each load's accessorials", async () => {
   const rows = (await env.RATECONS.prepare("SELECT * FROM ratecons ORDER BY rowid").all()).results;
   assert.match(inviteEmail(rows).html, /Includes Tarps \$125\.00/);
 });
+
+test("modify a confirmed agreement: revision link, change list, replaces the original once confirmed", async () => {
+  const { env, deps, sent } = setup();
+  const raw = env.RATECONS.raw;
+  const withLumper = { ...sample, accessorials: [{ type: "Lumper", amount: "75" }] };
+  const first = (await (await internalRoute(staff("POST", "", withLumper), env, deps)).json()).item;
+  const revise = (id, body) => internalRoute(staff("POST", `/${id}/revise`, body), env, deps);
+  // Waiting agreements can't be modified; they get a new link instead.
+  assert.equal((await revise(first.id, { ...withLumper, rate: "2,200" })).status, 409);
+  await publicRoute(confirm(first.link.split("#")[1], { name: "Dana Lee", email: "dana@acmefoods.com", agree: "on" }), env, deps, SITE);
+  sent.length = 0;
+
+  // Nothing changed: refused. Load number and customer can't be changed by the request.
+  assert.equal((await revise(first.id, withLumper)).status, 422);
+  const res = await revise(first.id, { ...withLumper, load_no: "OTHER1", customer: "Someone Else", accessorials: [{ type: "Detention", amount: "150" }] });
+  assert.equal(res.status, 200);
+  const rev = (await res.json()).item;
+  assert.equal(rev.load_no, "SLL1005");
+  assert.equal(rev.customer, "Acme Foods, Inc.");
+  assert.equal(rev.revision, 2);
+  assert.equal(rev.revises, first.id);
+  assert.equal(rev.status, "open");
+  assert.equal(rev.rate, "$2,250.00");
+  assert.deepEqual(rev.changes, ["Removed Lumper ($75.00)", "Added Detention $150.00", "New total $2,250.00 (was $2,175.00)"]);
+  // The confirmed original stays in force until the customer confirms the revision.
+  assert.equal(raw.prepare("SELECT status, superseded_by FROM ratecons WHERE id=?").get(first.id).status, "confirmed");
+
+  const mail = await (await internalRoute(staff("GET", `/${rev.id}/email`), env, deps)).json();
+  assert.equal(mail.subject, "Revised rate confirmation – Load SLL1005");
+  assert.ok(mail.html.includes("What changed") && mail.html.includes("Added Detention $150.00"));
+  assert.ok(mail.text.includes("- Removed Lumper ($75.00)"));
+
+  // A second revision before the first is confirmed replaces the waiting one.
+  const rev2 = (await (await revise(first.id, { ...withLumper, rate: "2,300" })).json()).item;
+  assert.equal(raw.prepare("SELECT status FROM ratecons WHERE id=?").get(rev.id).status, "void");
+  assert.deepEqual(rev2.changes, ["Line haul $2,100.00 → $2,300.00", "New total $2,375.00 (was $2,175.00)"]);
+
+  const token = rev2.link.split("#")[1];
+  const pub = await (await publicRoute(view(token), env, deps, SITE)).json();
+  assert.equal(pub.revision, 2);
+  assert.deepEqual(pub.changes, rev2.changes);
+  assert.equal((await publicRoute(confirm(token, { name: "Dana Lee", email: "dana@acmefoods.com", agree: "on" }), env, deps, SITE)).status, 200);
+  assert.equal(raw.prepare("SELECT superseded_by FROM ratecons WHERE id=?").get(first.id).superseded_by, rev2.id);
+  const [internal, customer] = sent;
+  assert.equal(internal.message.subject, "SLL1005 - Revised Customer Rate Agreement (Rev 2) - confirmed by Acme Foods, Inc.");
+  assert.ok(internal.message.body.content.includes(`replaces agreement ${first.id}`));
+  assert.equal(internal.message.attachments[0].name, "SLL1005 - Customer Rate Agreement (Rev 2).pdf");
+  assert.equal(customer.message.subject, "Load SLL1005 - your revised rate confirmation");
+  const doc = await PDFDocument.load(Buffer.from(internal.message.attachments[0].contentBytes, "base64"));
+  assert.equal(doc.getTitle(), "SLL1005 - Customer Rate Agreement (Rev 2)");
+  writeFileSync(new URL("./output/ratecon-rev2.pdf", import.meta.url), Buffer.from(internal.message.attachments[0].contentBytes, "base64"));
+
+  // The replaced agreement can't be modified again; the latest one can (revision 3).
+  assert.equal((await revise(first.id, { ...withLumper, rate: "2,400" })).status, 409);
+  const list = (await (await internalRoute(staff("GET", ""), env, deps)).json()).items;
+  assert.equal(list.find((x) => x.id === first.id).superseded_by, rev2.id);
+  const rev3 = (await (await revise(rev2.id, { ...withLumper, rate: "2,300", pickup_date: "2026-10-29", delivery_date: "2026-10-31" })).json()).item;
+  assert.equal(rev3.revision, 3);
+  assert.deepEqual(rev3.changes, ["Pickup date Wed, Oct 28, 2026 → Thu, Oct 29, 2026", "Delivery date Fri, Oct 30, 2026 → Sat, Oct 31, 2026"]);
+});
